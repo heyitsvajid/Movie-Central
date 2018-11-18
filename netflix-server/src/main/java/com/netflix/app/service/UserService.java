@@ -9,7 +9,7 @@ public interface UserService {
 	
 	User findById(long id);
 	
-	User findByUsername(String name);
+	User findByEmail(String email);
 	
 	void save(User user);
 	

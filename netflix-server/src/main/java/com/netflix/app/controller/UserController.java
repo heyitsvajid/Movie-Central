@@ -2,6 +2,8 @@ package com.netflix.app.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.netflix.app.model.User;
 import com.netflix.app.service.UserService;
 import com.netflix.app.util.CustomErrorType;
+import com.netflix.app.util.PasswordEncoder;
 
 @RestController
 public class UserController {
@@ -25,9 +29,11 @@ public class UserController {
 	public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	UserService userService; //Service which will do all data retrieval/manipulation work
+	UserService userService; // Service which will do all data
+								// retrieval/manipulation work
 
-	// -------------------Retrieve All Users---------------------------------------------
+	// -------------------Retrieve All
+	// Users---------------------------------------------
 
 	@RequestMapping(value = "/users/", method = RequestMethod.GET)
 	public ResponseEntity<List<User>> listAllUsers() {
@@ -40,7 +46,8 @@ public class UserController {
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 
-	// -------------------Retrieve Single User------------------------------------------
+	// -------------------Retrieve Single
+	// User------------------------------------------
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@PathVariable("id") long id) {
@@ -48,31 +55,33 @@ public class UserController {
 		User user = userService.findById(id);
 		if (user == null) {
 			logger.error("User with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("User with id " + id 
-					+ " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("User with id " + id + " not found"), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 
-	// -------------------Create a User-------------------------------------------
+	// -------------------Create a
+	// User-------------------------------------------
 
 	@RequestMapping(value = "/user/", method = RequestMethod.POST)
 	public ResponseEntity<?> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
 		logger.info("Creating User : {}", user);
 
-		if (userService.findByUsername(user.getEmail())!=null) {
-			logger.error("Unable to create. A User with name {} already exist", user.getEmail());
-			return new ResponseEntity(new CustomErrorType("Unable to create. A User with name " + 
-			user.getEmail() + " already exist."),HttpStatus.CONFLICT);
+		if (userService.findByEmail(user.getEmail()) != null) {
+			logger.error("Unable to create. A User with email {} already exist", user.getEmail());
+			return new ResponseEntity(
+					new CustomErrorType("Unable to create. A User with email " + user.getEmail() + " already exist."),
+					HttpStatus.CONFLICT);
 		}
+		
 		userService.save(user);
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/api/user/{id}").buildAndExpand(user.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
-	// ------------------- Update a User ------------------------------------------------
+	// ------------------- Update a User
+	// ------------------------------------------------
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody User user) {
@@ -86,15 +95,16 @@ public class UserController {
 					HttpStatus.NOT_FOUND);
 		}
 
-//		currentUser.setName(user.getName());
-//		currentUser.setAge(user.getAge());
-//		currentUser.setSalary(user.getSalary());
+		// currentUser.setName(user.getName());
+		// currentUser.setAge(user.getAge());
+		// currentUser.setSalary(user.getSalary());
 
 		userService.updateUser(currentUser);
 		return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 	}
 
-	// ------------------- Delete a User-----------------------------------------
+	// ------------------- Delete a
+	// User-----------------------------------------
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
@@ -116,8 +126,31 @@ public class UserController {
 	public ResponseEntity<User> deleteAllUsers() {
 		logger.info("Deleting All Users");
 
-//		userService.deleteAllUsers();
+		userService.deleteAllUsers();
 		return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 	}
 
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<?> login(@RequestParam("email") String email, @RequestParam("password") String password,
+			HttpServletRequest request) {
+		logger.info("Fetching User with username and password {}", email);
+		if (email != null && password != null) {
+			User user = userService.findByEmail(email);
+			if (user == null) {
+				logger.error("User with email {} not found.", email);
+				return new ResponseEntity(new CustomErrorType("User with email " + email + " not found"),
+						HttpStatus.NOT_FOUND);
+			} else if (PasswordEncoder.checkPassword(password, user.getPassword())) {
+				logger.error("Email {} and its password matched", email);
+
+				return new ResponseEntity<User>(user, HttpStatus.OK);
+			} else {
+				logger.error("Email and password match for: " + email);
+				return new ResponseEntity(new CustomErrorType("Email and password mismatch"), HttpStatus.NOT_FOUND);
+			}
+		} else {
+			return new ResponseEntity(new CustomErrorType("User with email " + email + " not found"),
+					HttpStatus.NOT_FOUND);
+		}
+	}
 }

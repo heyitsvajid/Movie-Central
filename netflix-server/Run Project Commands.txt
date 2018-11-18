@@ -1,0 +1,8 @@
+
+To build and package a Spring Boot app into a single executable Jar file with a Maven:
+
+> mvn clean compile
+
+From root directory of the application and type the following command to run it 
+
+> mvn spring-boot:run

@@ -58,7 +58,7 @@ public class PasswordEncoder {
 	 * hash verifies successfully for the password it represents, and also
 	 * generate a new hash and ensure that the new hash verifies just the same.
 	 */
-	public static void main(String[] args) {
+	public void test(String[] args) {
 		String test_passwd = "abcdefghijklmnopqrstuvwxyz";
 		String test_hash = "$2a$06$.rCVZVOThsIa97pEDOxvGuRRgzG64bvtJ0938xuqzv18d3ZpQhstC";
 
@@ -68,7 +68,7 @@ public class PasswordEncoder {
 		System.out.println("Hashing test password...");
 		System.out.println();
 
-		String computed_hash = "";// hash(test_passwd);
+		String computed_hash = hash(test_passwd);
 		System.out.println("Test computed hash: " + computed_hash);
 		System.out.println();
 		System.out.println("Verifying that hash and stored hash both match for the test password...");
