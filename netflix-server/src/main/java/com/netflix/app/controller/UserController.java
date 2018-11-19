@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.netflix.app.model.Roles;
 import com.netflix.app.model.User;
+import com.netflix.app.service.ObjectService;
 import com.netflix.app.service.RoleService;
 import com.netflix.app.service.UserService;
 import com.netflix.app.util.CustomErrorType;
@@ -33,6 +34,8 @@ public class UserController {
 	UserService userService;
 	@Autowired
 	RoleService roleService;
+	@Autowired
+	ObjectService objectService;
 	@Autowired
 	EmailService es;
 
@@ -105,7 +108,7 @@ public class UserController {
 		user.setDeleted("N");
 		userService.save(user);
 
-		String url = "localhost:8080/SpringBootRestApi/activate/" + uuid.toString() + "+" + user.getId();
+		String url = "localhost:8080/SpringBootRestApi/activate/" + uuid.toString() + "--" + user.getId();
 		try {
 			es.sendMail(user.getEmail(), url, user.getName());
 		} catch (Exception e) {
