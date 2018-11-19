@@ -2,14 +2,18 @@ package com.netflix.app.model;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
 	private Long id;
@@ -18,39 +22,35 @@ public class User {
 	private String email;
 	private Role role;
 
-	@Enumerated(EnumType.STRING)
+	@Column(insertable = false)
 	@org.hibernate.annotations.ColumnDefault("N")
-	private BooleanEnum activated; // 'Y' || 'N'
+	private String activated; // 'Y' || 'N'
 
-	@Enumerated(EnumType.STRING)
+	@Column(insertable = false)
 	@org.hibernate.annotations.ColumnDefault("N")
-	private BooleanEnum deleted; // 'Y' || 'N'
-	
-	
-	@Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+	private String deleted; // 'Y' || 'N'
+
 	@CreatedDate
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
 
-	@Column(nullable = false)
+    @LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
 	private Date updatedAt;
 
-
-	public BooleanEnum getActivated() {
+	public String getActivated() {
 		return activated;
 	}
 
-	public void setActivated(BooleanEnum activated) {
+	public void setActivated(String activated) {
 		this.activated = activated;
 	}
 
-	public BooleanEnum getDeleted() {
+	public String getDeleted() {
 		return deleted;
 	}
 
-	public void setDeleted(BooleanEnum deleted) {
+	public void setDeleted(String deleted) {
 		this.deleted = deleted;
 	}
 
@@ -85,19 +85,13 @@ public class User {
 		this.id = 0l;
 	}
 
-	
-	
-	public User(Long id, String name, String password, String email, Role role, BooleanEnum activated) {
+	public User(Long id, String name, String password, String email, Role role) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.email = email;
 		this.role = role;
-		this.activated = activated;
-		this.deleted = deleted;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 	}
 
 	@Id

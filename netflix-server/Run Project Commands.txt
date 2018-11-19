@@ -1,4 +1,10 @@
 
+> Add roles to Role Table
+	use cmpe275;
+	delete from role;
+	insert into role(name) values('ADMIN');
+	insert into role(name) values('CUSTOMER');
+
 To build and package a Spring Boot app into a single executable Jar file with a Maven:
 
 > mvn clean compile

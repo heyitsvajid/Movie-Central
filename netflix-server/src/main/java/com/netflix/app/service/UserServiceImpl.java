@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.netflix.app.model.Role;
 import com.netflix.app.model.User;
 import com.netflix.app.repository.UserRepository;
 import com.netflix.app.util.PasswordEncoder;
@@ -26,6 +27,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+	
+	@Override
+	public User findByEmailAndRole(String email,Role role) {
+		return userRepository.findByEmailAndRole(email,role);
 	}
 
 	@Override
