@@ -1,101 +1,79 @@
 package com.netflix.app.model;
-import javax.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
-import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "payment")
 @EntityListeners(AuditingEntityListener.class)
-
 public class Payment {
-	
+
 	private Long id;
+	
 	private Long userId;
-	private Long movieId;
-	private Long subscription_type;
-	private double amount;
-	private String card_number;
-	private Long exp_month;
-	private Long exp_year;
-	
-
+	//private Long movieId;
+	private Double amount;
+	private String Card_Number;
+	private int exp_month;
+	private int exp_year;
 	
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Long getUserId() {
 		return userId;
 	}
-
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-
-	public Long getMovieId() {
-		return movieId;
-	}
-
-	public void setMovieId(Long movieId) {
-		this.movieId = movieId;
-	}
-
-	public Long getSubscription_type() {
-		return subscription_type;
-	}
-
-	public void setSubscription_type(Long subscription_type) {
-		this.subscription_type = subscription_type;
-	}
-
-	public double getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
-
-	public void setAmount(double amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-
-	public String getCard_number() {
-		return card_number;
+	public String getCard_Number() {
+		return Card_Number;
 	}
-
-	public void setCard_number(String card_number) {
-		this.card_number = card_number;
+	public void setCard_Number(String card_Number) {
+		Card_Number = card_Number;
 	}
-
-	public Long getExp_month() {
+	public int getExp_month() {
 		return exp_month;
 	}
-
-	public void setExp_month(Long exp_month) {
+	public void setExp_month(int exp_month) {
 		this.exp_month = exp_month;
 	}
-
-	public Long getExp_year() {
+	public int getExp_year() {
 		return exp_year;
 	}
-
-	public void setExp_year(Long exp_year) {
+	public void setExp_year(int exp_year) {
 		this.exp_year = exp_year;
 	}
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
-	
 	
 	public Date getCreatedAt() {
 		return createdAt;
@@ -104,21 +82,22 @@ public class Payment {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-
+	
 	public Payment() {
 		super();
 		this.id = 0l;
+		
 	}
 	
-	public Payment(Long id,Long userId,
-			Long movieId,String card_number) 
+	public Payment(Long id, Long user_id, Double amount,String Card_Number, int exp_month, int exp_year)
 	{
 		super();
 		setId(id);
 		setUserId(userId);
-		setMovieId(movieId);
-		setCard_number(card_number);
+		setAmount(amount);
+		setCard_Number(Card_Number);
+		setExp_month(exp_month);
+		setExp_year(exp_year);
 	}
-
 
 }
