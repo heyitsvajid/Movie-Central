@@ -2,12 +2,12 @@ package com.netflix.app.repository;
 
 import java.util.List;
 
-import com.netflix.app.model.Subscription;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SubscriptionRepository {
-	void save (Subscription subscription);
-	List<Subscription> findAllSubscriptions();
+import com.netflix.app.model.Subscription;
+import com.netflix.app.model.User;
+
+public interface SubscriptionRepository  extends JpaRepository<Subscription, Long> {
 	List<Subscription> findSubscriptionById(long id);
-	List<Subscription> findAllSubscriptionByUserId(long user_id);
 
 }

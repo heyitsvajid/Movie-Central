@@ -25,12 +25,6 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 	}
 
 	@Override
-	public List<Subscription> findAllSubscriptionByUserId(long user_id) {
-		// TODO Auto-generated method stub
-		return (List<Subscription>) subscriptionRepository.findAllSubscriptionByUserId(user_id);
-	}
-
-	@Override
 	public List<Subscription> findAllSubscriptionById(long id) {
 		// TODO Auto-generated method stub
 		return (List<Subscription>) subscriptionRepository.findSubscriptionById(id);
@@ -39,7 +33,8 @@ public class SubscriptionServiceImpl implements SubscriptionService{
 	@Override
 	public List<Subscription> findAllSubscriptions() {
 		// TODO Auto-generated method stub
-		return (List<Subscription>) subscriptionRepository.findAllSubscriptions();
+		return (List<Subscription>) subscriptionRepository.findAll();
 	}
+
 
 }
