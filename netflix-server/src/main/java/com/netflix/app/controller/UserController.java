@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import com.netflix.app.util.CustomErrorType;
 import com.netflix.app.util.EmailService;
 import com.netflix.app.util.PasswordEncoder;
 
+@CrossOrigin
 @RestController
 public class UserController {
 
@@ -48,7 +50,7 @@ public class UserController {
 	@RequestMapping(value = "/users/", method = RequestMethod.GET)
 	public ResponseEntity<List<User>> listAllUsers() {
 		logger.info("Fetching all Users ");
-		List<User> users = userService.findAllUsers();
+		List<User> users = objectService.getUsersTest();
 		if (users.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND

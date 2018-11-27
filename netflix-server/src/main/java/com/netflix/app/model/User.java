@@ -31,11 +31,9 @@ public class User {
 	private String deleted; // 'Y' || 'N'
 
 	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
 
     @LastModifiedDate
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedAt;
 
 	public String getActivated() {

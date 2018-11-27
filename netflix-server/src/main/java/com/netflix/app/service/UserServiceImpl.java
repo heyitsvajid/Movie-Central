@@ -16,22 +16,22 @@ import com.netflix.app.util.PasswordEncoder;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Override
 	public void save(User user) {
 		user.setPassword(PasswordEncoder.hash(user.getPassword()));
 		// user.setRoles(new HashSet<>(roleRepository.findAll()));
 		userRepository.save(user);
 	}
-	
+
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
-	
+
 	@Override
-	public User findByEmailAndRole(String email,Role role) {
-		return userRepository.findByEmailAndRole(email,role);
+	public User findByEmailAndRole(String email, Role role) {
+		return userRepository.findByEmailAndRole(email, role);
 	}
 
 	@Override
