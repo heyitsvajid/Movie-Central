@@ -46,7 +46,7 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	public List<Movie> findAllMovies() {
 		// TODO Auto-generated method stub
-		return (List<Movie>) movieRepository.findByDeleted("N");
+		return movieRepository.findByDeleted("N");
 	}
 
 	@Override
