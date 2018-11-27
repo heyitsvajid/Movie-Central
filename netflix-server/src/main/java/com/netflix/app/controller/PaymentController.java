@@ -40,14 +40,14 @@ public class PaymentController {
 	
 	@RequestMapping(value = "/payment/{user_id}", method = RequestMethod.GET)
 	public ResponseEntity<List<Payment>> findAllPaymentByUserId(@PathVariable("role") String role, @PathVariable("user_id") long user_id) {
-		logger.info("Fetching all Payments for user id {} ", user_id);
+		
 		User user = userService.findById(user_id);
 		Role role_admin= roleService.findById(user_id);
 		
 		List<Payment> payments = paymentService.findAllPayments();
 		if(role_admin.equals("admin"))
 		{
-			
+			logger.info("Fetching all Payments for admin analysis");
 			if (payments.isEmpty()) {
 				return new ResponseEntity(HttpStatus.NO_CONTENT);
 				// You many decide to return HttpStatus.NOT_FOUND
@@ -62,7 +62,11 @@ public class PaymentController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
 		}
+		else
+		{
+		logger.info("Fetching all Payments for user id {} ", user_id);
 		return new ResponseEntity<List<Payment>>(payment, HttpStatus.OK);
+		}
 	}
 	
 	
