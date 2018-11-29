@@ -3,6 +3,9 @@ package com.netflix.app.service;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,6 +56,16 @@ public class MovieServiceImpl implements MovieService {
 	public void deleteAllMovies() {
 		// TODO Auto-generated method stub
 		movieRepository.deleteAll();
+	}
+
+	@PersistenceContext
+    private EntityManager em;
+	
+	@Override
+	public List<Movie> searchMovie(String query) {
+		// TODO Auto-generated method stub
+		List<Movie> results = em.createNativeQuery(query,Movie.class).getResultList();
+		return results;
 	}
 	
 	

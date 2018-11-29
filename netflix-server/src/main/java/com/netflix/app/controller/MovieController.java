@@ -1,5 +1,6 @@
 package com.netflix.app.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.netflix.app.model.Movie;
+import com.netflix.app.model.SearchRequest;
 import com.netflix.app.service.MovieService;
 import com.netflix.app.util.CustomErrorType;
+import com.netflix.app.util.QueryBuilder;
 
 @RestController
 public class MovieController {
@@ -108,6 +111,28 @@ public class MovieController {
 		movie.setDeleted("Y");
 		movieService.save(movie);
 		return new ResponseEntity<Movie>(HttpStatus.NO_CONTENT);
+	}
+	
+//	// ------------------- Search 
+//	// Movie-----------------------------------------
+
+	@RequestMapping(value = "/movie/search", method = RequestMethod.GET)
+	public ResponseEntity<?> searchMovie(@RequestBody SearchRequest search) {
+		logger.info("Searching Movies");
+
+		System.out.println(search.getSearch());
+		String query = QueryBuilder.buildMovieSearchQuery(search.getSearch());
+		
+//		System.out.println(query);
+		
+		List<Movie> movies = movieService.searchMovie(query);
+		
+		if (movies == null) {
+			logger.error("Unable to find related movie");
+			return new ResponseEntity(new CustomErrorType("Unable to find related movie"),
+					HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<Movie>>(movies, HttpStatus.OK);
 	}
 
 }

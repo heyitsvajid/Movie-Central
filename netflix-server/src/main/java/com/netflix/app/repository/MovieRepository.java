@@ -9,5 +9,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 	
 	Movie findById(long id);
 	List<Movie> findByDeleted(String deleted);
-	
+//	List<Movie> searchMovie();
 }

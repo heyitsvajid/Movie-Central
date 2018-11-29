@@ -43,19 +43,19 @@ public class PaymentController {
 		
 		User user = userService.findById(user_id);
 		Role role_admin= roleService.findById(user_id);
-		
-		List<Payment> payments = paymentService.findAllPayments();
-		if(role_admin.equals("admin"))
-		{
-			logger.info("Fetching all Payments for admin analysis");
-			if (payments.isEmpty()) {
-				return new ResponseEntity(HttpStatus.NO_CONTENT);
-				// You many decide to return HttpStatus.NOT_FOUND
-			}
-			else {
-			return new ResponseEntity<List<Payment>>(payments,HttpStatus.OK);
-			}
-		}
+//		
+//		List<Payment> payments = paymentService.findAllPayments();
+//		if(role_admin.equals("admin"))
+//		{
+//			logger.info("Fetching all Payments for admin analysis");
+//			if (payments.isEmpty()) {
+//				return new ResponseEntity(HttpStatus.NO_CONTENT);
+//				// You many decide to return HttpStatus.NOT_FOUND
+//			}
+//			else {
+//			return new ResponseEntity<List<Payment>>(payments,HttpStatus.OK);
+//			}
+//		}
 		
 		List<Payment> payment = paymentService.findAllPaymentByUserId(user_id);
 		if (payment.isEmpty()) {
@@ -96,23 +96,23 @@ public class PaymentController {
 	
 	//Update Payment
 	
-	@RequestMapping(value = "/pay/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateUser(@PathVariable("id") long id, @PathVariable("role") String role, @RequestBody Payment payment) {
-		logger.info("Updating Payment with id {}", id);
-		Role currentRole=roleService.findById(id);
-		User currentUser = userService.findById(id);
-
-		if (currentRole.equals("admin")) {
-			paymentService.updatePayment(payment);
-			return new ResponseEntity<Payment>(payment, HttpStatus.OK);
-		}
-		else {
-			logger.error("Unable to update. User with role {} not allowed.", role);
-			return new ResponseEntity(new CustomErrorType("Unable to upate paymemt as your role is not an admin "),
-					HttpStatus.NOT_FOUND);
-		}
-		
-	}
+//	@RequestMapping(value = "/pay/{id}", method = RequestMethod.PUT)
+//	public ResponseEntity<?> updateUser(@PathVariable("id") long id, @PathVariable("role") String role, @RequestBody Payment payment) {
+//		logger.info("Updating Payment with id {}", id);
+//		Role currentRole=roleService.findById(id);
+//		User currentUser = userService.findById(id);
+//
+//		if (currentRole.equals("admin")) {
+//			paymentService.updatePayment(payment);
+//			return new ResponseEntity<Payment>(payment, HttpStatus.OK);
+//		}
+//		else {
+//			logger.error("Unable to update. User with role {} not allowed.", role);
+//			return new ResponseEntity(new CustomErrorType("Unable to upate paymemt as your role is not an admin "),
+//					HttpStatus.NOT_FOUND);
+//		}
+//		
+//	}
 	
 
 }
