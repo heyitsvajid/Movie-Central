@@ -80,7 +80,9 @@ public class UserController {
 			UriComponentsBuilder ucBuilder) {
 
 		logger.info("Sign Up API called");
-
+		logger.info("Email: {}",user.getEmail());
+		logger.info("Password: {}",user.getPassword());
+		
 		if (role.equalsIgnoreCase("admin")) {
 			String[] temp;
 			String delimiter = "@";
@@ -108,9 +110,10 @@ public class UserController {
 
 		user.setActivated(uuid.toString());
 		user.setDeleted("N");
+		user.setPassword(PasswordEncoder.hash(user.getPassword()));
 		userService.save(user);
-
-		String url = "localhost:8080/SpringBootRestApi/activate/" + uuid.toString() + "--" + user.getId();
+		User createdUser = userService.findByEmailAndRole(user.getEmail(), user.getRole());
+		String url = "http://localhost:8080/SpringBootRestApi/activate/" + uuid.toString() + "--" + createdUser.getId();
 		try {
 			es.sendMail(user.getEmail(), url, user.getName());
 		} catch (Exception e) {
@@ -176,6 +179,7 @@ public class UserController {
 	public ResponseEntity<?> login(@RequestBody User user, @PathVariable("role") String role, HttpSession session) {
 		logger.info("Fetching User with username and password {}", user.getEmail());
 		if (user.getEmail() != null && user.getPassword() != null) {
+			logger.info("{}",user.toString());
 
 			if (role.equalsIgnoreCase("admin")) {
 				user.setRole(roleService.findByName(Roles.ADMIN.name()));
@@ -188,7 +192,7 @@ public class UserController {
 			if (userDetails == null) {
 				logger.error("User with email {} and role {} not found.", user.getEmail(), role);
 				return new ResponseEntity(
-						new CustomErrorType("User with email " + user.getEmail() + "and role " + role + " not found."),
+						new CustomErrorType("User with email " + user.getEmail() + " and role " + role + " not found."),
 						HttpStatus.NOT_FOUND);
 			} else if (PasswordEncoder.checkPassword(user.getPassword(), userDetails.getPassword())) {
 				logger.error("Email {} and its password matched", user.getEmail());
@@ -229,7 +233,19 @@ public class UserController {
 		}
 	}
 
-	// ------------------- Check session -----------------------------
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity<?> logout(HttpSession session) {
+        logger.info("");
+        System.out.println(session.getAttribute("name"));
+        session.removeAttribute("name");
+        session.removeAttribute("email");
+        session.removeAttribute("id");
+        session.removeAttribute("role");
+        session.invalidate();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+	
+	// ------------------- Activate ID -----------------------------
 
 	@RequestMapping(value = "/activate/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> activateUser(@PathVariable("id") String id) {
