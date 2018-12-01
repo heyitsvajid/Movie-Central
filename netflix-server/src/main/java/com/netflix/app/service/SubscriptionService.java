@@ -6,7 +6,9 @@ import com.netflix.app.model.Subscription;
 public interface SubscriptionService {
 	
 	void save(Subscription subscription);
-	List<Subscription> findAllSubscriptionById(long id);
+	Subscription findSubscriptionById(long id);
+	Subscription findSubscriptionByType(String type);
+
 	List<Subscription> findAllSubscriptions();
 
 }

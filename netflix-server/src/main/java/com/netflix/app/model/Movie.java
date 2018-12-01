@@ -1,6 +1,5 @@
 package com.netflix.app.model;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -35,7 +34,7 @@ public class Movie {
 	private String rating;
 	private String availability; // 'FREE' || 'SBCR' || 'PPVO' || 'PAID'
 	private int price;
-	
+
 	@Column(insertable = false)
 	@org.hibernate.annotations.ColumnDefault("N")
 	private String deleted; // 'Y' || 'N'
@@ -52,10 +51,9 @@ public class Movie {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
 
-    @LastModifiedDate
+	@LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedAt;
-	
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -72,26 +70,14 @@ public class Movie {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-    
+
 	public Movie() {
 		super();
 		this.id = 0l;
 	}
 
-	public Movie(
-			Long id, 
-			String title,
-			int year,
-			String studio,
-			String synopsis,
-			String image,
-			String trailer,
-			String actors,
-			String director,
-			String country,
-			String rating,
-			String availability,
-			int price) {
+	public Movie(Long id, String title, int year, String studio, String synopsis, String image, String trailer,
+			String actors, String director, String country, String rating, String availability, int price) {
 		super();
 		setId(id);
 		setTitle(title);
@@ -165,7 +151,7 @@ public class Movie {
 	public void setTrailer(String trailer) {
 		this.trailer = trailer;
 	}
-	
+
 	public String getActors() {
 		return actors;
 	}
@@ -213,7 +199,5 @@ public class Movie {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-
-	
 
 }
