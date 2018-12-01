@@ -5,6 +5,7 @@ import Header from './Header'
 import Footer from './Footer'
 import { envURL, reactURL } from '../config/environment';
 import swal from 'sweetalert2'
+import '../assets/css/movie-details.css'
 
 class MovieDetails extends Component {
   constructor(props) {
@@ -19,8 +20,8 @@ class MovieDetails extends Component {
       isLoggedIn: false
     }
   }
-  
-  componentWillMount(){
+
+    componentWillMount(){
     this.fetchDataFromServer();
   }
 
@@ -214,9 +215,12 @@ class MovieDetails extends Component {
     this.props.history.push("/login")
   }
 
+  
+  
+
 
   render() {
-    let movie_image, trailer_link, keywords_list, review_link = null;
+     let movie_image, trailer_link, keywords_list, review_link = null;
     if(this.state.movie.movie_logo != undefined){
       movie_image = <img class="movie-details__movie-img visual-thumb" src = {require('../images/' + this.state.movie.movie_logo)} alt="Blumhouse's Truth or Dare (2018) Movie Poster" />
       trailer_link = <a href = "https://www.youtube.com/embed/tgbNymZ7vqY"><img id="img-link" src={require('../images/' + this.state.movie.movie_logo)} alt="Truth or Dare: Trailer 1" itemprop="image" /></a>
@@ -246,373 +250,770 @@ class MovieDetails extends Component {
     debugger
     return (
     <div>
-      <Header/>
+      <div class="bd dark-background" style={{backgroundColor: '#141414'}} lang="en-US">
+        <div class="pinning-header">
+          <Header/>
+        </div>
+      </div>
+      
       <div id="page" role="main">
-        <div class="mop">
+         <div class="mop" style={{backgroundColor: '#141414'}}>
             <div class="mop__details mop__details--has-image">
-              <div class="mop__background js-backgroundBlur">
+               <div class="mop__background js-backgroundBlur">
                   <svg width="100%" height="100%">
-                    <defs>
+                     <defs>
                         <filter id="backgroundBlur" width="150%" height="150%" x="-25%" y="-25%" color-interpolation-filters="sRGB">
-                          <feGaussianBlur stdDeviation="7"/>
-                          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0 0 0 0 10 0"/>
-                          <feComposite in2="SourceGraphic" operator="in"></feComposite>
+                           <feGaussianBlur stdDeviation="7"/>
+                           <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0 0 0 0 10 0"/>
+                           <feComposite in2="SourceGraphic" operator="in"></feComposite>
                         </filter>
-                    </defs>
-                    <img class="js-backgroundBlur-image" x="0" y="0" width="100%" height="110%" src={this.state.img} preserveAspectRatio="xMidYMid slice"/>
+                     </defs>
+                     <image class="js-backgroundBlur-image" x="0" y="0" width="100%" height="110%" xlinkHref="https://images.fandango.com/ImageRenderer/300/0/redesign/static/img/default_poster.png/0/images/masterrepository/Fandango/201129/fmc_mc_RalphBreaksTheInternet.jpg" preserveAspectRatio="xMidYMid slice"/>
                   </svg>
-              </div>
-              <div class="mop__details-inner">
+               </div>
+               <div class="mop__details-inner">
                   <section class="subnav">
-                    <div class="row">
+                     <div class="row">
                         <div class="width-100">
-                          <h1 class="subnav__title movie-detail-header heading-style-1 heading-size-xl">
-                              {'title' in this.state.movie? this.state.movie.title: ''}
-                              
-                          </h1>
-                          <ul class="subnav__link-list">
-                              <li class=" subnav__link-item"><a class="below-header-link subnav__link" href="#">Overview</a></li>
-                              <li class="subnav__link-item"><a class="below-header-link subnav__link" href="#" onClick={this.handleBooking.bind(this)}>Movie Times + Tickets</a></li>
-                              <li class="subnav__link-item"><a class="below-header-link subnav__link" href="#">Synopsis</a></li>
-                              <li class="subnav__link-item"><a class="below-header-link subnav__link" href="#">Movie Reviews</a></li>
-                              <li class="subnav__link-item"><a class="below-header-link subnav__link" href="#">Trailers</a></li>
+                           <h1 class="subnav__title heading-style-1 heading-size-xl">
+                              Ralph Breaks the Internet
+                              <a
+                                 href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_addmovie&amp;action=addmovie&amp;id=201129"
+                                 class="follow-add icon icon-follow-white js-heartsAndStars-heart"
+                                 data-type="Movie"
+                                 data-id="201129"
+                                 data-name="Ralph Breaks the Internet"
+                                 data-is-favorite="false"
+                                 >
+                              Favorite Theater Button
+                              </a>
+                           </h1>
+                           <ul class="subnav__link-list">
+                              <li class="subnav__link-item"><a class="subnav__link" href="/ralph-breaks-the-internet-201129/movie-overview">Overview</a></li>
+                              <li class="subnav__link-item"><a class="subnav__link" href="/ralph-breaks-the-internet-201129/movie-times">Movie Times + Tickets</a></li>
+                              <li class="subnav__link-item"><a class="subnav__link" href="/ralph-breaks-the-internet-201129/plot-summary">Synopsis</a></li>
+                              <li class="subnav__link-item"><a class="subnav__link" href="/ralph-breaks-the-internet-201129/movie-reviews">Movie Reviews</a></li>
+                              <li class="subnav__link-item"><a class="subnav__link" href="https://www.fandango.com/movie-trailer/ralphbreakstheinternet-trailer/201129">Trailers</a></li>
                               <li class="subnav__link-item vertical-dropdown">
-                                <a class="below-header-link subnav__link" href="#">More</a>
-                                <ul class="dropdown-nav">
-                                    <li class="subnav__link-item"><a class="subnav__link" href="https://www.fandango.com/blumhousestruthordare2018_208538/moviephotosposters">Photos + Posters</a></li>
-                                    <li class="subnav__link-item"><a class="subnav__link" href="/blumhouses-truth-or-dare-2018-208538/cast-and-crew">Cast + Crew</a></li>
-                                </ul>
+                                 <a class="subnav__link" href="#">More</a>
+                                 <ul class="dropdown-nav">
+                                    <li class="subnav__link-item"><a class="subnav__link" href="https://www.fandango.com/ralphbreakstheinternet_201129/moviephotosposters">Photos + Posters</a></li>
+                                    <li class="subnav__link-item"><a class="subnav__link" href="/ralph-breaks-the-internet-201129/cast-and-crew">Cast + Crew</a></li>
+                                 </ul>
                               </li>
-                          </ul>
+                           </ul>
                         </div>
-                    </div>
+                     </div>
                   </section>
-                  <div class="row mop__layout">
-                  <div class="mop__details-container">
-                    <section class="movie-details">
-                        <a class="movie-details__mop-link" href="#">
-                        {movie_image}
-                        </a>
-                        <ul class="movie-details__detail">
-                          <li>{'release_date' in this.state.movie ?
-                          (new Date())>=(new Date(this.state.movie.release_date))?'Released':'Coming Soon':''
-                        }
-                        </li>
-                          <li class="release-date movie-details__release-date">
-                          {'release_date' in this.state.movie? this.getReleaseDate(this.state.movie.release_date) :''}
-                          </li>
-                          <li>
-                          {'mpaa_ratings' in this.state.movie?this.state.movie.mpaa_ratings+' ':''}, 
-                          {'movie_length' in this.state.movie?this.state.movie.movie_length+' min':''}, 
+                  <div class="row mop__layout" style={{marginLeft:'18%', marginTop:'3%'}}>
+                     <div class="mop__details-container">
+                        <section class="movie-details">
+                           <a class="movie-details__mop-link" href="/ralph-breaks-the-internet-201129/movie-overview">
+                           <img class="movie-details__movie-img visual-thumb" src="https://images.fandango.com/ImageRenderer/200/0/redesign/static/img/default_poster.png/0/images/masterrepository/Fandango/201129/WIR2_Payoff_195_B_NT_v70_A_Mech5_FS.jpg" alt="Ralph Breaks the Internet Movie Poster" />
+                           </a>
+                           <ul class="movie-details__detail">
+                              <li>Released</li>
+                              <li class="movie-details__release-date">November 21, 2018</li>
+                              <li>
+                                 PG, 
+                                 1 hr 52 min
+                              </li>
+                              <li>Action/Adventure</li>
+                              <li>Animated</li>
+                              <li class="fd-star-rating__container">
+                                 <div
+                                    class="
+                                    js-fd-star-rating
+                                    fd-star-rating
+                                    "
+                                    data-star-rating="4.5"
+                                    >
+                                    <a
+                                       href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=5"
+                                       class="fd-star-rating__star icon icon-star-rating-small js-heartsAndStars-star"
+                                       data-action="rate"
+                                       data-id="201129"
+                                       data-isnew="true"
+                                       data-rate-movie="false"
+                                       data-show-caption="true"
+                                       data-value="5"
+                                       title="Loved It"
+                                       >
+                                    </a>
+                                    <a
+                                       href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=4"
+                                       class="fd-star-rating__star icon icon-star-rating-small js-heartsAndStars-star"
+                                       data-action="rate"
+                                       data-id="201129"
+                                       data-isnew="true"
+                                       data-rate-movie="false"
+                                       data-show-caption="true"
+                                       data-value="4"
+                                       title="Really Liked It"
+                                       >
+                                    </a>
+                                    <a
+                                       href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=3"
+                                       class="fd-star-rating__star icon icon-star-rating-small js-heartsAndStars-star"
+                                       data-action="rate"
+                                       data-id="201129"
+                                       data-isnew="true"
+                                       data-rate-movie="false"
+                                       data-show-caption="true"
+                                       data-value="3"
+                                       title="Liked It"
+                                       >
+                                    </a>
+                                    <a
+                                       href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=2"
+                                       class="fd-star-rating__star icon icon-star-rating-small js-heartsAndStars-star"
+                                       data-action="rate"
+                                       data-id="201129"
+                                       data-isnew="true"
+                                       data-rate-movie="false"
+                                       data-show-caption="true"
+                                       data-value="2"
+                                       title="Disliked It"
+                                       >
+                                    </a>
+                                    <a
+                                       href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=1"
+                                       class="fd-star-rating__star icon icon-star-rating-small js-heartsAndStars-star"
+                                       data-action="rate"
+                                       data-id="201129"
+                                       data-isnew="true"
+                                       data-rate-movie="false"
+                                       data-show-caption="true"
+                                       data-value="1"
+                                       title="Hated It"
+                                       >
+                                    </a>
+                                 </div>
+                              </li>
+                              <li class="movie-details__fan-ratings">8,147 Fan Ratings</li>
 
-                          </li>
-                          {keywords_list}
-                          <li class="fd-star-rating__container">
-                              <div class="js-fd-star-rating fd-star-rating" data-star-rating="2">
-                                <a class="fd-star-rating__star icon icon-star-rating-small js-heartsAndStars-star" data-action="rate" data-id="208538" data-isnew="true" data-rate-movie="true" data-show-caption="true" data-value="5" title="Loved It">
-                                </a>
-
+                              <li class="js-rotten-tomatoes"></li>
+                           </ul>
+                           <ul class="movie-details__film-formats">
+                              <h3 class="movie-details__film-formats-header">SEE IT IN</h3>
+                              <li class="movie-details__format"><span class="movie-details__format-logo">35MM</span></li>
+                              <li class="movie-details__format"><span class="movie-details__format-logo">Digital 3D</span></li>
+                              <li class="movie-details__format"><span class="movie-details__format-logo">IMAX</span></li>
+                              <li class="movie-details__format"><span class="movie-details__format-logo">IMAX 3D</span></li>
+                           </ul>
+                        </section>
+                        <div class="js-movie-showtimes__location-form mop__location-form hide">
+                           <div class="date-picker__location">
+                              <div class="date-picker__error js-date-picker__error hide"></div>
+                              <div class="date-picker__message">
+                                 <h3 class="date-picker__message-title heading-size-l heading-style-1">
+                                    <i class="icon icon-location-white"></i>
+                                    Tell us where you are
+                                 </h3>
+                                 <p class="date-picker__details">
+                                    Looking for movie tickets? Enter your location to see which
+                                    movie theaters are playing Ralph Breaks the Internet near you.
+                                 </p>
                               </div>
-                          </li>
-                          <li class="movie-details__fan-ratings">
-                          {'review_ratings' in this.state.movie?this.state.movie.review_ratings.length +' ':''}
-                           Fan Ratings</li>
-                          <li>
-                          </li>
-                          
-                        </ul>
-                    </section>
-                    <div class="js-movie-showtimes__location-form mop__location-form">
-                        <div class="date-picker__location">
-                          <div class="date-picker__error js-date-picker__error hide"></div>
-                          <div class="date-picker__message">
-                              <h3 class="date-picker__message-title message-title heading-size-l heading-style-1">
-                                <i class="icon icon-location-white"></i>
-                                Want to buy tickets?
-                              </h3>
-                              <p class="date-picker__details">
-                                Looking for cheaper movie tickets? Enter coupon code to see what offers
-                                can you avail for this movie.
-                              </p>
-                          </div>
-                          <span class="date-picker__location-text">Need Help?</span>
-                          <div class="contact-info" >Contact us on +1-(213)-245-3398 or email us at support@fanfdango.com</div>
+                              <span class="date-picker__location-text">ENTER CITY, STATE OR ZIP CODE</span>
+                              <input
+                                 class="date-picker__location-input js-date-input"
+                                 placeholder="City, State or Zip Code"
+                                 type="text"
+                                 />
+                              <a href="#" class="date-picker__location-submit js-date-picker-btn">GO</a>
+                           </div>
                         </div>
-                    </div>
-                    <div class="js-movie-showtimes__container mop__showtimes-container hide">
-                        <div class="js-spinner csspinner"></div>
-                    </div>
-                    
+                        <section class="fan-alert js-fan-alert hide" data-movie-id="201129" data-fan-alert-from="">
+                           <h3 class="fan-alert__header font-sans-serif font-lg uppercase">
+                              <span class="icon icon-alarm-white fan-alert__icon"></span> Fandango Fanalert&#8482
+                           </h3>
+                           <div class="fan-alert__wrap js-fan-alert-wrap">
+                              <p class="fan-alert__description">Sign up for a FanAlert and be the first to know when tickets and other exclusives are available in your area.</p>
+                              <div class="js-fan-alert-error page-header-emphasis fan-alert__error"></div>
+                              <input type="text" class="fan-alert__input fan-alert__input-email js-fan-alert-email js-keyup" placeholder="Email Address" autocomplete="off" />
+                              <input type="text" class="fan-alert__input fan-alert__input-location js-fan-alert-location js-keyup" placeholder="Zip Code or City, State" maxlength="200" />
+                              <label class="fan-alert__fan-mail-label">
+                              <input type="checkbox" class="fan-alert__fan-mail-checkbox js-checkbox" />
+                              Also sign me up for FanMail to get updates on all things movies: tickets, special offers, screenings + more.
+                              </label>
+                              <a class="fan-alert__privacy-link" href="/policies/privacy-policy">Privacy Policy</a>
+                              <button class="fan-alert__btn btn-cta js-fan-alert-btn" type="button" name="button">Sign Up For FanAlert&#8482</button>
+                           </div>
+                           <div class="js-fan-alert-msg hide fan-alert__link-wrap">
+                              <a href="/movietimes">CHECK OUT WHAT'S PLAYING NEAR YOU</a>
+                           </div>
+                        </section>
+                     </div>
+                     <div class="mop__content-container">
+                        <section class="mop__content">
+                           <div class="mop-video">
+                              <div
+                                 id="vdlpVideoPlayerWrap"
+                                 class="media-player"
+                                 data-width=""
+                                 data-height="350"
+                                 style={{height: '350px'}}>
+                                 <div
+                                    class="media-player__placeholder js-video-placeholder"
+                                    data-iframe-url="/videos/player/Ralph-Breaks-the-Internet-1325045827642?autoPlay=true"
+                                    data-video-id="1325045827642"
+                                    style={{height: '350px'}}>
+                                    <img src="https://images.fandango.com/imagerelay/500/0/video.fandango.com/MPX/image/NBCU_Fandango/47/179/wreckitralph_trailer2.jpg/image.jpg/redesign/static/img/noxSquare.jpg" alt="Ralph Breaks the Internet: Trailer 2" itemprop="image" />
+                                 </div>
+                              </div>
+                           </div>
+                        </section>
+                        <div class="mop__ad-unit">
+                           <div class="ad" data-unit="boxadm" data-responsive="true" data-media="mobile">
+                           </div>
+                           <div class="ad" data-unit="boxaddt" data-responsive="true" data-media="desktop,tablet">
+                           </div>
+                        </div>
+                     </div>
                   </div>
-                    <div class="mop__content-container"  onClick = {this.handleTrailerClick.bind(this)}>
-                      <section id="trailer-section" class="mop__content">
-                          <div class="mop-video">
-                            <div id="vdlpVideoPlayerWrap" class="media-player" data-width="" data-height="350">
-                                <div class="media-player__placeholder js-video-placeholder" >
-                                  {trailer_link}
-                                </div>
-                            </div>
-                            <div class="mop-video__summary-wrapper">
-                                
-                                <h2 class="mop-video__title js-summary-video-title">
-                                  {'title' in this.state.movie? this.state.movie.title: ''}: Trailer
-                                </h2>
-                                <div class="mop-video__description js-summary-video-description">
-                                </div>
-                            </div>
-                          </div>
-                      </section>
-                      <div class="mop__ad-unit">
-                        <img src={require('../assets/static_images/static_add.png')} alt="Chicago"  />
-                      </div>
-                      
-                    </div>
-
-                  </div>
-              </div>
+               </div>
             </div>
             <div
-              class="mop__synopsis "
-              >
-              <div class="mop__synopsis-inner">
-                  <h2 class="mop__synopsis-title">Blumhouse&#39;s {'title' in this.state.movie? this.state.movie.title: ''} (2018) Synopsis</h2>
-                  <p class="mop__synopsis-content">{'synopsis' in this.state.movie? this.state.movie.synopsis: 'There is no Synopsis present for this movie'}</p>
-              </div>
+               class="mop__synopsis "
+               >
+               <div class="mop__synopsis-inner">
+                  <h2 class="mop__synopsis-title">Ralph Breaks the Internet Synopsis</h2>
+                  <p class="mop__synopsis-content">Ralph and Vanellope embark on an adventure inside the internet to find a spare part for a game.</p>
+                  <a class="mop__synopsis-link" href="/ralph-breaks-the-internet-201129/plot-summary">
+                  Read Full Synopsis
+                  </a>
+               </div>
             </div>
             <div class="row ad-unit--shop-ad">
-              <div class="ad" data-unit="shopad" data-responsive="true" data-media="desktop,tablet">
-              </div>
+               <div class="ad" data-unit="shopad" data-responsive="true" data-media="desktop,tablet">
+               </div>
             </div>
             <section class="row">
-              <div class="">
-                  <h3 class="cast-crew-heading inline heading-style-stub heading-style-1 heading-size-l section-header">
-                    Cast + Crew
-                  </h3>
-                  <div class="carousel jcarousel carousel-style-strip row js-carousel-cast-crew">
-                    {this.renderMovieCharacters()}
-                  </div>
-                    <a class="carousel-cast-crew__see-full cta right" href="/blumhouses-truth-or-dare-2018-208538/cast-and-crew">
-                    {/* See Full Cast + Crew for Blumhouse&#39;s Truth or Dare (2018) */}
-                    </a>
-              </div>
             </section>
-            <div class="row width-100">
-              <h3 id = "review-list" class="inline heading-style-stub heading-style-1 heading-size-l">Movie Reviews</h3>
+            <section
+               class="mop__marketing-spotlight js-marketingSpotlight"
+               data-name="movieOverview"
+               data-id="201129"
+               >
+            </section>
+            
+            <div class="row width-100" style={{marginLeft:'13%'}}>
+              <h3 class="inline heading-style-stub heading-style-1 heading-size-l">Movie Reviews</h3>
               <div class="row">
                   <section class="rt-reviews js-reviews__rt-container width-50">
-                    <div class="rt-reviews__headline-wrap">
-                        <h2 class=" review-heading rt-reviews__title heading-style-1 heading-size-l">ROTTEN TOMATOES™</h2>
-                        <span class="rt-reviews__icon icon-rottom-rotten"></span>
-                        
-                    </div>
-                    <ul class="rt-reviews-list__wrap rt-reviews-list--grid">
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  18, 2018</div>
-                          <div class="rt-reviews-list__quote">Those brief bits of digitally inserted spookiness are the only glints of interest in a plot that otherwise makes more Mexican border crossings (it's where the game starts) than an alarmist Trump speech.</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.timeout.com/us/film/truth-or-dare" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="image for Joshua Rothkopf" >
-                                {/* <img src = "https://resizing.flixster.com/vGLrQdMSgxI_vkxdoKGEti9IDWk=/150x150/v1.YzsyNjcwO2c7MTc2ODU7MTIwMDsxNTA7MTUw" /> */}
-                              </div>
-                              <span class="rt-reviews-list__reviewer-name">Joshua Rothkopf</span>
-                              <span class="rt-reviews-list__publication">Time Out</span>
-                              <span class="rt-reviews-list__top-critic-label">Top Critic</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  13, 2018</div>
-                          <div class="rt-reviews-list__quote">Horror fans trust Blumhouse, so why waste the brand on a flick as lame as Truth or Dare?</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.villagevoice.com/2018/04/13/the-truth-about-blumhouses-truth-or-dare-is-pretty-sorry/" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
-                              <span class="rt-reviews-list__reviewer-name">Chuck Wilson</span>
-                              <span class="rt-reviews-list__publication">Village Voice</span>
-                              <span class="rt-reviews-list__top-critic-label">Top Critic</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  13, 2018</div>
-                          <div class="rt-reviews-list__quote">Everything here...feels slotted into an existing template.</div>
-                          <a class="rt-reviews-list__full-link" href="http://www.vulture.com/2018/04/which-horror-movie-should-you-see-this-friday-the-13th.html" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="image for David Edelstein" >
-                              </div>
-                              <span class="rt-reviews-list__reviewer-name">David Edelstein</span>
-                              <span class="rt-reviews-list__publication">New York Magazine/Vulture</span>
-                              <span class="rt-reviews-list__top-critic-label">Top Critic</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  12, 2018</div>
-                          <div class="rt-reviews-list__quote">The Showgirls of post-Scream slasher movies: it's not campy nor emotionally involving enough to be more than the sum of its ungainly parts.</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.rogerebert.com/reviews/truth-or-dare-2018" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
-                              <span class="rt-reviews-list__reviewer-name">Simon Abrams</span>
-                              <span class="rt-reviews-list__publication">RogerEbert.com</span>
-                              <span class="rt-reviews-list__top-critic-label">Top Critic</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  11, 2018</div>
-                          <div class="rt-reviews-list__quote">A low-budget kids-gruesomely-dying romp that is decidedly same-old.</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.theglobeandmail.com/arts/film/reviews/article-review-truth-or-dare-poses-some-forgettable-questions/" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
-                              <span class="rt-reviews-list__reviewer-name">Brad Wheeler</span>
-                              <span class="rt-reviews-list__publication">Globe and Mail</span>
-                              <span class="rt-reviews-list__top-critic-label">Top Critic</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  11, 2018</div>
-                          <div class="rt-reviews-list__quote">"Truth or Dare" is foolish to the point of incoherence. Don't get played.</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.detroitnews.com/story/entertainment/movies/2018/04/12/movie-review-truth-dare-game-worth-playing/33784361/" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="image for Adam Graham" >
-                              </div>
-                              <span class="rt-reviews-list__reviewer-name">Adam Graham</span>
-                              <span class="rt-reviews-list__publication">Detroit News</span>
-                              <span class="rt-reviews-list__top-critic-label">Top Critic</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  19, 2018</div>
-                          <div class="rt-reviews-list__quote">[Truth or Dare] swings between the predictable and the ridiculous.</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.theaustralian.com.au/arts/review/ifeel-pretty-truth-or-dare-films-see-what-others-cant/news-story/e4a29c5b1ee4d5b9b39ea2deb50b2344" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
-                              <span class="rt-reviews-list__reviewer-name">Stephen Romei</span>
-                              <span class="rt-reviews-list__publication">The Australian</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  19, 2018</div>
-                          <div class="rt-reviews-list__quote">The film is called Truth Or Dare and it's the truths that are more interesting, bringing skeletons out of everyone's closet and driving a dent in relationships. The dare part of it is pure horror kitsch and doesn't affect you really. </div>
-                          <a class="rt-reviews-list__full-link" href="https://www.filmfare.com/reviews/hollywood-movies/movie-review-truth-or-dare-27770.html" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
-                              <span class="rt-reviews-list__reviewer-name">Devesh Sharma</span>
-                              <span class="rt-reviews-list__publication">Filmfare</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  18, 2018</div>
-                          <div class="rt-reviews-list__quote">Precious little craft or care is involved, and even less logic. Subtlety is clearly not director Jeff Wadlow's strong suit.</div>
-                          <a class="rt-reviews-list__full-link" href="https://www.hindustantimes.com/movie-reviews/a-frightful-mess-rashid-irani-reviews-truth-or-dare/story-ZeImSOtsG03DGIb3iRQYqL.html" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
-                              <span class="rt-reviews-list__reviewer-name">Rashid Irani</span>
-                              <span class="rt-reviews-list__publication">Hindustan Times</span>
-                          </div>
-                        </li>
-                        <li class="rt-reviews-list__item width-50 tablet-width-100">
-                          <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
-                          <div class="rt-reviews-list__date">April  18, 2018</div>
-                          <div class="rt-reviews-list__quote">A Blumhouse addition that's so boring it may induce bouts of narcolepsy.</div>
-                          <a class="rt-reviews-list__full-link" href="https://theplaylist.net/lucy-hale-truth-dare-review-20180413/" target="_blank" rel="noopener">Full Review</a>
-                          <div class="rt-reviews-list__reviewer">
-                              <div class="rt-reviews-list__reviewer-img" aria-label="image for Valerie Complex" >
-                              </div>
-                              <span class="rt-reviews-list__reviewer-name">Valerie Complex</span>
-                              <span class="rt-reviews-list__publication">The Playlist</span>
-                          </div>
-                        </li>
-                    </ul>
-                  </section>
-                  
-                  <section class="fan-reviews width-50">
-                    <div class="fan-reviews__header">
-                        <h2 class="review-heading fan-reviews__title heading-style-1 heading-size-l">Fan Reviews</h2>
-                        <div class="
-                          
-                          " data-star-rating="3.5">
-                          <span class="fa fa-star checked"></span>
-                          <span class="fa fa-star checked"></span>
-                          <span class="fa fa-star checked"></span>
-                          <span class="fa fa-star checked"></span>
-                          <span class="fa fa-star checked"></span>
-                        </div>
-                        <a class="cta fan-reviews__all-reviews" href="/blumhouses-truth-or-dare-2018-208538/movie-reviews">See All Fan Reviews</a>
-                    </div>
-                    <div class="fan-reviews__content-wrap">
-                        <div class="fan-reviews__decoration-top"></div>
-                        <div class="js-reviews__fan-container">
-                          {this.getMovieReviews()}
-                        </div>
-                        <div class="fan-reviews__decoration-bottom"></div>
-                    </div>
-                    {review_link}
-                  </section>
-                  
-                 
-              </div>
-            </div>
-            
-        </div>
-        <section class="favoriteFlyout js-heartsAndStars-flyout">
-            <div class="favoriteFlyout__message js-heartsAndStars-flyout-message"></div>
-        </section>
-      </div>
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <section id="writeReviewForm" class="movie-section write-review-form">
-                <h2 class="write-review-form__heading heading-style-1 heading-size-l">Please rate this movie from 1-5 stars</h2>
-                <div id="writeReviewForm__ratingInput" class="write-review-form__rating-input">
-                    <div class="fd-star-rating__container">
-                      <div class="js-rating-input__star-wrap fd-star-rating " data-star-rating="" >
-                      <input class="star star-5" id="star-5" type="radio" name="star" />
-                      <label class="star star-5" for="star-5" data-rating = "5" onClick = {this.handleStarClick.bind(this)}></label>
-                      <input class="star star-4" id="star-4" type="radio" name="star"/>
-                      <label class="star star-4" for="star-4" data-rating = "4" onClick = {this.handleStarClick.bind(this)}></label>
-                      <input class="star star-3" id="star-3" type="radio" name="star"/>
-                      <label class="star star-3" for="star-3" data-rating = "3" onClick = {this.handleStarClick.bind(this)}></label>
-                      <input class="star star-2" id="star-2" type="radio" name="star"/>
-                      <label class="star star-2" for="star-2" data-rating = "2" onClick = {this.handleStarClick.bind(this)}></label>
-                      <input class="star star-1" id="star-1" type="radio" name="star"/>
-                      <label class="star star-1" for="star-1" data-rating = "1" onClick = {this.handleStarClick.bind(this)}></label>
+                      <div class="rt-reviews__headline-wrap">
+                          <h2 class="rt-reviews__title heading-style-1 heading-size-l">ROTTEN TOMATOES™</h2>
+                          <span class="rt-reviews__icon icon-rottom-certified_fresh_text"></span>
+                          <span class="rt-reviews__score heading-style-1">86%</span>
+                          <span class="rt-tomatometer">
+                  <span class="rt-tomatometer__bar rt-tomatometer__bar--certified_fresh_text" style={{width: '86%'}}>
+                  </span>
+                          </span>
+          
+                          <a class="rt-reviews__all-link cta" href="/ralph-breaks-the-internet-201129/critic-reviews">ALL CRITICS REVIEWS</a>
+          
                       </div>
-                    </div>
-                </div>
-                <hr class="write-review-form__line" />
-                <h2 class="heading-style-1 heading-size-l">Write a review</h2>
-                <ul id="writeReviewForm__errors"></ul>
-                <section class="write-review-form__group">
-                    <label for="writeReviewForm__title">Title:</label>
-                    <input type="text" maxlength="200" id="writeReviewForm__title" onChange = {this.handleTitleChange.bind(this)}/>
-                </section>
-                <section class="write-review-form__group">
-                    <textarea rows="12" cols="200" id="writeReviewForm__body" onChange = {this.handleReviewContentChange.bind(this)} ></textarea>
-                </section>
-                <p class="write-review-form__save-btn">
-                    <a id="writeReviewForm__cancel-button" class="btn-cancel" href="/blumhouses-truth-or-dare-2018-208538/movie-reviews">Cancel</a>
-                    <button class="btn-cta" id="writeReviewForm__button" onClick = {this.addReview.bind(this)}>Save Review</button>
-                </p>
-              </section>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+          
+                      <ul class="rt-reviews-list__wrap rt-reviews-list--grid">
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 21, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">It's not every animation that features an eBay-spoofing riff involving a corn chip shaped like Beyoncé.</div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.timeout.com/london/film/ralph-breaks-the-internet" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Philip De Semlyen</span>
+          
+                                  <span class="rt-reviews-list__publication">Time Out</span>
+          
+                                  <span class="rt-reviews-list__top-critic-label">Top Critic</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 20, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">I am happy to say that the misogynists' worst fears were realized. This is very much a movie whose female characters are equal to their male counterparts...</div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.salon.com/2018/11/21/ralph-breaks-the-internet-has-a-lot-to-say-about-toxic-online-male-behavior/" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Matthew Rozsa</span>
+          
+                                  <span class="rt-reviews-list__publication">Salon.com</span>
+          
+                                  <span class="rt-reviews-list__top-critic-label">Top Critic</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 20, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">Ralph Breaks the Internet works because it doesn't pander, and it doesn't simplify.</div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.rogerebert.com/reviews/ralph-breaks-the-internet-2018" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Brian Tallerico</span>
+          
+                                  <span class="rt-reviews-list__publication">RogerEbert.com</span>
+          
+                                  <span class="rt-reviews-list__top-critic-label">Top Critic</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 20, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">Ralph Breaks the Internet is, without a doubt, the best film made about the lives of computer programs since the Wachowskis' Matrix sequels; I mean this as a glowing compliment.</div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.theatlantic.com/entertainment/archive/2018/11/ralph-breaks-internet-sequel-review/576235/" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="image for David Sims" >
+                                  </div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">David Sims</span>
+          
+                                  <span class="rt-reviews-list__publication">The Atlantic</span>
+          
+                                  <span class="rt-reviews-list__top-critic-label">Top Critic</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
+          
+                              <div class="rt-reviews-list__date">November 20, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">"Ralph Breaks the Internet" doesn't have anything new to say about our online behavior; it just wants us to log on and tune out.</div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.detroitnews.com/story/entertainment/movies/2018/11/20/movie-review-ralph-breaks-internet-wrecks-web/2015082002/" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="image for Adam Graham" >
+                                  </div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Adam Graham</span>
+          
+                                  <span class="rt-reviews-list__publication">Detroit News</span>
+          
+                                  <span class="rt-reviews-list__top-critic-label">Top Critic</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 19, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">The opposing trajectories of Ralph and Vanellope's friendship, fueled by their mutual insecurities and hurt, gives Ralph Breaks the Internet the little bit of heart it needs to keep from becoming mere product.</div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.npr.org/2018/11/21/669240038/toxic-masculinity-is-the-bad-guy-in-ralph-breaks-the-internet?utm_medium=RSS&amp;utm_campaign=movies" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="no critic image available"></div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Scott Tobias</span>
+          
+                                  <span class="rt-reviews-list__publication">NPR</span>
+          
+                                  <span class="rt-reviews-list__top-critic-label">Top Critic</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-rotten"></div>
+          
+                              <div class="rt-reviews-list__date">November 22, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">Why not the automatic alliteration Ralph Wrecks? At just shy of two-hours, many younger kids will end up as bored &amp; restless as their parents &amp; grandparents. </div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.kxl.com/ralph-breaks-the-internet/" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="image for Gary Wolcott" >
+                                  </div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Gary Wolcott</span>
+          
+                                  <span class="rt-reviews-list__publication">KXL-FM (Portland, OR)</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 22, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">The scenes where Vanellope inserts herself into the world of Disney Princesses (many of them voiced by the original stars) is worth the price of admission alone.</div>
+          
+                              <a class="rt-reviews-list__full-link" href="http://athomeinhollywood.com/2018/11/23/ralph-breaks-the-internet-review/" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="image for Lisa Johnson Mandell" >
+                                  </div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Lisa Johnson Mandell</span>
+          
+                                  <span class="rt-reviews-list__publication">AtHomeInHollywood.com</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 21, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">It's vibrant and everything moves very quickly, which is great for Vanellope but really discombobulates Ralph. </div>
+          
+                              <a class="rt-reviews-list__full-link" href="http://www.digitaljournal.com/entertainment/entertainment/review-ralph-breaks-the-internet-has-fun-with-our-virtual-vices/article/537488" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="image for Sarah Gopaul" >
+                                  </div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Sarah Gopaul</span>
+          
+                                  <span class="rt-reviews-list__publication">Digital Journal</span>
+          
+                              </div>
+                          </li>
+          
+                          <li class="rt-reviews-list__item width-50 tablet-width-100">
+                              <div class="rt-reviews-list__icon icon-rottom-fresh"></div>
+          
+                              <div class="rt-reviews-list__date">November 21, 2018</div>
+          
+                              <div class="rt-reviews-list__quote">Ralph Breaks The Internet is a welcome return for Disney's most unlikely band of misfits, but the style, tone, and creative components all breath life into this turbo charged satire that knows never to take itself too seriously. </div>
+          
+                              <a class="rt-reviews-list__full-link" href="https://www.theonlycritic.com/single-post/2018/11/22/Review-Sensational-Ralph-Breaks-The-Internet-filled-with-meta-creativity" target="_blank" rel="noopener">Full Review</a>
+          
+                              <div class="rt-reviews-list__reviewer">
+          
+                                  <div class="rt-reviews-list__reviewer-img" aria-label="image for Nate Adams" >
+                                  </div>
+          
+                                  <span class="rt-reviews-list__reviewer-name">Nate Adams</span>
+          
+                                  <span class="rt-reviews-list__publication">The Only Critic</span>
+          
+                              </div>
+                          </li>
+          
+                      </ul>
+          
+                  </section>
+                  <section class="fan-reviews width-50">
+                      <div class="fan-reviews__header">
+                          <h2 class="fan-reviews__title heading-style-1 heading-size-l">Fan Reviews</h2>
+          
+                          <div class="
+                  js-fd-star-rating 
+                  fd-star-rating
+                  stars-large__star-rating 
+          
+              " data-star-rating="4.5">
+          
+                              <a href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=5" class="stars-large__star icon icon-star-rating-small js-heartsAndStars-star" data-action="rate" data-id="201129" data-isnew="true" data-rate-movie="false" data-show-caption="true" data-value="5" title="Loved It">
+                              </a>
+          
+                              <a href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=4" class="stars-large__star icon icon-star-rating-small js-heartsAndStars-star" data-action="rate" data-id="201129" data-isnew="true" data-rate-movie="false" data-show-caption="true" data-value="4" title="Really Liked It">
+                              </a>
+          
+                              <a href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=3" class="stars-large__star icon icon-star-rating-small js-heartsAndStars-star" data-action="rate" data-id="201129" data-isnew="true" data-rate-movie="false" data-show-caption="true" data-value="3" title="Liked It">
+                              </a>
+          
+                              <a href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=2" class="stars-large__star icon icon-star-rating-small js-heartsAndStars-star" data-action="rate" data-id="201129" data-isnew="true" data-rate-movie="false" data-show-caption="true" data-value="2" title="Disliked It">
+                              </a>
+          
+                              <a href="https://www.fandango.com/account/joinnow?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet-201129%2Fmovie-overview&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=1" class="stars-large__star icon icon-star-rating-small js-heartsAndStars-star" data-action="rate" data-id="201129" data-isnew="true" data-rate-movie="false" data-show-caption="true" data-value="1" title="Hated It">
+                              </a>
+          
+                          </div>
+          
+                          <a class="cta fan-reviews__all-reviews" href="/ralph-breaks-the-internet-201129/movie-reviews">See All Fan Reviews</a>
+          
+                      </div>
+                      <div class="fan-reviews__content-wrap">
+                          <div class="fan-reviews__decoration-top"></div>
+                          <div class="js-reviews__fan-container">
+                              <ul class="fan-reviews__list">
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          Ralph Breaks The Internet
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By mjauer04
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">The movie was hilarious! I liked that there was YouTube, Facebook, Snapchat, Instagram, Twitter, eBay, Fandango, IMDb, Amazon, ect!</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          Loved it!
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By clindalopez13
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">Disney out does them selfs again! Great family movie. ??</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          full great
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By adaron08
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">i honestly want to watch it 3x</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          wow!
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By kam035142017340
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">This movie was better than I expected it to be. Worth going to see!</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="3">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">&nbsp;</div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By DHM
+          
+                                      </div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          Untitled
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By Rdanny321124
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">Great movie</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="4">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          Untitled
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By truegrizzlybayer
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">Pretty good. Some material was derived from modern social issues, though. Like when they were talking about some of the races, a few of the characters said sometimes losing is just as good as winning which isn’t correct at all, but I digress.</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          LOVED IT!
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By raerae35
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">So much to love about it, cannot wait to watch it again.</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          Wow
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By Xerolooper
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">It was on fleek. Came for a laugh and got some big belly laughs. Feels good to laugh so hard it hurts. But was not expecting to be in tears half the time. Luckily I grabbed a handful of napkins, for the kids, so was able to dry my face. Maybe as a Dad with two daughters it just touched me more. Also be sure to stay till after the credits for a hugh reveal.</div>
+          
+                                  </li>
+          
+                                  <li class="fan-reviews__item">
+                                      <div class="stars-large__star-rating--no-hover" data-star-rating="5">
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                          <span class="stars-large__star icon icon-star-rating-small"></span>
+                                      </div>
+          
+                                      <div class="fan-reviews__headline heading-style-1 heading-size-l">
+                                          Awesome movie!
+                                      </div>
+          
+                                      <div class="fan-reviews__user-name">
+                                          By Marissabarashi
+          
+                                      </div>
+          
+                                      <div class="fan-reviews__review">Fabulous! Go see it!</div>
+          
+                                  </li>
+          
+                              </ul>
+          
+                          </div>
+                          <div class="fan-reviews__decoration-bottom"></div>
+                      </div>
+          
+                      <a class="fan-review__write-review-cta cta" href="https://www.fandango.com/account/signin?from=https%3A%2F%2Fwww.fandango.com%2Fralph-breaks-the-internet_201129%2Fwriteuserreviews&amp;source=web_multiple_ratemovie&amp;action=ratereviewmovie&amp;id=201129&amp;rating=">
+                  Tell Us What You Think</a>
+          
+                  </section>
+              </div>
           </div>
-        </div>
+         </div>
+         <div class="js-flyout fd-amenity-flyout">
+            <span class="js-flyout__close fd-amenity-flyout__close">X</span>
+            <div class="js-flyout__title fd-amenity-flyout__title"></div>
+            <div class="js-flyout__desc fd-amenity-flyout__desc"></div>
+         </div>
+         <section class="favoriteFlyout js-heartsAndStars-flyout">
+            <div class="favoriteFlyout__message js-heartsAndStars-flyout-message"></div>
+         </section>
       </div>
-      <Footer />
+      <Footer/>
+      
       
     </div>
     )
