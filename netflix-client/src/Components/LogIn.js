@@ -59,13 +59,13 @@ class SignIn extends Component {
                 console.log(error)})
     }
 
-    componentDidMount() {
-        document.addEventListener('keydown', function(event) {
-            if(event.keyCode === 13 ) {
-                document.getElementById('ctl00_GlobalBody_SignOnControl_SignInButton').click();
-            }
-        });
-    }
+    // componentDidMount() {
+    //     document.addEventListener('keydown', function(event) {
+    //         if(event.keyCode === 13 ) {
+    //             document.getElementById('ctl00_GlobalBody_SignOnControl_SignInButton').click();
+    //         }
+    //     });
+    // }
 
 
     handleLogin(e) {

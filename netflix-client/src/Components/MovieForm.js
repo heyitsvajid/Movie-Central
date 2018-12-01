@@ -26,8 +26,8 @@ class MovieForm extends Component {
             actors: [],
             director: [],
             ratings: 'G', //PG and R
-            country: '',
-            availability:'', //Free SubscriptionOnly  PayPerViewOnly Paid
+            country: 'AF',
+            availability:'FREE', //Free SubscriptionOnly  PayPerViewOnly Paid
             price:'',
             update: false,
             movieList: [],
@@ -53,20 +53,19 @@ class MovieForm extends Component {
             })
         }
         else{
-            let titleErrorPresent = !this.validateTitleFormat(this.state.title) ? true : false; 
-            let trailerLinkErrorPresent = !this.validateTrailerLinkFormat(this.state.trailer_link) ? true : false;
-            let movieTimeErrorPresent = !this.validateMovieTimeFormat(this.state.movie_length) ? true : false;
-            let keywordsErrorPresent = !this.validateKeywordsFormat(this.state.movie_keywords) ? true : false;
-            let synopsisErrorPresent = !this.validateSynopsisFormat(this.state.synopsis) ? true : false;
-            let timeErrorPresent = !this.validateTimeFormat(this.state.release_date) ? true : false;
+            // let titleErrorPresent = !this.validateTitleFormat(this.state.title) ? true : false; 
+            // let trailerLinkErrorPresent = !this.validateTrailerLinkFormat(this.state.trailer_link) ? true : false;
+            // let movieTimeErrorPresent = !this.validateMovieTimeFormat(this.state.movie_length) ? true : false;
+            // let keywordsErrorPresent = !this.validateKeywordsFormat(this.state.movie_keywords) ? true : false;
+            // let synopsisErrorPresent = !this.validateSynopsisFormat(this.state.synopsis) ? true : false;
+            // let timeErrorPresent = !this.validateTimeFormat(this.state.release_date) ? true : false;
 
-            if (timeErrorPresent || titleErrorPresent || trailerLinkErrorPresent || movieTimeErrorPresent || keywordsErrorPresent
-                || synopsisErrorPresent) {
-                return;
-            }
+            // if (timeErrorPresent || titleErrorPresent || trailerLinkErrorPresent || movieTimeErrorPresent || keywordsErrorPresent
+            //     || synopsisErrorPresent) {
+            //     return;
+            // }
 
             var movie = {
-                id: this.state.update_id,
                 image:this.state.image,
                 title: this.state.title,
                 trailer: this.state.trailer_link,
@@ -81,21 +80,22 @@ class MovieForm extends Component {
                 price:this.state.price,
                 //movie_keywords: this.state.movie_keywords,
             }
+            debugger
+
             axios.post(envURL + 'movie',movie,{ headers: { 'Content-Type': 'application/json'}})
                 .then((res) => {
-                    console.log('Fetching all movies');
                             console.log(res.data);
                             swal({
                             type: 'success',
                             title: 'Add Movie',
-                            text: 'Movie Added Successfullt',
+                            text: 'Movie Added Successfully',
                         })    
                         this.loadMovies()          
                 },(error) => {
                     swal({
                         type: 'error',
                         title: 'Add Movie',
-                        text: error.response.error_message,
+                        text: error.response.data.errorMessage,
                     })
                     console.log('Error adding movies.');
                 })    
@@ -110,8 +110,8 @@ class MovieForm extends Component {
                 actors: [],
                 director: [],
                 ratings: 'G', //PG and R
-                country: '',
-                availability:'', //Free SubscriptionOnly  PayPerViewOnly Paid
+                country: 'AF',
+                availability:'FREE', //Free SubscriptionOnly  PayPerViewOnly Paid
                 price:'',
                 update: false,
                 update_id: 0
@@ -282,7 +282,7 @@ class MovieForm extends Component {
                 <tr>
                     <th scope="row">{item.current_index}</th>
                     <td>{item.title}</td>
-                    <td>{(new Date(item.year)).toDateString()}</td>
+                    <td>{item.year}</td>
                     <td>{item.studio}</td>
                     <td>{item.rating}</td>
                     <td>{item.country}</td>
@@ -337,15 +337,8 @@ class MovieForm extends Component {
 
         if (timeErrorPresent || titleErrorPresent || trailerLinkErrorPresent || movieTimeErrorPresent
             || synopsisErrorPresent) {
-            // swal({
-            //     type: 'error',
-            //     title: 'Add Movie',
-            //     text: 'Provide all fields.',
-            // })
             return;
         }
-
-        let updateMovieAPI = envURL + 'updateMovie';
         var movie = {
             id: this.state.update_id,
             image:this.state.image,
@@ -353,9 +346,6 @@ class MovieForm extends Component {
             trailer: this.state.trailer_link,
             year: this.state.year,
             rating: this.state.mpaa_ratings,
-//            movie_keywords: this.state.movie_keywords,
-//           movie_length: this.state.movie_length,
-//           movie_definition: this.state.movie_definition,
             synopsis:this.state.synopsis,
             studio:this.state.studio,
             actors:this.state.actors,
@@ -363,46 +353,42 @@ class MovieForm extends Component {
             country:this.state.country,
             availability:this.state.availability,
             price:this.state.price,
-            
+//            movie_keywords: this.state.movie_keywords,            
         }
 
-        const formData = new FormData();
-        formData.append('file', this.state.file);
-        for (var key in movie) {
-            formData.append(key, movie[key]);
-        }
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }
-        post(updateMovieAPI, formData, config).then(function (res) {
-            if (res.data.errorMsg != '') {
-                swal({
-                    type: 'error',
-                    title: 'Update Movie',
-                    text: res.data.errorMsg,
-                })
-            } else if (res.data.successMsg != '') {
-                swal({
-                    type: 'success',
-                    title: 'Update Movie',
-                    text: res.data.successMsg,
-                })
-            }
-        });
+        axios.put(envURL + 'movie',movie,{ headers: { 'Content-Type': 'application/json'}})
+        .then((res) => {
+                    console.log(res.data);
+                    swal({
+                        type: 'success',
+                        title: 'Update Movie',
+                        text: "Movie Updated Successfully",
+                    })
+                this.loadMovies()          
+        },(error) => {
+            swal({
+                type: 'error',
+                title: 'Add Movie',
+                text: error.response.data.errorMessage,
+            })
+            console.log('Error adding movies.');
+        })    
+
         this.setState({
-            update: false,
-            file: '',
             title: '',
+            year:'',
+            studio:'',
+            synopsis: '',
+            image: '',
             trailer_link: '',
-            release_date: '',
-            mpaa_ratings: '',
-            movie_keywords: '',
-            movie_length: '',
-            movie_definition: '',
-            update_id: 0,
-            synopsis: ''
+            actors: [],
+            director: [],
+            ratings: 'G', //PG and R
+            country: 'AF',
+            availability:'FREE', //Free SubscriptionOnly  PayPerViewOnly Paid
+            price:'',
+            update: false,
+            update_id: 0
         });
         var that = this;
         setTimeout(function () {
