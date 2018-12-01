@@ -1,12 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import SignUp from "./Components/SignUp";
+import LogIn from './Components/LogIn';
+import Index from './Components/Index';
+import MovieDetails from './Components/MovieDetails';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import AdminDashboard from './Components/AdminDashboard';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+    <Router>
+      <div>
+        <Route exact path="/adminDashboard" component={AdminDashboard} />
+        <Route exact path="/" component={Index} />
+        <Route exact path="/login" component={LogIn} />
+        <Route exact path="/signup" component={SignUp} />
+        <Route exact path="/movieDetails/:movieId" component={MovieDetails} />
+ 
+        {/* <Route exact path="/tickets" component={TicketBooking} />
+        <Route exact path="/checkout" component={Checkout} />
+        <Route exact path="/confirmation" component={TicketConfirmation} />
+        <Route exact path="/orders" component={PurchaseHistory} /> */}
+      </div>
+    </Router>,
+  document.getElementById('root')
+);
+
