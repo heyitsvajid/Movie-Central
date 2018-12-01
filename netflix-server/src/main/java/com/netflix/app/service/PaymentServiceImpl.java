@@ -13,12 +13,11 @@ public class PaymentServiceImpl implements PaymentService{
 
 	@Autowired
 	private PaymentRepository paymentRepository;
-//	
-//	@Override
-//	public Review findById(long id) {
-//		// TODO Auto-generated method stub
-//		return reviewRepository.findById(id);
-//	}
+	
+	public Payment findById(long id) {
+		// TODO Auto-generated method stub
+		return paymentRepository.findById(id);
+	}
 
 	@Override
 	public void save(Payment payment) {
@@ -37,6 +36,12 @@ public class PaymentServiceImpl implements PaymentService{
 	public List<Payment> findAllPaymentById(long id) {
 		// TODO Auto-generated method stub
 		return (List<Payment>) paymentRepository.findAllPaymentById(id);
+	}
+
+	@Override
+	public List<Payment> findAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

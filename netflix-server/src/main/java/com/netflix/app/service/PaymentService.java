@@ -10,5 +10,6 @@ public interface PaymentService {
 	void save(Payment payment);
 	List<Payment> findAllPaymentByUserId(long user_id);
 	List<Payment> findAllPaymentById(long id);
+	List<Payment> findAll();
 }
 

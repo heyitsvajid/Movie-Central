@@ -1,20 +1,15 @@
 package com.netflix.app.model;
 
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Table;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -23,81 +18,123 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Payment {
 
 	private Long id;
-	
-	private Long userId;
-	//private Long movieId;
 	private Double amount;
-	private String Card_Number;
-	private int exp_month;
-	private int exp_year;
-	
-	
-	public Long getUserId() {
-		return userId;
+	private String cardNumber;
+	private int expMonth;
+	private int expYear;
+	private Date endAt;
+	private Date startAt;
+	private Subscription subscription;
+	private User user;
+	private Movie movie;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "userId")
+	public User getUser() {
+		return user;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
+
+	public void setUser(User user) {
+		this.user = user;
 	}
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "movieId")	
+	public Movie getMovie() {
+		return movie;
+	}
+
+	public void setMovie(Movie movie) {
+		this.movie = movie;
+	}
+
 	public Double getAmount() {
 		return amount;
 	}
+
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-	public String getCard_Number() {
-		return Card_Number;
+
+	public String getCardNumber() {
+		return cardNumber;
 	}
-	public void setCard_Number(String card_Number) {
-		Card_Number = card_Number;
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
 	}
-	public int getExp_month() {
-		return exp_month;
+
+	public int getExpMonth() {
+		return expMonth;
 	}
-	public void setExp_month(int exp_month) {
-		this.exp_month = exp_month;
+
+	public void setExpMonth(int expMonth) {
+		this.expMonth = expMonth;
 	}
-	public int getExp_year() {
-		return exp_year;
+
+	public int getExpYear() {
+		return expYear;
 	}
-	public void setExp_year(int exp_year) {
-		this.exp_year = exp_year;
+
+	public void setExpYear(int expYear) {
+		this.expYear = expYear;
 	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
-	
-	public Date getCreatedAt() {
-		return createdAt;
-	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-	
 	public Payment() {
 		super();
 		this.id = 0l;
-		
+
 	}
+
+	public Date getEndAt() {
+		return endAt;
+	}
+
+	public void setEndAt(Date endAt) {
+		this.endAt = endAt;
+	}
+
+	public Date getStartAt() {
+		return startAt;
+	}
+
+	public void setStartAt(Date startAt) {
+		this.startAt = startAt;
+	}
+
 	
-	public Payment(Long id, Long user_id, Double amount,String Card_Number, int exp_month, int exp_year)
-	{
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "subscriptionId")
+	public Subscription getSubscription() {
+		return subscription;
+	}
+
+	public void setSubscription(Subscription subscription) {
+		this.subscription = subscription;
+	}
+
+	public Payment(Double amount, String cardNumber, int expMonth, int expYear, Date endAt, Date startAt,
+			Subscription subscription, User user, Movie movie) {
 		super();
-		setId(id);
-		setUserId(userId);
-		setAmount(amount);
-		setCard_Number(Card_Number);
-		setExp_month(exp_month);
-		setExp_year(exp_year);
+		this.amount = amount;
+		this.cardNumber = cardNumber;
+		this.expMonth = expMonth;
+		this.expYear = expYear;
+		this.endAt = endAt;
+		this.startAt = startAt;
+		this.subscription = subscription;
+		this.user = user;
+		this.movie = movie;
 	}
 
 }
