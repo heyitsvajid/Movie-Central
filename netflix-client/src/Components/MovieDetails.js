@@ -247,7 +247,7 @@ getMovieReviews(){
                            </a>
                            <ul className="movie-details__detail">
                                 <li> <h2 className="mop__synopsis-title movie-details__release-date">{this.state.title}</h2></li>
-                                <li>{this.state.rating}</li>
+                                <li>{this.state.movieRating}</li>
                                 <li className="mop__synopsis-title">{this.state.year} {this.state.country}</li>
                                 <li className="mop__synopsis-title">Genres: {this.state.genre}</li>
                                 <li className="mop__synopsis-title">Studio: {this.state.studio}</li>
