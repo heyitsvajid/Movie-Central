@@ -9,11 +9,11 @@ public class QueryBuilder {
 	       int i = 1;
 	       for(String item: conditions){
 
-	       String appendString = " CONCAT_WS('#', actors, director, title, synopsis, studio, rating) like '%" + item+"%' ";
+	       String appendString = " CONCAT_WS('#', actors, director, title, synopsis, studio) like '%" + item+"%' ";
 	       query.append(appendString);
 	       
 	       if(i<conditions.length){
-	       query.append("OR");
+	       query.append("AND");
 	       i++;            
 	       }
 	           
