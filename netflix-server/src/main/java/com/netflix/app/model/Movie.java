@@ -34,6 +34,7 @@ public class Movie {
 	private String rating;
 	private String availability; // 'FREE' || 'SBCR' || 'PPVO' || 'PAID'
 	private int price;
+	private String genre;
 
 	@Column(insertable = false)
 	@org.hibernate.annotations.ColumnDefault("N")
@@ -198,6 +199,14 @@ public class Movie {
 
 	public void setPrice(int price) {
 		this.price = price;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
 
 }

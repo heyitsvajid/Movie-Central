@@ -104,7 +104,16 @@ class Header extends Component {
               <div class="secondary-navigation">
                   <div class="nav-element">
                       <div class="searchBox">
-                          <button class="searchTab" tabindex="0" aria-label="Search" data-uia="search-box-launcher"><span class="icon-search"></span></button>
+                      <div class="searchBox">
+                      <div class="searchInput">
+                        <span class="icon-search">
+                        </span>
+                            <input type="text" style={{width:'250px'}} placeholder="" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" value="" style={{opacity: '0', transitionDuration: '200ms'}} />
+                        <span class="icon-close empty">
+                        </span>
+                        </div>
+                      </div>
+
                       </div>
                   </div>
                   <div class="nav-element show-kids"><a href="/Kids">KIDS</a></div>
