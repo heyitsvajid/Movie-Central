@@ -322,7 +322,7 @@ getMovieReviews(){
                           <div className="fan-reviews__decoration-bottom"></div>
                       </div>
           
-                      <a data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
+                      <a style={{color:'white'}} data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
           
                   </section>
               </div>

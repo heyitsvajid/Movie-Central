@@ -292,7 +292,7 @@ class MovieForm extends Component {
                             <input type="button" class="dashboard-form-btn link-style nav-link btn-info action-link"
                             value="Update" required="" id={item.id} onClick={this.handleMovieUpdate.bind(this)} />
 
-                            <input type="button" class="dashboard-form-btn link-style nav-link btn-info action-link"
+                            <input style={{marginLeft:"5px"}} type="button" class="dashboard-form-btn link-style nav-link btn-info action-link"
                             value="Delete" required="" id={item.id} onClick={this.handleMovieDelete.bind(this)} />
                         </div>
                     </td>
@@ -435,11 +435,13 @@ class MovieForm extends Component {
     handleSearchBar(e){
         var searched_array = [];
         if(e.target.value != ""){
+            debugger
           if(this.state.movieList.length > 0){
               for(let i = 0; i < this.state.movieList.length; i++){
                 var strRegExPattern = new RegExp(e.target.value, 'i');
-                let list_element = this.state.movieList[i]
-                if(list_element.title.match(strRegExPattern)){
+                var list_element = this.state.movieList[i]
+                debugger
+                if(list_element.title.match(strRegExPattern) || list_element.studio.match(strRegExPattern) || list_element.rating.match(strRegExPattern) || list_element.availability.match(strRegExPattern)){
                     searched_array.push(list_element);
                 }
               }

@@ -7,6 +7,15 @@ body,html{
   font-size:16px;
   direction:ltr
 }
+
+.hybrid-login-form .login-remember-me input[type=checkbox]:checked+label::after{
+  top: 5px !important;
+}
+
+.ui-binary-input input[type=checkbox], .ui-binary-input input[type=radio]{
+  top: 10px !important;
+}
+
 h1{
   font-size:1.5em;
   color:#333;

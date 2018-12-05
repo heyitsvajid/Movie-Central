@@ -162,14 +162,10 @@ class SignIn extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input type="text" name="email" className="nfTextField" id="id_userLoginId" style={{width:"111%"}} value={this.state.email} onChange={this.handleUserInput} tabindex="0" autoComplete="email" dir="" />
-                                                        <label for="id_userLoginId" className="placeLabel">Enter Email</label>
+                                                        <input type="text" placeholder="Enter Email" name="email" className="nfTextField" id="id_userLoginId" style={{width:"138%"}} value={this.state.email} onChange={this.handleUserInput} tabindex="0" autoComplete="email" dir="" />
+                                                        {/* <label for="id_userLoginId" className="placeLabel">Enter Email</label> */}
                                                     </label>
-                                                    <div className="ui-select-wrapper country-select">
-                                                        <a href="#" className="ui-select-wrapper-link">
-                                                            <div className="ui-select-current" placeholder="{&quot;current_selected_country&quot;:&quot;US&quot;}"><span className="country-select-flag nf-flag nf-flag-us"></span></div>
-                                                        </a>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -177,8 +173,8 @@ class SignIn extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfPasswordControls">
                                                     <label className="input_id">
-                                                        <input type="password" name="password" className="nfTextField" id="id_password" value={this.state.password} onChange={this.handleUserInput} tabindex="0" autoComplete="password" dir="" />
-                                                        <label for="id_password" className="placeLabel">Password</label>
+                                                        <input type="password" placeholder="Password" style={{backgroundColor:'#333'}} name="password" className="nfTextField" id="id_password" value={this.state.password} onChange={this.handleUserInput} tabindex="0" autoComplete="password" dir="" />
+                                                        {/* <label for="id_password" className="placeLabel">Password</label> */}
                                                     </label>
                                                     <button id="id_password_toggle" type="button" className="nfPasswordToggle" title="Show Password">SHOW</button>
                                                 </div>

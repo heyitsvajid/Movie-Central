@@ -141,7 +141,7 @@ returnMovieList() {
                         </div>
                                 </div>
                                 <table class="table" id = "scoreboard-table">
-                                  <thead>
+                                  <thead class="thead-dark">
                                     <tr>
                                       <th style={{color:'white'}} scope="col">#</th>
                                       <th style={{color:'white'}} scope="col">First</th>

@@ -14,7 +14,7 @@ class Pagination extends Component {
     return (
       <div class="text-center">
         <nav aria-label="pagination example" className="pagination-list">
-          <ul className="pagination pg-blue">
+          <ul className="pagination pg-blue" style={{backgroundColor: 'white'}}>
               <li className="page-item">
                   <a className="page-link" href="#" aria-label="Previous" onClick={this.props.handlePrevPaginationButton}>
                       <span aria-hidden="true">&laquo;</span>

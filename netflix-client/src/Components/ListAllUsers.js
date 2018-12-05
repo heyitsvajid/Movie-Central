@@ -451,7 +451,9 @@ class ListAllUsers extends Component {
                             </div>
 
                             <div className="form-group col-md-2">
-                                <button className='btn-danger' style={{backgroundColor: '#F15500'}} onClick={this.handleDeleteUser.bind(this, item.id )} > Delete </button>
+                                <input type="button" class="dashboard-form-btn link-style nav-link btn-info action-link"
+                                value="Delete" required="" id={item.id} onClick={this.handleDeleteUser.bind(this, item.id)} />
+                                {/* <button className='btn-danger' style={{backgroundColor: '#F15500'}} onClick={this.handleDeleteUser.bind(this, item.id )} > Delete </button> */}
                             </div>
                         </div>
 
