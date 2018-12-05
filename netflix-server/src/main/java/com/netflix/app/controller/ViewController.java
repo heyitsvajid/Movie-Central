@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.netflix.app.model.Movie;
+import com.netflix.app.model.Review;
 import com.netflix.app.model.User;
 import com.netflix.app.model.View;
 import com.netflix.app.model.ViewRequest;
 import com.netflix.app.service.MovieService;
+import com.netflix.app.service.ObjectService;
 import com.netflix.app.service.UserService;
 import com.netflix.app.service.ViewService;
 import com.netflix.app.util.CustomErrorType;
@@ -41,6 +43,9 @@ public class ViewController {
 	MovieService movieService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	ObjectService objectService;
+
 
 	// Service which will do all data retrieval/manipulation work for View
 	// object
@@ -72,6 +77,27 @@ public class ViewController {
 		}
 		return new ResponseEntity<View>(view, HttpStatus.OK);
 	}
+	
+	// -------------------Retrieve View of Single User------------------------------------------
+
+	@RequestMapping(value = "/view/user/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<View>> getUserViews(@PathVariable("id") long id) {
+		logger.info("Fetching all Views for a user");
+		
+		User user = userService.findById(id);
+		if(user==null){
+			return new ResponseEntity(new CustomErrorType("Please provide valid user id"), HttpStatus.NOT_FOUND);			
+		}
+		
+		List<View> views = viewService.findByUser(user);
+		if (views.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<View>>(views, HttpStatus.OK);
+	}
+
+
 
 	// -------------------Create view-------------------------------------------
 
@@ -102,7 +128,7 @@ public class ViewController {
 		viewService.save(view);
 		HttpHeaders headers = new HttpHeaders();
 
-		headers.setLocation(ucBuilder.path("/movie/{id}").buildAndExpand(view.getId()).toUri());
+		headers.setLocation(ucBuilder.path("/view/{id}").buildAndExpand(view.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
@@ -142,7 +168,7 @@ public class ViewController {
 		return new ResponseEntity<View>(HttpStatus.NO_CONTENT);
 	}
 
-	// ------------------- Delete All Users-----------------------------
+	// ------------------- Delete All Views-----------------------------
 
 	@RequestMapping(value = "/view/", method = RequestMethod.DELETE)
 	public ResponseEntity<View> deleteAllUsers() {
@@ -151,5 +177,19 @@ public class ViewController {
 		viewService.deleteAllViews();
 		return new ResponseEntity<View>(HttpStatus.NO_CONTENT);
 	}
+	
+	// -------------------Top 10 rated movies-------------------------------------------
+
+	@RequestMapping(value = "/topTenViewedMovies", method = RequestMethod.GET)
+	public ResponseEntity<List<View>> movieScoreboard() {
+		logger.info("Fetching all Views ");
+		List<View> views = objectService.findTopTenViewedMovies("");
+		if (views.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<View>>(views, HttpStatus.OK);
+	}
+	
 
 }

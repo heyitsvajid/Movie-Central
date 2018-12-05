@@ -19,4 +19,6 @@ public interface ViewService {
 
 	void deleteAllViews();
 
+	List<View> findByUser(User user);
+
 }
