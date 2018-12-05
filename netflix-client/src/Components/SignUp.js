@@ -141,7 +141,7 @@ class SignUp extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input type="text" name="fname" className="nfTextField" id="id_userLoginId" value={this.state.fname} onChange={this.handleUserInput.bind(this)}  dir="" />
+                                                        <input style={{width: '111%'}} type="text" name="fname" className="nfTextField" id="id_userLoginId" value={this.state.fname} onChange={this.handleUserInput.bind(this)}  dir="" />
                                                         <label for="id_userLoginId" className="placeLabel">Enter name</label>
                                                     </label>
                                                     <div className="ui-select-wrapper country-select">
@@ -156,7 +156,7 @@ class SignUp extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input type="text" name="email" className="nfTextField" id="id_userLoginId" value={this.state.email} onChange={this.handleUserInput.bind(this)}  tabindex="0" autoComplete="email" dir="" />
+                                                        <input style={{width: '111%'}} type="text" name="email" className="nfTextField" id="id_userLoginId" value={this.state.email} onChange={this.handleUserInput.bind(this)}  tabindex="0" autoComplete="email" dir="" />
                                                         <label for="id_userLoginId" className="placeLabel">Enter Email</label>
                                                     </label>
                                                     <div className="ui-select-wrapper country-select">
@@ -182,7 +182,7 @@ class SignUp extends Component {
                                         
                                         <div className="hybrid-login-form-help">
                                             <div className="ui-binary-input login-remember-me">
-                                                <input type="checkbox" className="" name="isAdmin" id="isAdmin" onChange={this.handleCheck.bind(this)} value={this.state.isAdmin} />
+                                                <input type="checkbox" className="" name="isAdmin" id="isAdmin" onChange={this.handleCheck.bind(this)} value={this.state.isAdmin} style={{zIndex:2}} />
                                                 <label for="bxid_rememberMe_true"><span className="login-remember-me-label-text">Is Admin?</span></label>
                                                 <div className="helper"></div>
                                         </div></div>

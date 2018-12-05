@@ -131,7 +131,7 @@ class SignIn extends Component {
 
     }
     render() {
-
+        debugger
         return (
         <div>
             <div id="appMountPoint">
@@ -162,7 +162,7 @@ class SignIn extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input type="text" name="email" className="nfTextField" id="id_userLoginId" value={this.state.email} onChange={this.handleUserInput} tabindex="0" autoComplete="email" dir="" />
+                                                        <input type="text" name="email" className="nfTextField" id="id_userLoginId" style={{width:"111%"}} value={this.state.email} onChange={this.handleUserInput} tabindex="0" autoComplete="email" dir="" />
                                                         <label for="id_userLoginId" className="placeLabel">Enter Email</label>
                                                     </label>
                                                     <div className="ui-select-wrapper country-select">
@@ -187,7 +187,7 @@ class SignIn extends Component {
 
                                         <div className="hybrid-login-form-help">
                                             <div className="ui-binary-input login-remember-me">
-                                                <input type="checkbox" className="" name="isAdmin" id="isAdmin" onChange={this.handleCheck.bind(this)} value={this.state.isAdmin} />
+                                                <input type="checkbox" className="" name="isAdmin" id="isAdmin" onChange={this.handleCheck.bind(this)} value={this.state.isAdmin} style={{zIndex:2}} />
                                                 <label for="bxid_rememberMe_true"><span className="login-remember-me-label-text">Is Admin?</span></label>
                                                 <div className="helper"></div>
                                         </div></div>
