@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.netflix.app.model.Review;
+import com.netflix.app.model.View;
+import com.netflix.app.service.ObjectService;
 import com.netflix.app.service.ReviewService;
 
 @RestController
@@ -25,6 +27,9 @@ public class ReviewController {
 
 	@Autowired
 	ReviewService reviewService;
+	@Autowired
+	ObjectService objectService;
+
 	
 	// Service which will do all data retrieval/manipulation work for Review
 	// Reviews---------------------------------------------
@@ -54,6 +59,19 @@ public class ReviewController {
 		headers.setLocation(ucBuilder.path("/review/{id}").buildAndExpand(review.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 		
+	}
+	
+	// -------------------Top 10 rated movies-------------------------------------------
+
+	@RequestMapping(value = "/topTenRatedMovies", method = RequestMethod.GET)
+	public ResponseEntity<List<Review>> movieScoreboard() {
+		logger.info("Fetching all Views ");
+		List<Review> reviews = objectService.findTopTenRatedMovies("");
+		if (reviews.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<Review>>(reviews, HttpStatus.OK);
 	}
 
 }

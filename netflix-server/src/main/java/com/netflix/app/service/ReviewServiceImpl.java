@@ -30,5 +30,6 @@ public class ReviewServiceImpl implements ReviewService{
 		// TODO Auto-generated method stub
 		return (List<Review>) reviewRepository.findAllReviewByMovieId(id);
 	}
+
 	
 }
