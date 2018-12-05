@@ -116,7 +116,7 @@ public class MovieController {
 //	// ------------------- Search 
 //	// Movie-----------------------------------------
 
-	@RequestMapping(value = "/movie/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/movie/search", method = RequestMethod.POST)
 	public ResponseEntity<?> searchMovie(@RequestBody SearchRequest search) {
 		logger.info("Searching Movies");
 

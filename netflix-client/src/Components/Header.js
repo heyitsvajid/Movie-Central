@@ -10,7 +10,7 @@ class Header extends Component {
     super(props);
     this.state = {
         isLoggedIn: false,
-        searchQuery: localStorage.getItem('search')
+        search: localStorage.getItem('search')
     }
 
       this.handleLogout = this.handleLogout.bind(this);
@@ -53,26 +53,16 @@ class Header extends Component {
       })
   }
 
-  handleSearch() {
-      console.log("search clicked", this.state.searchQuery);
-      if(window.location.href.includes('/movies')){
-        this.props.onSearchData(this.state.searchQuery);
-      }else{
-        localStorage.setItem('search',this.state.searchQuery)
-        this.props.history.push('/movies');
-      
-      }
- 
-      // var data = {
-      //     searchQuery: this.state.searchQuery
-      // }
-      // axios.post(envURL + 'searchQuery', data, {withCredentials: true})
-      //     .then((response) => {
-      //         console.log("After search results in Header compoent...", response.data);
-      //     })
 
-  }
 
+
+    handleSearch(e) {
+        this.setState({
+            search : e.target.value
+        })
+        debugger
+        this.props.callbackFromParent(e.target.value);
+    }
 
   render() {
 
@@ -108,12 +98,27 @@ class Header extends Component {
                       <div class="searchInput">
                         <span class="icon-search">
                         </span>
-                            <input type="text" style={{width:'250px'}} placeholder="" data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" value="" style={{opacity: '0', transitionDuration: '200ms'}} />
+                            <input type="text" onChange = {this.handleSearch.bind(this)} placeholder = {this.state.searchQuery}  data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" value={this.state.searchQuery} style={{ transitionDuration: '200ms', width:'250px', backgroundColor: 'black'}} />
                         <span class="icon-close empty">
                         </span>
                         </div>
                       </div>
 
+                      </div>
+                  </div>
+                  <div class="nav-element">
+                      <div class="searchBox">
+                      <div class="">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" style={{color: 'black'}} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown button
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>
+                        </div>
                       </div>
                   </div>
                   <div class="nav-element show-kids"><a href="/Kids">KIDS</a></div>

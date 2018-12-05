@@ -43,23 +43,22 @@ class MovieDetails extends Component {
 
   fetchDataFromServer(){
 
-    // var url = envURL + 'isLoggedIn'
+    var url = envURL + 'isLoggedIn'
     const { movieId } = this.props.match.params
     // this.setState({
     //     movieId: this.props.match.params
     // })
-    // alert(movieId)
-
     // axios.get(envURL + 'isLoggedIn', {withCredentials: true})
     // .then((response) => {
     //     console.log("After checking the session", response.data);
-            // if(response.data.role.name === 'CUSTOMER'){
-                // console.log("Already Logged In. Getting movie")
+    //         if(response.data.role.name === 'CUSTOMER'){
+    //             console.log("Already Logged In. Getting movie")
                 axios.get(envURL + 'movie/' + movieId,{ headers: { 'Content-Type': 'application/json'}})
                 .then((res) => {
                             console.log(res.data);
                             // debugger
                             this.setState({
+                                movieId: res.data.id ? res.data.id : null,
                                 title: res.data.title ? res.data.title : null,
                                 year: res.data.year ? res.data.year : null,
                                 studio: res.data.studio ? res.data.studio : null,
@@ -90,18 +89,18 @@ class MovieDetails extends Component {
                     console.log('Error fetching the movie.');
                 })
     }
-    //         else if(response.data.role.name === 'ADMIN') {
-    //             console.log("Already Logged In. Redirecting to admin dashboard")
-    //             this.props.history.push('/adminDashboard');
-    //         }else{
-    //             console.log("Error checking session")
-    //         }
-    // },
-//     (error) => { 
-//         this.props.history.push('/login');
-//         console.log(error)})
+  //           else if(response.data.role.name === 'ADMIN') {
+  //               console.log("Already Logged In. Redirecting to admin dashboard")
+  //               this.props.history.push('/adminDashboard');
+  //           }else{
+  //               console.log("Error checking session")
+  //           }
+  //   },
+  //   (error) => { 
+  //       this.props.history.push('/login');
+  //       console.log(error)})
 
-//   }
+  // }
 
 
 
@@ -111,15 +110,8 @@ getMovieReviews(){
     var movieReviews = this.state.reviews;
     if(movieReviews.length>0){
       let reviews = movieReviews.map((item, index) => {
-    //     let ratingsHash = { 1: "", 2: "",  3: "", 4: "", 5: "" };
-    //     var item_ratings = item.rating;
-    //     for(let i = Object.keys(ratingsHash).length; i > 0 ; i--){
-    //       if(item_ratings > 0){
-    //         ratingsHash[i] = "checked"
-    //         item_ratings-=1;
-    //       }
-    //     }
         this.state.movieReviewRating  = this.state.movieReviewRating + item.rating
+        if(item.rating!=0 && item.review!=null && item.review!=undefined){
         return (
           <li class="fan-reviews__item">
             <div className="stars-large__star-rating--no-hover" data-star-rating={item.rating}>
@@ -129,32 +121,9 @@ getMovieReviews(){
                 <span className="stars-large__star icon icon-star-rating-small"></span>
                 <span className="stars-large__star icon icon-star-rating-small"></span>
             </div>
-            {/* <div className="fan-reviews__headline heading-style-1 heading-size-l">
-                Ralph Breaks The Internet
-            </div>
-
-            <div className="fan-reviews__user-name">
-                By mjauer04
-
-            </div>
-            <div className="fan-reviews__review">The movie was hilarious! I liked that there was YouTube, Facebook, Snapchat, Instagram, Twitter, eBay, Fandango, IMDb, Amazon, ect!</div> */}
-            {/* <div class="stars-large__star-rating--no-hover" data-star-rating="4">
-              <span className={'fa fa-star ' + ratingsHash[1]} ></span>
-              <span className={'fa fa-star ' + ratingsHash[2]}></span>
-              <span className={'fa fa-star ' + ratingsHash[3]}></span>
-              <span className={'fa fa-star ' + ratingsHash[4]}></span>
-              <span className={'fa fa-star ' + ratingsHash[5]}></span>
-            </div> */}
-            {/* <div class="user-review-heading fan-reviews__headline heading-style-1 heading-size-l">
-                {item.title}
-            </div>
-            <div class="fan-reviews__user-name">
-                By {item.user_name}
-            </div> */}
-
             <div class="fan-reviews__review">{item.review}</div>
           </li>
-        )
+        )}
       });
       return (
         <ul class="fan-reviews__list">
@@ -174,7 +143,7 @@ getMovieReviews(){
       debugger
     var review = {
         rating: this.state.rating,
-        review: this.state.review != "" ? this.state.review : "No Content Supplied!",
+        review: this.state.review != null ? this.state.review : null,
         userId: localStorage.userid,
         movieId: this.state.movieId
     }
@@ -208,15 +177,9 @@ getMovieReviews(){
     this.setState({rating: parseInt(e.target.dataset.rating)});
     debugger
   }
-
-//   handleTitleChange(e){
-//     this.setState({ title: e.target.value });
-//   }
-
   handleReviewContentChange(e){
     this.setState({ review: e.target.value });
   }
-
 
   handleSessionChange(e){
     this.props.history.push("/login")
@@ -342,11 +305,11 @@ getMovieReviews(){
                >
             </section>
             
-            <div className="row width-100" style={{marginLeft:'13%'}}>
+            <div className="row width-100" style={{marginLeft:'13%', width:"1000px"}}>
               <h3 className="inline heading-style-stub heading-style-1 heading-size-l">Movie Reviews</h3>
               <div className="row">
                   
-                  <section className="fan-reviews width-100">
+                  <section className="fan-reviews width-100" style = {{width:"1000px"}}>
                       <div className="fan-reviews__header">
                           <h2 className="fan-reviews__title heading-style-1 heading-size-l">Fan Reviews</h2>
                           <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating="4.5">

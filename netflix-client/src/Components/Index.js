@@ -14,8 +14,10 @@ class Index extends Component {
         super(props);
         this.state = {
             movieList: [],
-            firstMovie: ""
+            firstMovie: "",
+            search: null
         }
+        this.findMovies = this.findMovies.bind(this)
     }
 
   componentWillMount(){
@@ -24,17 +26,33 @@ class Index extends Component {
     //     console.log("After checking the session", response.data);
             // if(response.data.role.name === 'CUSTOMER'){
     //             console.log("Already Logged In. Getting movie list")
-                axios.get(envURL + 'movies',{ headers: { 'Content-Type': 'application/json'}})
-                .then((res) => {
-                            console.log(res.data);
-                            debugger
-                            this.setState({
-                                movieList: res.data ? res.data : [],
-                                firstMovie: res.data ? res.data[0] : ""
-                            })          
-                },(error) => {
-                    console.log('Error fetching all movies.');
-                })
+            {this.findMovies()}
+            //     if(localStorage.getItem("search")== undefined || localStorage.getItem("search")== null){
+            //     axios.get(envURL + 'movies',{ headers: { 'Content-Type': 'application/json'}})
+            //     .then((res) => {
+            //                 console.log(res.data);
+            //                 debugger
+            //                 this.setState({
+            //                     movieList: res.data ? res.data : [],
+            //                     firstMovie: res.data ? res.data[0] : ""
+            //                 })          
+            //     },(error) => {
+            //         console.log('Error fetching all movies.');
+            //     })
+            // }else{
+            //     let search = localStorage.getItem("search")
+            //     axios.get(envURL + 'movie/search',{ search , headers: { 'Content-Type': 'application/json'}})
+            //     .then((res) => {
+            //                 console.log(res.data);
+            //                 debugger
+            //                 this.setState({
+            //                     movieList: res.data ? res.data : [],
+            //                     firstMovie: res.data ? res.data[0] : ""
+            //                 })          
+            //     },(error) => {
+            //         console.log('Error fetching all movies.');
+            //     })
+            // }
             // }
             // else if(response.data.role.name === 'ADMIN') {
             //     console.log("Already Logged In. Redirecting to admin dashboard")
@@ -46,6 +64,37 @@ class Index extends Component {
     // (error) => { 
     //     this.props.history.push('/login');
     //     console.log(error)})
+}
+
+findMovies(dataFromChild){
+    debugger
+    var search = { search: dataFromChild}
+    if(dataFromChild == null || dataFromChild == undefined){
+        debugger
+        axios.get(envURL + 'movies',{ headers: { 'Content-Type': 'application/json'}})
+        .then((res) => {
+                    console.log(res.data);
+                    debugger
+                    this.setState({
+                        movieList: res.data ? res.data : [],
+                        firstMovie: res.data ? res.data[0] : ""
+                    })          
+        },(error) => {
+            console.log('Error fetching all movies.');
+        })
+    }else{
+        axios.post(envURL + 'movie/search',search)
+        .then((res) => {
+                    console.log(res.data);
+                    debugger
+                    this.setState({
+                        movieList: res.data ? res.data : [],
+                        firstMovie: res.data ? res.data[0] : ""
+                    })          
+        },(error) => {
+            console.log('Error fetching all movies.');
+        })
+    }
 }
 
 handleLogout() {
@@ -69,6 +118,11 @@ handleMovieDetails(e){
     e ? e.preventDefault() : ''        
     this.props.history.push('/movieDetails/'+e.target.id);
     console.log(e)
+}
+
+myCallback = (dataFromChild) => {
+    debugger
+    this.findMovies(dataFromChild)
 }
 
 returnMovieList() {
@@ -98,6 +152,7 @@ returnMovieList() {
 
 }
     returnFirstMovie() {
+        if(this.state.movieList.length>0){
         return (
         <div class="slider-item slider-item-0">
             <div class="title-card-container">
@@ -114,10 +169,10 @@ returnMovieList() {
             </div>
         </div>
         )
+        }
     }
 
     render() {
-        debugger
         return (
             <div>
               <div id="appMountPoint">
@@ -126,7 +181,7 @@ returnMovieList() {
                         <div>
                             <div class="bd dark-background" style={{backgroundColor: '#141414'}} lang="en-US">
                                 <div class="pinning-header">
-                                    <Header/>
+                                    <Header callbackFromParent={this.myCallback}/>
                                 </div>
                                 <div class="mainView" role="main">
                                     <div class="lolomo is-fullbleed">
