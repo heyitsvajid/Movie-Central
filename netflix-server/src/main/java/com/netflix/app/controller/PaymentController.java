@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.netflix.app.model.Movie;
 import com.netflix.app.model.Payment;
-//import com.netflix.app.model.PaymentRequest;
+import com.netflix.app.model.PaymentRequest;
 import com.netflix.app.model.Role;
 import com.netflix.app.model.Subscription;
 import com.netflix.app.model.User;
@@ -42,25 +42,11 @@ public class PaymentController {
 	@Autowired
 	SubscriptionService subscriptionService;
 
-	// Retreive list of payments for a particular user and if the user is an
-	// admin, he can have the access to all the payments.
+	// Retreive list of payments for a particular user
 
-	@RequestMapping(value = "/payment/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/payment/user/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<List<Payment>> findAllPaymentByUserId(@PathVariable("userId") long userId) {
 
-		User user = userService.findById(userId);
-		Role role_admin = roleService.findById(userId);
-
-		List<Payment> payments = paymentService.findAll();
-		if (role_admin.equals("admin")) {
-			logger.info("Fetching all Payments for admin analysis");
-			if (payments.isEmpty()) {
-				return new ResponseEntity(HttpStatus.NO_CONTENT);
-				// You many decide to return HttpStatus.NOT_FOUND
-			} else {
-				return new ResponseEntity<List<Payment>>(payments, HttpStatus.OK);
-			}
-		}
 		List<Payment> payment = paymentService.findAllPaymentByUserId(userId);
 		if (payment.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -97,37 +83,36 @@ public class PaymentController {
 	}
 
 	// Make a payment
-//	@RequestMapping(value = "/payment", method = RequestMethod.POST)
-//	public ResponseEntity<?> addPayment(@RequestBody PaymentRequest paymentRequest, UriComponentsBuilder ucBuilder) {
-//
-//		// To be Implemented based on subscription type
-//		Date endDate = new Timestamp(System.currentTimeMillis());
-//
-//		User user = userService.findById(paymentRequest.getUserId());
-//		Movie movie = movieService.findById(paymentRequest.getMovieId());
-//
-//		Subscription subscription = subscriptionService.findSubscriptionByType(paymentRequest.getSubscriptionType());
-//
-//		if (user == null) {
-//			return new ResponseEntity<String>("User does not exists", HttpStatus.BAD_REQUEST);
-//		}
-//		if (user == null) {
-//			return new ResponseEntity<String>("Movie does not exists", HttpStatus.BAD_REQUEST);
-//		}
-//
-//		if (subscription == null) {
-//			return new ResponseEntity<String>("Subscription type does not exists", HttpStatus.BAD_REQUEST);
-//		}
-//		Payment payment = new Payment(paymentRequest.getAmount(), paymentRequest.getCardNumber(),
-//				paymentRequest.getExpMonth(), paymentRequest.getExpYear(), endDate,
-//				new Timestamp(System.currentTimeMillis()), subscription, user, movie);
-//
-//		logger.info("Adding a payment");
-//		logger.info("{}", payment);
-//
-//		paymentService.save(payment);
-//
-//		return new ResponseEntity<String>("Payment posted successfully", HttpStatus.CREATED);
-//
-//	}
+	@RequestMapping(value = "/payment", method = RequestMethod.POST)
+	public ResponseEntity<?> addPayment(@RequestBody PaymentRequest paymentRequest, UriComponentsBuilder ucBuilder) {
+
+		// To be Implemented based on subscription type 
+		Date endDate = new Timestamp(System.currentTimeMillis());
+
+		User user = userService.findById(paymentRequest.getUserId());
+		Movie movie = movieService.findById(paymentRequest.getMovieId());
+		Subscription subscription = subscriptionService.findSubscriptionByType(paymentRequest.getSubscriptionType());
+
+		if (user == null) {
+			return new ResponseEntity<String>("User does not exists", HttpStatus.BAD_REQUEST);
+		}
+		if (movie == null) {
+			return new ResponseEntity<String>("Movie does not exists", HttpStatus.BAD_REQUEST);
+		}
+		if (subscription == null) {
+			return new ResponseEntity<String>("Subscription type does not exists", HttpStatus.BAD_REQUEST);
+		}
+
+		Payment payment = new Payment(paymentRequest.getAmount(), paymentRequest.getCardNumber(),
+				paymentRequest.getExpMonth(), paymentRequest.getExpYear(), endDate,
+				new Timestamp(System.currentTimeMillis()), subscription, user, movie);
+
+		logger.info("Adding a payment");
+		logger.info("{}", payment);
+
+		paymentService.save(payment);
+
+		return new ResponseEntity<String>("Payment posted successfully", HttpStatus.CREATED);
+
+	}
 }
