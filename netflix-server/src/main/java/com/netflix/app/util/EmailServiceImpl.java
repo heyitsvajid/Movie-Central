@@ -45,4 +45,28 @@ public class EmailServiceImpl implements EmailService {
 
         sender.send(message);
 	}
+
+	@Override
+	public void sendActivatedMail(String email, String name) throws Exception {
+		// TODO Auto-generated method stub
+		MimeMessage message = sender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", name);
+        
+        // set loading location to src/main/resources
+        // You may want to use a subfolder such as /templates here
+        freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/");
+        
+        Template t = freemarkerConfig.getTemplate("ActivatedEmail.ftl");
+        String text = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);
+
+        helper.setTo(email);
+        helper.setText(text, true); // set to html
+        helper.setSubject("Welcome To Movie Central");
+
+        sender.send(message);
+	}
 }

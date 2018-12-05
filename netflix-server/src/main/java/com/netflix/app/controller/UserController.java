@@ -261,6 +261,14 @@ public class UserController {
 			logger.info("User account activated");
 			user.setActivated("Y");
 			userService.save(user);
+			
+			try {
+				es.sendActivatedMail(user.getEmail(),user.getName());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger.error("Error sending email");
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>("Account activated. Sign In to continue", HttpStatus.OK);
 		} else {
 			return new ResponseEntity(null, HttpStatus.UNAUTHORIZED);
