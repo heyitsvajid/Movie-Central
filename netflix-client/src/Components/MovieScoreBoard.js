@@ -19,6 +19,7 @@ class Index extends Component {
     }
 
   componentWillMount(){
+      this.fetchTopTenRatedMovieReviews()
     // axios.get(envURL + 'isLoggedIn', {withCredentials: true})
     // .then((response) => {
     //     console.log("After checking the session", response.data);
@@ -53,6 +54,7 @@ handleLogout() {
     localStorage.clear();
     axios.post(envURL + 'logout', null, { withCredentials: true })
         .then((response) => {
+
             console.log(response.data);
             // if(response.data.session === 'logged out') {
                 this.setState({
@@ -64,58 +66,41 @@ handleLogout() {
         })
 }
 
-handleMovieDetails(e){
+fetchTopTenRatedMovieReviews(){
+    axios.get(envURL + 'topTenRatedMovies', null, { withCredentials: true })
+        .then((response) => {
+
+            console.log(response.data);
+            debugger
+            this.getTopTenRatedMovies()
+                this.setState({
+                    topTenRatedMoviesReviews : response.data
+                }, () => {
+                    this.props.history.push('/movieScoreBoard');
+                })
+    })
+}
+getTopTenRatedMovies(){
     debugger
-    e ? e.preventDefault() : ''        
-    this.props.history.push('/movieDetails/'+e.target.id);
-    console.log(e)
-}
-
-returnMovieList() {
-    var movieList = this.state.movieList;
-    let movieNodes = movieList.map((item, index) => {
+    var topTenRatedMoviesReviews = this.state.topTenRatedMoviesReviews;
+    if(topTenRatedMoviesReviews.length>0){
+      let reviews = topTenRatedMoviesReviews.map((item, index) => {
         return (
-        <div class="slider-item slider-item-0">
-            <div class="title-card-container">
-                <div id="title-card-2-0" class="title-card">
-                    <div class="ptrack-content" data-ui-tracking-context="%7B%22list_id%22:%2222c6a048-0a5c-4a83-9b10-c49b8bc8d817_115976689X19XX1542578115059%22,%22location%22:%22homeScreen%22,%22rank%22:0,%22request_id%22:%226ab7664b-8540-430b-93e7-e12db6e75d4f-89857730%22,%22row%22:2,%22track_id%22:14170035,%22video_id%22:80201680,%22image_key%22:%22sdp,16%7CAD_cdfc1710-d0ad-11e8-9705-0eaa7fb7c3c4%7Cen%22,%22supp_video_id%22:1,%22lolomo_id%22:%2222c6a048-0a5c-4a83-9b10-c49b8bc8d817_ROOT%22,%22maturityMisMatchEdgy%22:false,%22maturityMisMatchNonEdgy%22:false,%22appView%22:%22boxArt%22,%22usePresentedEvent%22:true%7D" data-tracking-uuid="93b1f144-4d72-4675-862b-4dbfd30f89bb">
-                        <a href="" aria-label="The Kominsky Method" tabindex="0" aria-hidden="false" class="slider-refocus">
-                            <div class="boxart-size-16x9 boxart-container"><img onClick={this.handleMovieDetails.bind(this)} id={item.id} class="boxart-image boxart-image-in-padded-container" src={item.image} alt="" />
-                                <div class="fallback-text-container" aria-hidden="true">
-                                    <div class="fallback-text">{item.title}</div>
-                                </div>
-                            </div>
-                        </a>
-                    </div><span></span></div>
-            </div>
-        </div>
+            <tr>
+                <th style={{color:'white'}} scope="row">1</th>
+                <td style={{color:'white'}}>{item.title}</td>
+                <td style={{color:'white'}}>{item.director}</td>
+                <td style={{color:'white'}}>{item.rating}</td>
+            </tr>
         )
-    });
-    return (
-        <div>{movieNodes}</div>
-      
-    );
-
+    })
 }
-    returnFirstMovie() {
-        return (
-        <div class="slider-item slider-item-0">
-            <div class="title-card-container">
-                <div id="title-card-2-0" class="title-card">
-                    <div class="ptrack-content" data-ui-tracking-context="%7B%22list_id%22:%2222c6a048-0a5c-4a83-9b10-c49b8bc8d817_115976689X19XX1542578115059%22,%22location%22:%22homeScreen%22,%22rank%22:0,%22request_id%22:%226ab7664b-8540-430b-93e7-e12db6e75d4f-89857730%22,%22row%22:2,%22track_id%22:14170035,%22video_id%22:80201680,%22image_key%22:%22sdp,16%7CAD_cdfc1710-d0ad-11e8-9705-0eaa7fb7c3c4%7Cen%22,%22supp_video_id%22:1,%22lolomo_id%22:%2222c6a048-0a5c-4a83-9b10-c49b8bc8d817_ROOT%22,%22maturityMisMatchEdgy%22:false,%22maturityMisMatchNonEdgy%22:false,%22appView%22:%22boxArt%22,%22usePresentedEvent%22:true%7D" data-tracking-uuid="93b1f144-4d72-4675-862b-4dbfd30f89bb">
-                        <a href="" aria-label="The Kominsky Method" tabindex="0" aria-hidden="false" class="slider-refocus">
-                            <div class="boxart-size-16x9 boxart-container"><img onClick={this.handleMovieDetails.bind(this)} id = {this.state.firstMovie.id} class="boxart-image boxart-image-in-padded-container" src={this.state.firstMovie.image} alt="" />
-                                <div class="fallback-text-container" aria-hidden="true">
-                                    <div class="fallback-text">{this.state.title}</div>
-                                </div>
-                            </div>
-                        </a>
-                    </div><span></span></div>
-            </div>
-        </div>
-        )
-    }
-
+// handleMovieDetails(e){
+//     debugger
+//     e ? e.preventDefault() : ''        
+//     this.props.history.push('/movieDetails/'+e.target.id);
+//     console.log(e)
+}
     render() {
         return (
             <div>
@@ -140,124 +125,44 @@ returnMovieList() {
                             </div>
                         </div>
                                 </div>
+                                <h3 className="inline heading-style-stub heading-style-1 heading-size-l" style={{marginLeft:"215px"}}>Top 10 movies</h3>
                                 <table class="table" id = "scoreboard-table">
-                                  <thead class="thead-dark">
+                                  <thead>
                                     <tr>
                                       <th style={{color:'white'}} scope="col">#</th>
-                                      <th style={{color:'white'}} scope="col">First</th>
-                                      <th style={{color:'white'}} scope="col">Last</th>
-                                      <th style={{color:'white'}} scope="col">Handle</th>
+                                      <th style={{color:'white'}} scope="col">Title</th>
+                                      <th style={{color:'white'}} scope="col">Director</th>
+                                      <th style={{color:'white'}} scope="col">Rating</th>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr>
+                                    {/* <tr>
                                       <th style={{color:'white'}} scope="row">1</th>
                                       <td style={{color:'white'}}>Mark</td>
                                       <td style={{color:'white'}}>Otto</td>
                                       <td style={{color:'white'}}>@mdo</td>
-                                    </tr>
+                                    </tr> */}
+                                    {this.getTopTenRatedMovies()}
+                                  </tbody>
+                                </table>
+                                <h3 className="inline heading-style-stub heading-style-1 heading-size-l" style={{marginLeft:"215px"}}>Top 10 movies</h3>
+                                <table class="table" id = "scoreboard-table">
+                                  <thead>
                                     <tr>
-                                      <th style={{color:'white'}} scope="row">2</th>
-                                      <td style={{color:'white'}}>Jacob</td>
-                                      <td style={{color:'white'}}>Thornton</td>
-                                      <td style={{color:'white'}}>@fat</td>
+                                      <th style={{color:'white'}} scope="col">#</th>
+                                      <th style={{color:'white'}} scope="col">Title</th>
+                                      <th style={{color:'white'}} scope="col">Director</th>
+                                      <th style={{color:'white'}} scope="col">Rating</th>
                                     </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">3</th>
-                                      <td style={{color:'white'}}>Larry</td>
-                                      <td style={{color:'white'}}>the Bird</td>
-                                      <td style={{color:'white'}}>@twitter</td>
-                                    </tr>
-                                    <tr>
+                                  </thead>
+                                  <tbody>
+                                    {/* <tr>
                                       <th style={{color:'white'}} scope="row">1</th>
                                       <td style={{color:'white'}}>Mark</td>
                                       <td style={{color:'white'}}>Otto</td>
                                       <td style={{color:'white'}}>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">2</th>
-                                      <td style={{color:'white'}}>Jacob</td>
-                                      <td style={{color:'white'}}>Thornton</td>
-                                      <td style={{color:'white'}}>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">3</th>
-                                      <td style={{color:'white'}}>Larry</td>
-                                      <td style={{color:'white'}}>the Bird</td>
-                                      <td style={{color:'white'}}>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">1</th>
-                                      <td style={{color:'white'}}>Mark</td>
-                                      <td style={{color:'white'}}>Otto</td>
-                                      <td style={{color:'white'}}>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">2</th>
-                                      <td style={{color:'white'}}>Jacob</td>
-                                      <td style={{color:'white'}}>Thornton</td>
-                                      <td style={{color:'white'}}>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">3</th>
-                                      <td style={{color:'white'}}>Larry</td>
-                                      <td style={{color:'white'}}>the Bird</td>
-                                      <td style={{color:'white'}}>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">1</th>
-                                      <td style={{color:'white'}}>Mark</td>
-                                      <td style={{color:'white'}}>Otto</td>
-                                      <td style={{color:'white'}}>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">2</th>
-                                      <td style={{color:'white'}}>Jacob</td>
-                                      <td style={{color:'white'}}>Thornton</td>
-                                      <td style={{color:'white'}}>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">3</th>
-                                      <td style={{color:'white'}}>Larry</td>
-                                      <td style={{color:'white'}}>the Bird</td>
-                                      <td style={{color:'white'}}>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">1</th>
-                                      <td style={{color:'white'}}>Mark</td>
-                                      <td style={{color:'white'}}>Otto</td>
-                                      <td style={{color:'white'}}>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">2</th>
-                                      <td style={{color:'white'}}>Jacob</td>
-                                      <td style={{color:'white'}}>Thornton</td>
-                                      <td style={{color:'white'}}>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">3</th>
-                                      <td style={{color:'white'}}>Larry</td>
-                                      <td style={{color:'white'}}>the Bird</td>
-                                      <td style={{color:'white'}}>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">1</th>
-                                      <td style={{color:'white'}}>Mark</td>
-                                      <td style={{color:'white'}}>Otto</td>
-                                      <td style={{color:'white'}}>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">2</th>
-                                      <td style={{color:'white'}}>Jacob</td>
-                                      <td style={{color:'white'}}>Thornton</td>
-                                      <td style={{color:'white'}}>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th style={{color:'white'}} scope="row">3</th>
-                                      <td style={{color:'white'}}>Larry</td>
-                                      <td style={{color:'white'}}>the Bird</td>
-                                      <td style={{color:'white'}}>@twitter</td>
-                                    </tr>
+                                    </tr> */}
+                                    {this.getTopTenRatedMovies()}
                                   </tbody>
                                 </table>
                             </div>
