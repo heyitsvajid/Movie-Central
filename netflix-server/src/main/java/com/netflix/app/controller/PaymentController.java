@@ -86,9 +86,6 @@ public class PaymentController {
 	@RequestMapping(value = "/payment", method = RequestMethod.POST)
 	public ResponseEntity<?> addPayment(@RequestBody PaymentRequest paymentRequest, UriComponentsBuilder ucBuilder) {
 
-		// To be Implemented based on subscription type 
-		Date endDate = new Timestamp(System.currentTimeMillis());
-
 		User user = userService.findById(paymentRequest.getUserId());
 		Movie movie = movieService.findById(paymentRequest.getMovieId());
 		Subscription subscription = subscriptionService.findSubscriptionByType(paymentRequest.getSubscriptionType());

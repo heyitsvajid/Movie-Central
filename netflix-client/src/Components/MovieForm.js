@@ -214,7 +214,7 @@ class MovieForm extends Component {
 
     multiValueChangeActor(val) {
         var multiValues = []
-        document.getElementById("actors_error").innerHTML = "";
+//        document.getElementById("actors_error").innerHTML = "";
         val.forEach(element => {
             multiValues.push(element.value)
         });
@@ -225,7 +225,7 @@ class MovieForm extends Component {
 
     multiValueChangeDirector(val) {
         var multiValues = []
-        document.getElementById("keywords_error").innerHTML = "";
+//        document.getElementById("keywords_error").innerHTML = "";
         val.forEach(element => {
             multiValues.push(element.value)
         });
@@ -237,7 +237,7 @@ class MovieForm extends Component {
     handleUserInput = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        document.getElementById(e.target.name + "_error").innerHTML = "";
+    //    document.getElementById(e.target.name + "_error").innerHTML = "";
         this.setState({ [name]: value })
     }
 
