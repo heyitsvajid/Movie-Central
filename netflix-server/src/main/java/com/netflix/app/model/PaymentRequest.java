@@ -10,6 +10,17 @@ public class PaymentRequest {
 	private long userId;
 	private long movieId;
 	private String subscriptionType;
+	private Date endDate;
+	
+	
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public Double getAmount() {
 		return amount;
@@ -71,9 +82,10 @@ public class PaymentRequest {
 		super();
 	}
 
-	public PaymentRequest(Double amount, String cardNumber, int expMonth, int expYear, long userId, long movieId,
+	public PaymentRequest(Date endDate, Double amount, String cardNumber, int expMonth, int expYear, long userId, long movieId,
 			String subscriptionType) {
 		super();
+		this.endDate = endDate;
 		this.amount = amount;
 		this.cardNumber = cardNumber;
 		this.expMonth = expMonth;

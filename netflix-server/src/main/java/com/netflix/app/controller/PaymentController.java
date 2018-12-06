@@ -104,7 +104,7 @@ public class PaymentController {
 		}
 
 		Payment payment = new Payment(paymentRequest.getAmount(), paymentRequest.getCardNumber(),
-				paymentRequest.getExpMonth(), paymentRequest.getExpYear(), endDate,
+				paymentRequest.getExpMonth(), paymentRequest.getExpYear(), paymentRequest.getEndDate(),
 				new Timestamp(System.currentTimeMillis()), subscription, user, movie);
 
 		logger.info("Adding a payment");

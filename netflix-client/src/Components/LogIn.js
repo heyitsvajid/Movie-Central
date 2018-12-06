@@ -40,7 +40,7 @@ class SignIn extends Component {
 
     componentWillMount() {
     
-        axios.get(envURL + 'isLoggedIn', {withCredentials: true})
+    axios.get(envURL + 'isLoggedIn', {withCredentials: true})
             .then((response) => {
                 console.log("After checking the session", response.data);
                     if(response.data.role.name === 'CUSTOMER'){

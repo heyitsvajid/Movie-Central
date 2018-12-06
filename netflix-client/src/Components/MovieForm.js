@@ -21,6 +21,7 @@ class MovieForm extends Component {
             year:'',
             studio:'',
             synopsis: '',
+            genre:"",
             image: '',
             trailer_link: '',
             actors: [],
@@ -78,7 +79,7 @@ class MovieForm extends Component {
                 country:this.state.country,
                 availability:this.state.availability,
                 price:this.state.price,
-                //movie_keywords: this.state.movie_keywords,
+                genre: this.state.genre,
             }
             debugger
 
@@ -103,6 +104,7 @@ class MovieForm extends Component {
             this.setState({
                 title: '',
                 year:'',
+                genre:'',
                 studio:'',
                 synopsis: '',
                 image: '',
@@ -212,7 +214,7 @@ class MovieForm extends Component {
 
     multiValueChangeActor(val) {
         var multiValues = []
-        document.getElementById("keywords_error").innerHTML = "";
+        document.getElementById("actors_error").innerHTML = "";
         val.forEach(element => {
             multiValues.push(element.value)
         });
@@ -328,20 +330,22 @@ class MovieForm extends Component {
     updateMovie(e) {
         e ? e.preventDefault() : ''
 
-        let titleErrorPresent = !this.validateTitleFormat(this.state.title) ? true : false; 
-        let trailerLinkErrorPresent = !this.validateTrailerLinkFormat(this.state.trailer_link) ? true : false;
-        let movieTimeErrorPresent = !this.validateMovieTimeFormat(this.state.movie_length) ? true : false;
-        let keywordsErrorPresent = !this.validateKeywordsFormat(this.state.movie_keywords) ? true : false;
-        let synopsisErrorPresent = !this.validateSynopsisFormat(this.state.synopsis) ? true : false;
-        let timeErrorPresent = !this.validateTimeFormat(this.state.release_date) ? true : false;
+        // let titleErrorPresent = !this.validateTitleFormat(this.state.title) ? true : false; 
+        // let trailerLinkErrorPresent = !this.validateTrailerLinkFormat(this.state.trailer_link) ? true : false;
+        // let movieTimeErrorPresent = !this.validateMovieTimeFormat(this.state.movie_length) ? true : false;
+        // let keywordsErrorPresent = !this.validateKeywordsFormat(this.state.movie_keywords) ? true : false;
+        // let synopsisErrorPresent = !this.validateSynopsisFormat(this.state.synopsis) ? true : false;
+        // let timeErrorPresent = !this.validateTimeFormat(this.state.release_date) ? true : false;
 
-        if (timeErrorPresent || titleErrorPresent || trailerLinkErrorPresent || movieTimeErrorPresent
-            || synopsisErrorPresent) {
-            return;
-        }
+        // if (timeErrorPresent || titleErrorPresent || trailerLinkErrorPresent || movieTimeErrorPresent
+        //     || synopsisErrorPresent) {
+        //     return;
+        // }
+ 
         var movie = {
             id: this.state.update_id,
             image:this.state.image,
+            genre:this.state.genre,
             title: this.state.title,
             trailer: this.state.trailer_link,
             year: this.state.year,
@@ -353,10 +357,9 @@ class MovieForm extends Component {
             country:this.state.country,
             availability:this.state.availability,
             price:this.state.price,
-//            movie_keywords: this.state.movie_keywords,            
         }
-
-        axios.put(envURL + 'movie',movie,{ headers: { 'Content-Type': 'application/json'}})
+        debugger
+        axios.put(envURL + 'movie/'+this.state.update_id,movie,{ headers: { 'Content-Type': 'application/json'}})
         .then((res) => {
                     console.log(res.data);
                     swal({
@@ -368,7 +371,7 @@ class MovieForm extends Component {
         },(error) => {
             swal({
                 type: 'error',
-                title: 'Add Movie',
+                title: 'Update Movie Error',
                 text: error.response.data.errorMessage,
             })
             console.log('Error adding movies.');
@@ -396,35 +399,62 @@ class MovieForm extends Component {
         }, 2000);
     }
 
-    handleMovieDelete(e) {
-        var message = "To be Implemented: "+ e.target.id
+        handleMovieDelete(e) {
+        axios.delete(envURL + 'movie/'+e.target.id,{ headers: { 'Content-Type': 'application/json'}})
+        .then((res) => {
+                    console.log(res.data);
+                    swal({
+                        type: 'success',
+                        title: 'Delete Movie',
+                        text: "Movie Deleted Successfully",
+                    })
+                this.loadMovies()          
+        },(error) => {
+            swal({
+                type: 'error',
+                title: 'Delete Movie Error',
+                text: error.response.data.errorMessage,
+            })
+            console.log('Error adding movies.');
+        })    
+    }
+
+    
+    handleCancel() {
+        var message = "To be Implemented: "
         alert(message)
     }
 
     handleMovieUpdate(e) {
         e ? e.preventDefault() : ''
 
-        document.getElementById("title_error").innerHTML = "";
-        document.getElementById("trailer_link_error").innerHTML = "";
-        document.getElementById("time_error").innerHTML = "";
-        document.getElementById("movie_length_error").innerHTML = "";
-        document.getElementById("synopsis_error").innerHTML = "";
-        document.getElementById("keywords_error").innerHTML = "";
-        document.getElementById("file_error").innerHTML = "";
+        // document.getElementById("title_error").innerHTML = "";
+        // document.getElementById("trailer_link_error").innerHTML = "";
+        // document.getElementById("time_error").innerHTML = "";
+        // document.getElementById("movie_length_error").innerHTML = "";
+        // document.getElementById("synopsis_error").innerHTML = "";
+        // document.getElementById("keywords_error").innerHTML = "";
+        // document.getElementById("file_error").innerHTML = "";
 
+        debugger
         this.state.movieList.forEach(element => {
-            if (element._id == e.target.id) {
+            if (element.id == e.target.id) {
                 this.setState({
                     update_id: e.target.id,
                     update: !this.state.update,
                     title: element.title,
-                    trailer_link: element.trailer_link,
-                    release_date: moment(element.release_date),
-                    mpaa_ratings: element.mpaa_ratings,
-                    movie_keywords: element.movie_keywords,
-                    movie_length: element.movie_length,
-                    movie_definition: element.movie_definition,
+                    trailer_link: element.trailer,
+                    year: element.year,
+                    price: element.price,
+                    studio: element.studio,
+                    genre: element.genre,
+                    ratings: element.ratings,
+                    availability: element.availability,
+                    country: element.country,
+                    actors: element.actors,
+                    director: element.director,
                     synopsis : element.synopsis,
+                    image: element.image,
                 })
                 return;
             }
@@ -516,25 +546,12 @@ class MovieForm extends Component {
                                         <div id = "studio_error" class= "error"></div>
                                     </div>
 
-                                    {/* <div class="form-row">
-                                        <div className="form-group col-md-6">
-                                            <label class="dashboard-label">Movie Length</label>
-                                            <input class="form-control" type="number" name="movie_length"
-                                            placeholder="Length in Minutes" required="" value={this.state.movie_length} onChange={this.handleUserInput} />
-                                            <div id = "movie_length_error" class= "error"></div>                                            
-                                        </div> */}
-
-                                        {/* <div className="form-group col-md-6">
-                                            <label class="dashboard-label">Release Date</label>
-                                            <DatePicker
-                                                selected={(this.state.release_date)}
-                                                onChange={this.handleChange.bind(this)}
-                                                minDate={moment()}
-                                                placeholderText="Select a release date"
-                                            />
-                                             <div id = "time_error" class= "error"></div>
-                                        </div> */}
-                                    
+                                    <div className="form-group">
+                                        <label class="dashboard-label">Genre</label>
+                                        <input class="form-control" type="text" name="genre" placeholder="Enter Genre" 
+                                        required="" value={this.state.genre} onChange={this.handleUserInput} />
+                                        <div id = "genre_error" class= "error"></div>
+                                    </div>
 
                                     <div class="form-row">
                                         <div className="form-group col-md-6">
@@ -840,11 +857,11 @@ class MovieForm extends Component {
                                         </div> */}
                                     
 
-                                    <div className="form-group">
-                                        <label class="dashboard-label">Movie Keywords</label>
-                                        <Creatable amenities={this.state.movie_keywords} multiValueChange={this.multiValueChangeKeywords.bind(this)} />
-                                        <div id = "keywords_error" class= "error"></div>  
-                                    </div>
+                                    {/* // <div className="form-group">
+                                    //     <label class="dashboard-label">Movie Keywords</label>
+                                    //     <Creatable amenities={this.state.movie_keywords} multiValueChange={this.multiValueChangeKeywords.bind(this)} />
+                                    //     <div id = "keywords_error" class= "error"></div>  
+                                    // </div> */}
 
                                     <div className="form-group">
                                         <label class="dashboard-label">Actors</label>
@@ -879,7 +896,7 @@ class MovieForm extends Component {
                                         </div>
 
                                         <div className="form-group col-md-3">
-                                            <input type="reset" class="dashboard-form-btn btn btn-default" value="Cancel" />
+                                            <input type="reset" class="dashboard-form-btn btn btn-default" value="Cancel" onClick={this.handleCancel.bind(this)} />
                                             
                                         </div>
                                     </div>

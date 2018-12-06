@@ -18,13 +18,13 @@ public enum Subscriptions {
 	PPVO {
 		@Override
 		public String toString() {
-			return "SBCR";
+			return "PPVO";
 		}
 	},
 	PAID {
 		@Override
 		public String toString() {
-			return "SBCR";
+			return "PAID";
 		}
 	}
 }

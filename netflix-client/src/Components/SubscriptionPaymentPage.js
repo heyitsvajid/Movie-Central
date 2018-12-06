@@ -11,22 +11,111 @@ class SubscriptionPaymentPage extends Component {
   constructor(props) {
     super(props);
     this.state={
-      movie:{},
-      reviews:[],
-      img:'',
-      rating: 0,
-      title: "",
-      review_content: "",
-      isLoggedIn: false
+    amount:localStorage.getItem('amount'),
+    cardNumber:'',
+    expMonth:'',
+    expYear:'',
+    userId:'',
+    movieId:'',
+    subscriptionType:'',
+    endDate:''
     }
   }
 
-    componentWillMount(){
-    // this.fetchDataFromServer();
-  }
-  
-  
 
+  handleUserInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+//    document.getElementById(e.target.name + "_error").innerHTML = "";
+    this.setState({ [name]: value })
+}
+
+    componentWillMount(){
+    axios.get(envURL + 'isLoggedIn', {withCredentials: true})
+        .then((response) => {
+            console.log("After checking the session", response.data);
+                if(response.data.role.name === 'CUSTOMER'){
+                    console.log("Already Logged In")
+                }
+                else{
+                console.log("Error : User is not CUSTOMER")                   
+                }
+        },
+        (error) => { 
+            swal({
+                type: 'error',
+                title: 'Login to Continue',
+                text: "error.response.data.errorMessage",
+            })
+            this.props.history.push('/login');
+            console.log(error)})
+}
+  
+    
+  handleSubmit(e) {
+    e.preventDefault();
+
+        debugger
+        var type = localStorage.getItem("movieType") ? localStorage.getItem("movieType") : ''
+        var amount = localStorage.getItem("amount"); 
+        var endDate = new Date(); // Now
+
+       if(type == 'SBCR'){
+            amount = 10;
+            endDate = endDate.setDate(endDate.getDate() + 30); // Set now + 30 days as the new date
+        } else if(type == 'PPVO'){
+            amount = localStorage.getItem("amount");
+            endDate = endDate.setDate(endDate.getDate() + 1); // Set now + 1 days as the new date
+
+        }else if(type = 'PAID'){
+            amount = localStorage.getItem("amount");
+            endDate = endDate.setDate(endDate.getDate() + 1); // Set now + 1 days as the new date
+        }
+        var payment = {
+            amount:amount,
+            cardNumber:this.state.cardNumber,
+            expMonth:this.state.expMonth,
+            expYear:this.state.expYear,
+            userId:localStorage.getItem("userid"),
+            movieId:localStorage.getItem("movieid"),
+            subscriptionType: type,
+            endDate:endDate,
+        }
+        debugger
+
+        axios.post(envURL + 'payment',payment,{ headers: { 'Content-Type': 'application/json'}})
+            .then((res) => {
+                        console.log(res.data);
+                        swal({
+                        type: 'success',
+                        title: 'Payment',
+                        text: 'Payment Done Successfully',
+                    })                                  
+            this.props.history.push('/login');
+            },(error) => {
+                swal({
+                    type: 'error',
+                    title: 'Payment',
+                    text: error.response.data.errorMessage,
+                })
+                console.log('Error in Payment.');
+            })    
+        
+        this.setState({
+            amount:'',
+            cardNumber:'',
+            expMonth:'',
+            expYear:'',
+            userId:'',
+            movieId:'',
+            subscriptionType:'',
+            endDate:'',
+        });
+        var that = this;
+        setTimeout(function () {
+            that.loadMovies()
+        }, 2000);    
+}
 
   render() {
    
@@ -72,13 +161,13 @@ class SubscriptionPaymentPage extends Component {
                                             <div class="nfInput validated nfInputOversize">
                                                 <div class="nfInputPlacement">
                                                     <label class="input_id" placeholder="Amount">
-                                                        <input placeholder="Amount"  style = {{width:'450px'}} type="text" name="lastName" class="nfTextField hasText" id="id_lastName" tabindex="0" dir="ltr" />
+                                                        <input placeholder="Amount"  style = {{width:'450px'}} value={this.state.amount} onChange={this.handleUserInput} type="number" name="amount" class="nfTextField hasText" id="id_lastName" tabindex="0" dir="ltr" disabled/>
                                                         {/* <label for="id_lastName" class="placeLabel">Last Name</label> */}
                                                     </label>
                                                 </div>
                                             </div>
                                         </li>
-                                        <li data-testid="field-lastName" class="nfFormSpace">
+                                     <li data-testid="field-lastName" class="nfFormSpace">
                                             <div class="nfInput validated nfInputOversize">
                                                 <div class="nfInputPlacement">
                                                     <label class="input_id" placeholder="lastName">
@@ -107,13 +196,13 @@ class SubscriptionPaymentPage extends Component {
                                                     </label>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> 
                                         <li data-testid="field-creditCardNumber" class="nfFormSpace">
                                             <div class="cardNumberContainer">
                                                 <div class="nfInput validated nfInputOversize">
                                                     <div class="nfInputPlacement">
                                                         <label class="input_id" placeholder="creditCardNumber">
-                                                            <input style = {{width:'450px'}} type="tel" placeholder="Card Number" name="creditCardNumber" class="nfTextField hasText" id="id_creditCardNumber" value="************4243" tabindex="0" maxLength="19" minLength="12" dir="ltr" />
+                                                            <input style = {{width:'450px'}} type="tel" placeholder="Card Number"  value={this.state.cardNumber} onChange={this.handleUserInput} type="number" name="cardNumber" class="nfTextField hasText" id="id_creditCardNumber"  tabindex="0" maxLength="19" minLength="12" dir="ltr" />
                                                             {/* <label for="id_creditCardNumber" class="placeLabel">Card Number</label> */}
                                                         </label>
                                                     </div>
@@ -124,19 +213,31 @@ class SubscriptionPaymentPage extends Component {
                                             <div class="nfInput validated nfInputOversize">
                                                 <div class="nfInputPlacement">
                                                     <label class="input_id" placeholder="creditExpirationMonth">
-                                                        <input style = {{width:'450px'}} placeholder="Expiration Date (MM/YY)" type="tel" name="creditExpirationMonth" class="nfTextField hasText" id="id_creditExpirationMonth" value="09/20" tabindex="0" dir="ltr" />
+                                                        <input style = {{width:'450px'}} placeholder="Expiration Date (MM)" type="tel" name="expMonth" value={this.state.expMonth} onChange={this.handleUserInput} class="nfTextField hasText" id="id_creditExpirationMonth" tabindex="0" dir="ltr" />
                                                         {/* <label for="id_creditExpirationMonth" class="placeLabel">Expiration Date (MM/YY)</label> */}
                                                     </label>
                                                 </div>
                                             </div>
                                         </li>
+
+                                        <li data-testid="field-creditExpirationMonth" class="nfFormSpace">
+                                            <div class="nfInput validated nfInputOversize">
+                                                <div class="nfInputPlacement">
+                                                    <label class="input_id" placeholder="creditExpirationMonth">
+                                                        <input style = {{width:'450px'}} placeholder="Expiration Year (YYYY)" type="tel" name="expYear" value={this.state.expYear} onChange={this.handleUserInput} class="nfTextField hasText" id="id_creditExpirationMonth" tabindex="0" dir="ltr" />
+                                                        {/* <label for="id_creditExpirationMonth" class="placeLabel">Expiration Date (MM/YY)</label> */}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </li>
+
                                         <li data-testid="field-creditExpirationYear" class="nfFormSpace"></li>
                                         <li data-testid="field-creditCardSecurityCode" class="nfFormSpace">
                                             <div class="nfInput nfInputOversize tooltip">
                                                 <div class="nfInputPlacement">
-                                                    <label class="input_id" placeholder="creditCardSecurityCode">
-                                                        <input style = {{width:'450px'}} placeholder="Security Code (CVV)" type="tel" name="creditCardSecurityCode" class="nfTextField" id="id_creditCardSecurityCode" value="" tabindex="0" maxLength="4" minLength="3" dir="" />
-                                                    </label>
+                                                    {/* <label class="input_id" placeholder="creditCardSecurityCode">
+                                                        <input style = {{width:'450px'}} placeholder="Security Code (CVV)" type="tel" name="cvv" value={this.state.cvv} onChange={this.handleUserInput} class="nfTextField" id="id_creditCardSecurityCode"  tabindex="0" maxLength="4" minLength="3" dir="" />
+                                                    </label> */}
                                                 </div>
                                                 <div class="tooltipWrapper"><span class="nf-svg-icon "><svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g><circle stroke="#A9A6A6" stroke-width="2" cx="18" cy="18" r="17"></circle><path d="M17.051 21.094v-.54c0-.648.123-1.203.369-1.665.246-.462.741-.915 1.485-1.359a7.37 7.37 0 0 0 .981-.657c.222-.186.372-.366.45-.54.078-.174.117-.369.117-.585 0-.384-.177-.714-.531-.99-.354-.276-.831-.414-1.431-.414-.624 0-1.131.135-1.521.405-.39.27-.627.627-.711 1.071h-2.304a4.053 4.053 0 0 1 .738-1.845c.396-.546.924-.981 1.584-1.305.66-.324 1.44-.486 2.34-.486.852 0 1.596.153 2.232.459.636.306 1.134.726 1.494 1.26.36.534.54 1.143.54 1.827 0 .66-.177 1.227-.531 1.701-.354.474-.891.933-1.611 1.377-.42.252-.729.48-.927.684-.198.204-.33.399-.396.585a1.79 1.79 0 0 0-.099.603v.414h-2.268zm1.26 4.158c-.408 0-.762-.15-1.062-.45-.3-.3-.45-.654-.45-1.062 0-.408.15-.762.45-1.062.3-.3.654-.45 1.062-.45.408 0 .762.15 1.062.45.3.3.45.654.45 1.062 0 .408-.15.762-.45 1.062-.3.3-.654.45-1.062.45z" fill="#A9A6A6"></path></g></g></svg></span></div>
                                             </div>
@@ -146,7 +247,8 @@ class SubscriptionPaymentPage extends Component {
                             </div>
                         </div>
                         <div class="submitBtnContainer">
-                            <button id="simplicityPayment-SAVE" type="submit" autoComplete="off" class="nf-btn nf-btn-primary nf-btn-solid nf-btn-oversize">Pay</button>
+
+                            <button id="simplicityPayment-SAVE" type="submit" autoComplete="off" onClick={this.handleSubmit.bind(this)} class="nf-btn nf-btn-primary nf-btn-solid nf-btn-oversize">Pay</button>
                         </div>
                     </form>
                 </div>

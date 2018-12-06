@@ -255,7 +255,7 @@ class AdminDashboard extends Component {
                     this.setState({
                         isLoggedIn: false
                     }, () => {
-                        this.props.history.push('/');
+                        this.props.history.push('/login');
                     })
             })
     }
