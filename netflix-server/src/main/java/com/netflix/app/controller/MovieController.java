@@ -1,6 +1,7 @@
 package com.netflix.app.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class MovieController {
 	public ResponseEntity<?> addMovie(@RequestBody Movie movie,UriComponentsBuilder ucBuilder) {
 
 		logger.info("Adding a movie");
-
+		movie.setCreatedAt(new Date());
 		movie.setDeleted("N");
 		movieService.save(movie);
 		HttpHeaders headers = new HttpHeaders();
@@ -82,7 +83,7 @@ public class MovieController {
 		logger.info("Updating Movie with id {}", id);
 
 		Movie currentMovie = movieService.findById(id);
-		
+		currentMovie.setUpdatedAt(new Date());
 		if (currentMovie == null || currentMovie.getDeleted().equals("Y")) {
 			logger.error("Unable to update. Movie with id {} not found.", id);
 			return new ResponseEntity(new CustomErrorType("Unable to upate Movie with id " + id + " not found."),

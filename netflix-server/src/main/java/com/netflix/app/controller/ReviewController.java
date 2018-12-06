@@ -1,5 +1,6 @@
 package com.netflix.app.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class ReviewController {
 	public ResponseEntity<?> addReview(@RequestBody Review review,UriComponentsBuilder ucBuilder) {
 
 		logger.info("Adding a review");
-
+		review.setCreatedAt(new Date());
 		reviewService.save(review);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(ucBuilder.path("/review/{id}").buildAndExpand(review.getId()).toUri());
