@@ -254,8 +254,7 @@ getMovieReviews(){
                                 <li className="mop__synopsis-title">Directors:{this.state.director}</li>
                                 <li className="mop__synopsis-title">Actors:{this.state.actors}</li>
                               <li className="fd-star-rating__container">
-                                 <div className=" js-fd-star-rating fd-star-rating " data-star-rating={this.state.movieReviewRating / this.state.reviews.length}>
-                                 </div>
+                                 {/* <div className=" js-fd-star-rating fd-star-rating " data-star-rating={this.state.movieReviewRating / this.state.reviews.length}></div> */}
                               </li>
                               <li className="movie-details__fan-ratings">{this.state.totalReview}</li>
                               <li className="js-rotten-tomatoes"></li>
@@ -312,7 +311,7 @@ getMovieReviews(){
                   <section className="fan-reviews width-100" style = {{width:"1000px"}}>
                       <div className="fan-reviews__header">
                           <h2 className="fan-reviews__title heading-style-1 heading-size-l">Fan Reviews</h2>
-                          <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating="4.5">
+                          <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating={this.state.movieReviewRating}>
                           </div>
                           {/* <a className="cta fan-reviews__all-reviews" href="/ralph-breaks-the-internet-201129/movie-reviews">See All Fan Reviews</a> */}
                       </div>
@@ -322,7 +321,7 @@ getMovieReviews(){
                           <div className="fan-reviews__decoration-bottom"></div>
                       </div>
           
-                      <a style={{color:'white'}} data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
+                      <a data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
           
                   </section>
               </div>

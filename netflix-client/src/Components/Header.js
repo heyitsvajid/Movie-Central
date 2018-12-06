@@ -81,7 +81,7 @@ class Header extends Component {
     <div>
       <div class="pinning-header-container" style={{top: '0px', position: 'relative', background: 'transparent'}}>
           <div class="main-header has-billboard" style={{height:'66px'}}>
-              <a aria-label="Netflix" class="logo icon-logoUpdate active" href="/browse"></a>
+              <a aria-label="Netflix" class="logo icon-logoUpdate active" href="/"></a>
               <ul class="tabbed-primary-navigation" role="navigation">
                   <li class="navigation-menu"><a class="menu-trigger" role="button" aria-haspopup="true">Browse</a></li>
                   <li class="navigation-tab"><a class="current active" href="/browse">Home</a></li>
@@ -98,7 +98,7 @@ class Header extends Component {
                       <div class="searchInput">
                         <span class="icon-search">
                         </span>
-                            <input type="text" onChange = {this.handleSearch.bind(this)} placeholder = "Titles, People, Genre"  data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" value={this.state.searchQuery} style={{border:'none', transitionDuration: '200ms', width:'250px', backgroundColor: 'black'}} />
+                            <input type="text" onChange = {this.handleSearch.bind(this)} placeholder = {this.state.searchQuery}  data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" value={this.state.searchQuery} style={{ transitionDuration: '200ms', width:'250px', backgroundColor: 'black'}} />
                         <span class="icon-close empty">
                         </span>
                         </div>
@@ -121,9 +121,8 @@ class Header extends Component {
                         </div>
                       </div>
                   </div>
-                  {/* <div class="nav-element show-kids"><a href="/Kids">KIDS</a></div>
-                  <div class="nav-element show-dvd"><a href="https://dvd.netflix.com/SubscriptionAdd?preselect=1u&amp;dsrc=STRWEB_NAV">DVD</a></div> */}
-                  <div class="nav-element show-kids"><a href="" onClick={ this.handleLogout.bind(this) }>Logout</a></div>
+                  <div class="nav-element show-kids"><a href="/Kids">KIDS</a></div>
+                  <div class="nav-element show-dvd"><a href="https://dvd.netflix.com/SubscriptionAdd?preselect=1u&amp;dsrc=STRWEB_NAV">DVD</a></div>
                   <div class="nav-element"><span class="notifications"><button class="notifications-menu" aria-haspopup="true" aria-expanded="false" aria-label="Notifications"><span class="icon-button-notification"></span><span class="notification-pill">1</span></button>
                       </span>
                   </div>
