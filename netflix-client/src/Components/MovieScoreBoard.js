@@ -95,11 +95,11 @@ getTopTenRatedMovies(){
         )
     })
 }
-handleMovieDetails(e){
-    debugger
-    e ? e.preventDefault() : ''        
-    this.props.history.push('/movieDetails/'+e.target.id);
-    console.log(e)
+// handleMovieDetails(e){
+//     debugger
+//     e ? e.preventDefault() : ''        
+//     this.props.history.push('/movieDetails/'+e.target.id);
+//     console.log(e)
 }
     render() {
         return (
