@@ -41,7 +41,7 @@ public class PaymentServiceImpl implements PaymentService{
 	@Override
 	public List<Payment> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return (List<Payment>) paymentRepository.findAll();
 	}
 	
 

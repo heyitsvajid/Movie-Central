@@ -15,6 +15,10 @@ class ListAllUsers extends Component {
     constructor() {
         super();
         this.state = {
+            listSubscriptions:[],
+            listViews:[],
+            showUserViews:false,
+            showUserSubscriptions:false,
             multiplex_admins : [],
             users: [],
             searchedUsers: [],
@@ -50,26 +54,52 @@ class ListAllUsers extends Component {
 
     componentWillMount(){
         this.getAllUsers();
-//        this.loadSessionAnalytics();
     }
 
-    // loadSessionAnalytics(){
-    //     let findAllSessionDetails = envURL + 'getAllSessionDetails';
-    //     axios.get(findAllSessionDetails)
-    //         .then(res => {
-    //             if (res.data.successMsg != '') {
-    //                 console.log('Fetching all SessionDetails');
-    //                 console.log(res.data.data);
-    //                  this.setState({allUserSessionDetails: res.data.data})
-    //             } else {
-    //                 console.error('Error Fetching all movie');
-    //             }
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //         });
-    // }    
+
+    getAllUserSubscriptions = (e) => {
+        debugger
+        let userId = e.target.id;
+        let url = envURL + 'payment/user/'+ userId;
+        axios.get( url, { withCredentials : true } )
+            .then((response) => {
+                console.log("In Get All Users Subscriptions", response.data);
+                this.setState({
+                    listSubscriptions : response.data ? response.data : [],
+                    showUserViews:false,
+                    showUserSubscriptions:true,
+        
+                }, () => {
+                    console.log("Users Array set", this.state.users )
+                })
+            },(error) => {
+                console.log("Error fetching all users")
+                console.log(error)
+            }
+            )
+    };
     
+
+    getAllUserViews = (e) => {
+        let userId = e.target.id;
+        let url = envURL + 'view/user/'+ userId;
+        axios.get( url, { withCredentials : true } )
+            .then((response) => {
+                console.log("In Get All Users Subscriptions", response.data);
+                this.setState({
+                    listViews : response.data ? response.data : [],
+                    showUserViews:true,
+                    showUserSubscriptions:false,
+                }, () => {
+                    console.log("Users Array set", this.state.users )
+                })
+            },(error) => {
+                console.log("Error fetching all users")
+                console.log(error)
+            }
+            )
+    };
+
     getAllUsers = () => {
         let url = envURL + 'users/';
         axios.get( url, { withCredentials : true } )
@@ -91,84 +121,7 @@ class ListAllUsers extends Component {
 
     updateUser(e) {
         e ? e.preventDefault() : ''
-        // if (!this.state.name || !this.state.address || !this.state.state_name || !this.state.city || !this.state.zipcode
-        //     || !this.state.multiplex_owner_id || !this.state.amenities || !this.state.screens.length > 0 || !this.state.file) {
-        //     swal({
-        //         type: 'error',
-        //         title: 'Add Multiplex',
-        //         text: 'Provide all fields.',
-        //     })
-        //     return;
-        // }
-        // if (!String(this.state.zipcode).match(/(^\d{5}$)|(^\d{5}-\d{4}$)/i)) {
-        //     swal({
-        //         type: 'error',
-        //         title: 'Add Multiplex',
-        //         text: 'Invalid Zipcode',
-        //     })
-        //     return;
-        // }
-        // if (!(String(this.state.contact_number).length == 10)) {
-        //     swal({
-        //         type: 'error',
-        //         title: 'Add Multiplex',
-        //         text: 'Invalid Contact Number',
-        //     })
-        //     return;
-        // }
 
-        let firstNameErrorPresent = !this.validateFirstNameFormat(this.state.first_name) ? true : false;
-        let emailErrorPresent = !this.validateEmailFormat(this.state.email) ? true : false;
-        let zipcodeErrorPresent = !this.validateZipcodeFormat(this.state.zipcode) ? true : false;
-        let phoneNumberErrorPresent = !this.validatePhoneNumberFormat(this.state.phone_number) ? true : false;
-
-        if(firstNameErrorPresent || emailErrorPresent || zipcodeErrorPresent || phoneNumberErrorPresent){ return; }
-
-        let all_details = {
-            id : this.state.update_id,
-            first_name : this.state.first_name,
-            last_name : this.state.last_name,
-            city: this.state.city,
-            state_name: this.state.state_name,
-            zipcode: this.state.zipcode,
-            phone: this.state.phone_number,
-            address: this.state.address
-        };
-
-        let profiledetails = {
-            id : this.state.update_id,
-            email : this.state.email,
-        };
-
-        axios.post(envURL + 'checkforexistingemail', profiledetails, { withCredentials : true})
-        .then(res => {
-            if(res.data.errorMsg == "" && all_details.id != res.data.data[0].id){
-                document.getElementById("email_error").innerHTML = "Email already present";
-                return;
-            }
-            else {
-                axios.post( envURL+'updateprofileemail', profiledetails, { withCredentials : true} )
-                    .then( (response) => {
-                            axios.post( envURL+'updateprofilebasicinfo', all_details, { withCredentials : true} )
-                            .then((res) => {
-                                this.setState({
-                                    id : '',
-                                    first_name : '',
-                                    last_name : '',
-                                    city: '',
-                                    state_name: '',
-                                    zipcode: '',
-                                    phone: '',
-                                    address: ''
-                                })
-                                this.getAllUsers();
-                                swal( "Profile Updated Successfully!", "", "success" );
-                                document.getElementById("user-update").style.display = "none";
-                            })
-                        }
-                    )
-            }
-        })
     }
 
     validateEmailFormat(email){
@@ -229,10 +182,10 @@ class ListAllUsers extends Component {
                 if (willDelete) {
                     console.log("In handleDeleteUser, id :", e );
                     let id = { id : e };
-                    let url = envURL + 'disableaccount';
+                    let url = envURL + 'delete';
                     axios.post( url, id, { withCredentials : true } )
                     .then( (response) => {
-                        console.log("After Deleting Bill, Response ", response.data);
+                        console.log(response.data);
                         swal({
                             type: 'success',
                             title: 'User Deleted Successfully',
@@ -268,7 +221,7 @@ class ListAllUsers extends Component {
               for(let i = 0; i < this.state.users.length; i++){
                 var strRegExPattern = new RegExp(e.target.value, 'i');
                 let list_element = this.state.users[i]
-                if(list_element.first_name.match(strRegExPattern) || list_element.email.match(strRegExPattern)){
+                if(list_element.name.match(strRegExPattern) || list_element.email.match(strRegExPattern)){
                     searched_array.push(list_element);
                 }
               }
@@ -293,126 +246,6 @@ class ListAllUsers extends Component {
         this.setState({finalGraphData: finalData});
     }
 
-    getSessionChart(){
-        if(this.state.currentSessionUserId != ""){
-            return(
-                <div>
-                    <h3>Session Graph</h3>
-                    <hr />
-                    <div class="row gap-20 masonry pos-r" style={{position: 'relative', height: '800px'}}>
-                        <div class="masonry-item col-md-12" style={{position: 'absolute', top: '0px'}}>
-                            <div class="user-session-graph bgc-white p-20 bd">
-                                <div class="mT-30">
-                                    <div className="form-group">
-                                        <label class="dashboard-label">User Session</label>
-                                        <br/>
-                                        <select id = "select-session" class="form-control col-sm-5"
-                                                    name="mpaa_ratings" onChange = {this.setGraphData.bind(this)}>
-                                            <option value="#" disabled selected>Select Session</option>
-                                            {
-                                                this.state.currentSessionObject.session.map(function (s, index) {
-                                                    return <option key={index}
-                                                        value={index}>{"Session on " + new Date(s.date_added)}</option>;
-                                                })
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <h3  style={ {marginLeft : 295}}>Pages Visited By User in a Session</h3>
-                                <br/>
-                                <br/>
-                                <br/>
-                                <br/>
-                            <ComposedChart width={1000} height={400} data={this.state.finalGraphData}>
-                                <XAxis label={{ position: 'insideLeft'}} dataKey="page" />
-                                <YAxis label={{ value: "Time Spent on Page(sec)", angle: -90, position: 'insideLeft' }}/>
-                                <Tooltip />
-
-                                <defs>
-                                    <linearGradient id="colorUv6" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="30%" stopColor="#8884d8" stopOpacity={0.9}/>
-                                        <stop offset="70%" stopColor="#8884d8" stopOpacity={0.5}/>
-                                    </linearGradient>
-
-                                </defs>
-
-                                <Legend />
-                                <CartesianGrid stroke="#f5f5f5" />
-                                <Area type="monotone" dataKey="time" fill="url(#colorUv6)" stroke="#8884d8" />
-                            </ComposedChart>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-        else{
-            return(
-                <div></div>
-            )
-        }
-        
-        
-        
-    }
-
-    handleShowUserSessionGraph(e){
-        e.preventDefault();
-        this.setState( {currentSessionObject: {session:[]}});
-        console.log(this.state.allUserSessionDetails);
-        var user_id = e.target.dataset.userid;
-        this.state.allUserSessionDetails.forEach(element => {
-            if(element.user_id == e.target.dataset.userid){
-                this.setState({currentSessionObject: element},() =>{
-                    this.setState({currentSessionUserId: user_id});
-                });
-                return;
-            }
-        });
-        this.setState({finalGraphData: []});
-        if(document.getElementById("select-session") != null){
-            document.getElementById("select-session").value = "#";
-        }
-    }
-
-    handleUserUpdate(e) {
-        e ? e.preventDefault() : ''
-        this.state.users.forEach(element => {
-            if (element.id == e.target.id) {
-                document.getElementById("user-update").style.display = 'block';
-                debugger
-                this.setState({
-                    update_id: e.target.id,
-                    first_name: element.first_name,
-                    last_name: element.last_name,
-                    email: element.email,
-                    city: element.city,
-                    state_name: element.state,
-                    zipcode: element.zipcode,
-                    phone_number: element.phone_number,
-                    address: element.address
-                })
-                return;
-            }
-        });
-
-    }
-
-    handleCancel(e){
-        document.getElementById("user-update").style.display = "none";
-    }
 
     returnUserList() {
         let pagination_list, currentTodos=null;
@@ -434,26 +267,32 @@ class ListAllUsers extends Component {
                 currentTodos[i].current_index = indexOfFirstTodo + i + 1;
             }
         }
-        //onClick={this.handleShowUserSessionGraph.bind(this)}
         let rowNodes = currentTodos.map((item, index) => {
             return (
                 <tr>
                     <th scope="row"> { item.current_index } </th>
-                    <td> <a href = "" data-userId = {item.id}  > { item.name } </a> </td>
+                    <td>{ item.name }</td>
                     
                     <td> { item.email } </td>
                     <td> { item.role.name } </td>
+                    <td> { new Date(item.role.createdAt).toDateString() } </td>
+
                     <td>
                         <div class="row">
-                            <div className="form-group col-md-2.5">
+                            <div className="form-group col-ml-2">
                                 <input type="button" id={item.id} class="dashboard-form-btn link-style nav-link btn-info action-link"
-                                    value="Update" required=""  onClick={this.handleUserUpdate.bind(this)} />
+                                    value="Subscriptions" required=""  onClick={this.getAllUserSubscriptions.bind(this)} />
                             </div>
 
-                            <div className="form-group col-md-2">
-                                <input type="button" class="dashboard-form-btn link-style nav-link btn-info action-link"
-                                value="Delete" required="" id={item.id} onClick={this.handleDeleteUser.bind(this, item.id)} />
-                                {/* <button className='btn-danger' style={{backgroundColor: '#F15500'}} onClick={this.handleDeleteUser.bind(this, item.id )} > Delete </button> */}
+                            <div className="form-group col-ml-5">
+                                <input type="button" id={item.id} class="dashboard-form-btn link-style nav-link btn-info action-link"
+                                    value="Views" required=""  onClick={this.getAllUserViews.bind(this)} />
+                            </div>
+
+
+                            <div className="form-group col-ml-5">
+                            <input type="button" id={item.id} class="dashboard-form-btn link-style nav-link btn-danger action-link"
+                                    value="Delete" required=""  onClick={this.handleDeleteUser.bind(this)} />
                             </div>
                         </div>
 
@@ -462,6 +301,11 @@ class ListAllUsers extends Component {
                 </tr>
             )
         });
+
+
+
+
+        
         return (
             <div>
                 <table class="table table-striped">
@@ -472,6 +316,9 @@ class ListAllUsers extends Component {
                             <th scope="col"> Name</th>
                             <th scope="col"> Email </th>
                             <th scope="col"> Role </th>
+                            <th scope="col"> Registered On </th>
+                            <th scope="col"> Admin Actions </th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -485,6 +332,89 @@ class ListAllUsers extends Component {
         );
 
     }
+
+    returnSubscriptionList() {
+        var userSBCRS = this.state.listSubscriptions;
+        let rowNodes = userSBCRS.map((item,index) => {
+            return (
+                <tr>
+                    <th scope="row"> { item.current_index } </th>
+                    <td>{ item.subscription.type ? item.subscription.type : '' }</td>
+                    <td>{ item.subscription.type == 'SBCR' ? '-' : item.movie.title }</td>
+                    <td> { new Date(item.startAt).toDateString() } </td>
+                    <td> { new Date(item.endAt).toDateString()}  </td>
+                    <td> { item.amount } </td>
+                </tr>
+            )
+        });       
+        return (
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"> # </th>
+                            <th scope="col"> Subscription Type</th>
+                            <th scope="col"> Movie </th>
+                            <th scope="col"> Start At </th>
+                            <th scope="col"> End At </th>
+                            <th scope="col"> Amount </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rowNodes}
+                    </tbody>
+                </table>
+
+            </div>
+            
+        );
+    }
+
+
+    returnViewsList() {
+        var userViews = this.state.listViews;        
+        const sortBy = fn => (a, b) => -(fn(a) < fn(b)) || +(fn(a) > fn(b))
+        const getTimestamp = o => o.getTimestamp
+        const sortByTimestamp = sortBy(getTimestamp)
+        userViews.sort(sortByTimestamp)
+        userViews.reverse()
+        let rowNodes = userViews.map((item,index) => {
+            return (
+                <tr>
+                    <th scope="row"> { item.current_index } </th>
+                    <td>{ item.movie.title }</td>
+                    <td> { new Date(item.timestamp).toString() } </td>
+                    <td>{ item.movie.availability }</td>
+                    <td> { item.movie.price } </td>
+                </tr>
+            )
+        });
+
+        return (
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"> # </th>
+                            <th scope="col"> Movie </th>
+                            <th scope="col"> Viewed At </th>
+                            <th scope="col"> Availability </th>
+                            <th scope="col"> Amount </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rowNodes}
+                    </tbody>
+                </table>
+
+            </div>
+            
+        );
+
+    }
+
 
     render() {
         return(
@@ -501,156 +431,29 @@ class ListAllUsers extends Component {
                         </div>
                     </div>
                     </div>
+                    
                 </div>
                 <hr/>
-
                 {this.returnUserList()}
-                <hr/>
-                {this.getSessionChart()}
-                <hr class='mt-5 mb-5' />
-                <div id = "user-update">
-                    <h3>Update User</h3>
-                    <hr />
 
 
-                    <div class="row gap-20 masonry pos-r" style={{position: 'relative', height: '606px'}}>
-                        <div class="masonry-item col-md-6" style={{position: 'absolute', top: '0px'}}>
-                            <div class="bgc-white p-20 bd">
-                                <div class="mT-30">
-                                    <form id="dashboard-form" className='form-multiplexadmin'>
-
-                                        <div class="form-row">
-                                            <div className="form-group col-md-6">
-                                                <label class="dashboard-label">First Name</label>
-                                                <input type="text" onChange={this.handleChange} value = {this.state.first_name} placeholder="Enter First Name" className="form-control" id="first_name" name='first_name' pattern='[A-Za-z]*' title='Please enter valid name' />
-                                                <div id = "first_name_error" class= "error"></div>
-                                            </div>
-
-                                            <div className="form-group col-md-6">
-                                                <label class="dashboard-label">Last Name</label>
-                                                <input type="text" onChange={this.handleChange} value = {this.state.last_name} placeholder="Enter Last Name" className="form-control" id="last_name" name='last_name' pattern='[A-Za-z]*' title='Please enter valid name' />
-                                                <div id = "last_name_error" class= "error"></div>
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label class="dashboard-label">Email</label>
-                                            <input type="text" placeholder="Enter Email" value = {this.state.email} onChange={this.handleChange} className="form-control" id="email" name='email' />
-                                            <div id = "email_error" class= "error"></div>
-                                        </div>
-                                        {/* <div className="form-group">
-                                            <label class="dashboard-label">Password</label>
-                                            <input type="password" placeholder="Enter Password" value = {this.state.first_name} className="form-control" onChange={this.handleChange} id="pwd" name='password' />
-                                            <div id = "password_error" class= "error"></div>
-                                        </div> */}
-                                        <div className="form-group">
-                                            <label class="dashboard-label">Address</label>
-                                            <input type="text" placeholder="Enter Address"  value = {this.state.address} className="form-control" onChange={this.handleChange} id="address" name='address' />
-                                            <div id = "address_error" class= "error"></div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div className="form-group col-md-6">
-                                                <label class="dashboard-label">City</label>
-                                                <input type="text" placeholder="Enter City"  value = {this.state.city} className="form-control" onChange={this.handleChange} id="city" name='city' pattern='[A-Za-z]+[\s]*[A-Za-z]*' title='Please enter valid city' />
-                                                <div id = "city_error" class= "error"></div>
-                                            </div>
-
-                                            <div className="form-group col-md-6">
-                                                <label class="dashboard-label">State</label>
-                                                <select class="form-control" onChange={this.handleChange} id="state" name='state_name' >
-                                                    <option value="AL">Alabama</option>
-                                                    <option value="AK">Alaska</option>
-                                                    <option value="AZ">Arizona</option>
-                                                    <option value="AR">Arkansas</option>
-                                                    <option value="CA">California</option>
-                                                    <option value="CO">Colorado</option>
-                                                    <option value="CT">Connecticut</option>
-                                                    <option value="DE">Delaware</option>
-                                                    <option value="DC">District Of Columbia</option>
-                                                    <option value="FL">Florida</option>
-                                                    <option value="GA">Georgia</option>
-                                                    <option value="HI">Hawaii</option>
-                                                    <option value="ID">Idaho</option>
-                                                    <option value="IL">Illinois</option>
-                                                    <option value="IN">Indiana</option>
-                                                    <option value="IA">Iowa</option>
-                                                    <option value="KS">Kansas</option>
-                                                    <option value="KY">Kentucky</option>
-                                                    <option value="LA">Louisiana</option>
-                                                    <option value="ME">Maine</option>
-                                                    <option value="MD">Maryland</option>
-                                                    <option value="MA">Massachusetts</option>
-                                                    <option value="MI">Michigan</option>
-                                                    <option value="MN">Minnesota</option>
-                                                    <option value="MS">Mississippi</option>
-                                                    <option value="MO">Missouri</option>
-                                                    <option value="MT">Montana</option>
-                                                    <option value="NE">Nebraska</option>
-                                                    <option value="NV">Nevada</option>
-                                                    <option value="NH">New Hampshire</option>
-                                                    <option value="NJ">New Jersey</option>
-                                                    <option value="NM">New Mexico</option>
-                                                    <option value="NY">New York</option>
-                                                    <option value="NC">North Carolina</option>
-                                                    <option value="ND">North Dakota</option>
-                                                    <option value="OH">Ohio</option>
-                                                    <option value="OK">Oklahoma</option>
-                                                    <option value="OR">Oregon</option>
-                                                    <option value="PA">Pennsylvania</option>
-                                                    <option value="RI">Rhode Island</option>
-                                                    <option value="SC">South Carolina</option>
-                                                    <option value="SD">South Dakota</option>
-                                                    <option value="TN">Tennessee</option>
-                                                    <option value="TX">Texas</option>
-                                                    <option value="UT">Utah</option>
-                                                    <option value="VT">Vermont</option>
-                                                    <option value="VA">Virginia</option>
-                                                    <option value="WA">Washington</option>
-                                                    <option value="WV">West Virginia</option>
-                                                    <option value="WI">Wisconsin</option>
-                                                    <option value="WY">Wyoming</option>
-                                                </select>
-                                                <div id = "state_name_error" class= "error"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-row">
-                                            <div className="form-group col-md-6">
-                                                <label class="dashboard-label">ZipCode</label>
-                                                <input value = {this.state.zipcode} type="text" placeholder="Enter ZipCode" className="form-control" onChange={this.handleChange} id="zipcode" name='zipcode' title='Please enter 5 Digit Zipcode' />
-                                                <div id = "zipcode_error" class= "error"></div>
-                                            </div>
-                                            <div className="form-group col-md-6">
-                                                <label class="dashboard-label">Phone Number</label>
-                                                <input value = {this.state.phone_number} type="text" placeholder="Enter Phone Number" className="form-control" onChange={this.handleChange} id="phone_number" name='phone_number' title='Please enter 10 Digit Phone Number' />
-                                                <div id = "phone_number_error" class= "error"></div>
-                                            </div>
-                                        </div>
-
-                                        {/* <div className="form-group">
-                                            <label class="dashboard-label">Multiplex Logo</label>
-                                            <input id="file-upload" type="file" onChange={ this._handleChangeFile.bind(this) } />
-                                            <div id = "file_error" class= "error"></div>
-                                        </div> */}
-
-                                        <div class="form-row">
-                                            <div className="form-group col-md-3">
-                                            <input type="submit" class="dashboard-form-btn btn btn-primary"
-                                            value="Update User" required="" onClick={this.updateUser.bind(this)} /> 
-                                            </div>
-
-                                            <div className="form-group col-md-3">
-                                                <input type="reset" class="dashboard-form-btn btn btn-default" value="Cancel" onClick = {this.handleCancel.bind(this)} />
-                                            </div>
-                                        </div>
-                                    
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+            <div class="row">
+                    <div class="col-lg-4">
+                    <h4 class="c-grey-900 mB-5">User {this.state.showUserSubscriptions ? 'Subscriptions' : this.state.showUserViews ? 'Views' : 'Activity'} </h4>
+                    </div>
+                    <div class="col-lg-10">
+                    <div id = "user_activity">
+                    </div>
                     </div>
                 </div>
-                
-            </div>
+                <hr/>
+                {this.state.showUserSubscriptions ? this.returnSubscriptionList() : ''}
+                {this.state.showUserViews ? this.returnViewsList() : ''}
+
+
+
+</div>                   
+
         );
     }
 }

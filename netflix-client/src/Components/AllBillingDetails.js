@@ -57,32 +57,17 @@ class AllBillingDetails extends Component {
 
     componentWillMount(){
         this.getAllBillingDetails();
-        this.getAllMultiplex()
     }
 
-    getAllMultiplex() {
-        let findAllMultiplex = envURL + 'findAllMultiplex';
-        axios.get(findAllMultiplex)
-          .then(res => {
-              console.log("All Multiplex Data")
-            console.log(res.data.data)
-            this.setState({
-              allMultiplex: res.data.data
-            })
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      }
-
     getAllBillingDetails(){
-        let url = envURL + 'getAllBillingDetails';
-        axios.post( url, null, {withCredentials : true} )
+        debugger
+        let url = envURL + 'payments';
+        axios.get( url, null, {withCredentials : true} )
         .then( (response) => {
             console.log( "In Get All Billing details, Responce from DB" , response.data);
             this.setState({
-                billing_details : response.data.results.billing_information,
-                searchedBillingDetails: response.data.results.billing_information,
+                billing_details : response.data,
+                searchedBillingDetails: response.data,
                 currentPage: 1
             }, () => {
                 console.log(this.state.billing_details)
@@ -92,8 +77,6 @@ class AllBillingDetails extends Component {
 
     handleDeleteBillingDetail = ( e ) => {
         console.log("Delete Clicked", e );
-
-
         swal({
             title: "Are you sure?",
             text: "",
@@ -104,8 +87,8 @@ class AllBillingDetails extends Component {
             .then((willDelete) => {
                 if (willDelete) {
                     let id = { id : e };
-                    let url = envURL + 'deletebillingdetail';
-                    axios.post( url, id, { withCredentials : true } )
+                    let url = envURL + 'payment';
+                    axios.delete( url, id, { withCredentials : true } )
                         .then( (response) => {
                             console.log("After Deleting Bill, Response ", response.data);
                             swal({
@@ -124,9 +107,6 @@ class AllBillingDetails extends Component {
 
 
     };
-
-
-
 
     renderModal(e) {
         e.preventDefault();
@@ -194,10 +174,8 @@ class AllBillingDetails extends Component {
               for(let i = 0; i < this.state.billing_details.length; i++){
                 var strRegExPattern = new RegExp(e.target.value, 'i');
                 let list_element = this.state.billing_details[i];
-                const multiplex_zipcode = "" + list_element.multiplex_zipcode + "";
-                if(list_element.user_email.match(strRegExPattern) || list_element.movie_name.match(strRegExPattern) || 
-                list_element.multiplex_name.match(strRegExPattern) || multiplex_zipcode.match(strRegExPattern)
-                || list_element.user_name.match(strRegExPattern) || this.checkDate(strRegExPattern, list_element.booking_date)){
+                if(list_element.user.name.match(strRegExPattern) || list_element.movie.title.match(strRegExPattern) || 
+                list_element.subscription.type.match(strRegExPattern)){
                     searched_array.push(list_element);
                 }
               }
@@ -257,17 +235,15 @@ class AllBillingDetails extends Component {
             }
         }
         let billingdetailsArray = currentTodos.map( (item, index) => {
-
-            let number_of_tickets = item.adult_tickets + item.child_tickets + item.disabled_tickets + item.student_tickets  ;
-
             return (
                 <tr>
-                    <th scope="row"> {item.current_index} </th>
-                    <td> <a href="#myModal" id={item.id} data-toggle="modal" onClick={this.renderModal}  > { item.movie_name } </a>  </td>
-                    <td> { item.user_name } </td>
-                    <td> { item.multiplex_name } </td>
-                    <td> { item.booking_date } </td>
-                    <td> { number_of_tickets } </td>
+                    <th scope="row"> { item.current_index } </th>
+                    <td>{ item.user.name }</td>
+                    <td>{ item.subscription.type ? item.subscription.type : '' }</td>
+                    <td>{ item.subscription.type == 'SBCR' ? '-' : item.movie.title }</td>
+                    <td> { new Date(item.startAt).toDateString() } </td>
+                    <td> { new Date(item.endAt).toDateString()}  </td>
+                    <td> { item.amount } </td>
                     <td>
                         <button className='btn-danger' style={{backgroundColor: '#F15500'}} onClick={this.handleDeleteBillingDetail.bind(this, item.id)} > Delete </button>
                     </td>
@@ -286,7 +262,7 @@ class AllBillingDetails extends Component {
                     <div class="col-lg-10">
                     <div id = "search_bar">
                         <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search Movie By Name" onChange={this.handleSearchBar.bind(this)}/>
+                        <input type="text" class="form-control" placeholder="Search Bill By User Name, Movie Name, Subscription type" onChange={this.handleSearchBar.bind(this)}/>
                         </div>
                     </div>
                     </div>
@@ -297,12 +273,14 @@ class AllBillingDetails extends Component {
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col"> Movie Name</th>
                         <th scope="col"> User Name</th>
-                        <th scope="col"> Multiplex Name</th>
-                        <th scope="col"> Booking Date</th>
-                        <th scope="col"> Number of Tickets</th>
+                        <th scope="col"> Subscription Type </th>
+                        <th scope="col"> Movie Name</th>
+                        <th scope="col"> Start At</th>
+                        <th scope="col"> End At</th>
+                        <th scope="col"> Amount </th>
                         <th scope="col"> Action </th>
+
                     </tr>
                     </thead>
                     <tbody>

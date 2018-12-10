@@ -178,7 +178,7 @@ public class ViewController {
 		return new ResponseEntity<View>(HttpStatus.NO_CONTENT);
 	}
 	
-	// -------------------Top 10 rated movies-------------------------------------------
+	// -------------------Top 10 Viewed movies-------------------------------------------
 
 	@RequestMapping(value = "/topTenViewedMovies", method = RequestMethod.GET)
 	public ResponseEntity<List<View>> movieScoreboard() {
