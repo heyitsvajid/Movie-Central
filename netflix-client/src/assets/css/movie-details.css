@@ -7,6 +7,24 @@
 /* -----------------------------------*/
 /* =Helper Classes and Base / Foundation Overrides   */
 /* -----------------------------------*/
+.modal-content {
+	margin-top: 40%;
+}
+
+.subscribe{
+	color: white;
+	font-size: 29px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 250px;
+	margin-left: 6%
+}
+.subs-anchor{
+	font-size: 24px;
+	text-align: center;
+	vertical-align: middle;
+	margin-left: 30%
+}
 
 #memberGreeting {
     color: #ebebeb;

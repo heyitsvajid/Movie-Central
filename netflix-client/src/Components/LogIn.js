@@ -162,7 +162,7 @@ class SignIn extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input type="text" placeholder="Enter Email" name="email" className="nfTextField" id="id_userLoginId" style={{width:"138%"}} value={this.state.email} onChange={this.handleUserInput} tabindex="0" autoComplete="email" dir="" />
+                                                        <input type="text" placeholder="Enter Email" name="email" className="nfTextField" id="id_userLoginId" style={{width:"145%"}} value={this.state.email} onChange={this.handleUserInput} tabindex="0" autoComplete="email" dir="" />
                                                         {/* <label for="id_userLoginId" className="placeLabel">Enter Email</label> */}
                                                     </label>
                                                     

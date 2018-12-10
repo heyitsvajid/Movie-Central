@@ -7,6 +7,7 @@ import Index from './Components/Index';
 import MovieDetails from './Components/MovieDetails';
 import movieScoreBoard from './Components/MovieScoreBoard'
 import SubscriptionPaymentPage from './Components/SubscriptionPaymentPage'
+import SubscriptionListing from './Components/SubscriptionListing'
 
 import AdminDashboard from './Components/AdminDashboard';
 
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route exact path="/movieScoreBoard" component={movieScoreBoard} />
 	<Route exact path="/movieDetails/" component={MovieDetails} />
         <Route exact path="/payment" component={SubscriptionPaymentPage} />
+        <Route exact path="/subscriptions" component={SubscriptionListing} />
  
         {/* <Route exact path="/tickets" component={TicketBooking} />
         <Route exact path="/checkout" component={Checkout} />

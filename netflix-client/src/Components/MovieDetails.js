@@ -7,6 +7,8 @@ import { envURL, reactURL } from '../config/environment';
 import swal from 'sweetalert2'
 import '../assets/css/movie-details.css'
 import ReactPlayer from 'react-player'
+import YouTube from 'react-youtube';
+
 
 class MovieDetails extends Component {
   constructor(props) {
@@ -29,7 +31,8 @@ class MovieDetails extends Component {
         reviews : [],
         movieReviewRating: 0,
         rating : 0,
-        review : null
+        review : null,
+        userPayments: []
         // reviewCount:0
     }
     this.fetchDataFromServer = this.fetchDataFromServer.bind(this);
@@ -37,8 +40,25 @@ class MovieDetails extends Component {
   }
 
     componentWillMount(){
-        this.fetchDataFromServer();
-        // this.fetchReviews();
+      axios.get(envURL + 'isLoggedIn', {withCredentials: true})
+      .then((response) => {
+          console.log("After checking the session", response.data);
+          this.fetchDataFromServer();
+          this.getCurrentUserPayments();
+      },
+      (error) => { 
+          this.props.history.push('/login');
+          console.log(error)})
+    }
+
+    getCurrentUserPayments(){
+      axios.get(envURL + 'payment/user/' + localStorage.getItem("userid"),{ headers: { 'Content-Type': 'application/json'}})
+        .then((res) => {
+            console.log(res.data);
+            this.setState({userPayments: res.data});
+        },(error) => {
+            console.log('Error fetching user subscriptions');
+        })
     }
 
   fetchDataFromServer(){
@@ -100,97 +120,184 @@ class MovieDetails extends Component {
   //       this.props.history.push('/login');
   //       console.log(error)})
 
-  // }
-
-
-
-
-
-getMovieReviews(){
-    var movieReviews = this.state.reviews;
-    if(movieReviews.length>0){
-      let reviews = movieReviews.map((item, index) => {
-        this.state.movieReviewRating  = this.state.movieReviewRating + item.rating
-        if(item.rating!=0 && item.review!=null && item.review!=undefined){
-        return (
-          <li class="fan-reviews__item">
-            <div className="stars-large__star-rating--no-hover" data-star-rating={item.rating}>
-                <span className="stars-large__star icon icon-star-rating-small"></span>
-                <span className="stars-large__star icon icon-star-rating-small"></span>
-                <span className="stars-large__star icon icon-star-rating-small"></span>
-                <span className="stars-large__star icon icon-star-rating-small"></span>
-                <span className="stars-large__star icon icon-star-rating-small"></span>
-            </div>
-            <div class="fan-reviews__review">{item.review}</div>
-          </li>
-        )}
-      });
-      return (
-        <ul class="fan-reviews__list">
-          { reviews }
-        </ul>        
-      )
-    }
-  }
-  handleTrailerClick(e){
-    if(this.state.movie.trailer_link != undefined){
-      window.open(this.state.movie.trailer_link);
-    }
-  }
-
-
-  addReview() {
-      debugger
-    var review = {
-        rating: this.state.rating,
-        review: this.state.review != null ? this.state.review : null,
-        userId: localStorage.userid,
-        movieId: this.state.movieId
-    }
-
-    // var apiPayload = { review: review };
-    let addReview = envURL + 'review';
-
-    axios.post(addReview, review)
-        .then(res => {
-            debugger
-            if (res.status == 400) {
-                swal({
-                    type: 'error',
-                    title: 'Add Review',
-                    text: res.data.errorMsg,
-                })
-            } else if (res.status == 201) {
-                swal({
-                    type: 'success',
-                    title: 'Review Added',
-                    text: res.data.successMsg,
-                })
-            }
-            this.fetchDataFromServer();
-        })
-        .catch(err => {
-            console.error(err);
+  getMovieReviews(){
+      var movieReviews = this.state.reviews;
+      if(movieReviews.length>0){
+        let reviews = movieReviews.map((item, index) => {
+          this.state.movieReviewRating  = this.state.movieReviewRating + item.rating
+          if(item.rating!=0 && item.review!=null && item.review!=undefined){
+          return (
+            <li class="fan-reviews__item">
+              <div className="stars-large__star-rating--no-hover" data-star-rating={item.rating}>
+                  <span className="stars-large__star icon icon-star-rating-small"></span>
+                  <span className="stars-large__star icon icon-star-rating-small"></span>
+                  <span className="stars-large__star icon icon-star-rating-small"></span>
+                  <span className="stars-large__star icon icon-star-rating-small"></span>
+                  <span className="stars-large__star icon icon-star-rating-small"></span>
+              </div>
+              <div class="fan-reviews__review">{item.review}</div>
+            </li>
+          )}
         });
-  }
-  handleStarClick(e){
-    this.setState({rating: parseInt(e.target.dataset.rating)});
-    debugger
-  }
-  handleReviewContentChange(e){
-    this.setState({ review: e.target.value });
-  }
+        return (
+          <ul class="fan-reviews__list">
+            { reviews }
+          </ul>        
+        )
+      }
+    }
+    handleTrailerClick(e){
+      if(this.state.movie.trailer_link != undefined){
+        window.open(this.state.movie.trailer_link);
+      }
+    }
 
-  handleSessionChange(e){
-    this.props.history.push("/login")
-  }
+
+    addReview() {
+      var review = {
+          rating: this.state.rating,
+          review: this.state.review != null ? this.state.review : null,
+          userId: localStorage.userid,
+          movieId: this.state.movieId
+      }
+
+      // var apiPayload = { review: review };
+      let addReview = envURL + 'review';
+
+      axios.post(addReview, review)
+          .then(res => {
+              if (res.status == 400) {
+                  swal({
+                      type: 'error',
+                      title: 'Add Review',
+                      text: res.data.errorMsg,
+                  })
+              } else if (res.status == 201) {
+                  swal({
+                      type: 'success',
+                      title: 'Review Added',
+                      text: res.data.successMsg,
+                  })
+              }
+              this.fetchDataFromServer();
+          })
+          .catch(err => {
+              console.error(err);
+          });
+    }
+    handleStarClick(e){
+      this.setState({rating: parseInt(e.target.dataset.rating)});
+    }
+    handleReviewContentChange(e){
+      this.setState({ review: e.target.value });
+    }
+
+    handleSessionChange(e){
+      this.props.history.push("/login")
+    }
+
+    myCallback(val){
+
+    }
+
+    handlePaymentClick(e){
+      localStorage.setItem("amount", e.target.dataset.amount);
+      localStorage.setItem("movieType", this.state.availability);
+      localStorage.setItem("movieid", this.state.movieId);
+      window.location.href = "http://localhost:3000/payment";
+
+
+    }
+
+    handleYouTubeButtonClick(e){
+      var data = {
+        userId: localStorage.getItem("userid"),
+        movieId: this.state.movieId
+      }
+      var addEvent = envURL + 'view';
+      axios.post(addEvent, data)
+          .then(res => {
+          })
+          .catch(err => {
+              console.error(err);
+          });
+
+    }
+
+
+    getUserSubscriptions(){
+      var result = []
+      if(this.state.userPayments.length != 0){
+        this.state.userPayments.forEach(payment => {
+          if(payment.endAt > new Date()){
+            if(payment.subscription.type == "PPVO" && payment.movie.id == this.state.movieId){
+              result.push("PPVO");
+            }
+            else if(payment.subscription.type == "SBCR"){
+              result.push("SBCR");
+            }
+            else if(payment.subscription.type == "PAID" && payment.movie.id == this.state.movieId){
+              result.push("PAID");
+            }
+          }
+        });
+      }
+      return result;
+    }
 
   render() {
      let movie_image, trailer_link, keywords_list, review_link = null;
+    let subscriptionBlock = null;
+     if(this.state.availability!=null){
+       if(this.state.availability == "FREE"){
+        var video_id = this.state.trailer.split('v=')[1];
+        var ampersandPosition = video_id.indexOf('&');
+        if(ampersandPosition != -1) {
+          video_id = video_id.substring(0, ampersandPosition);
+        }
+        var string = "123"
+        trailer_link = <ReactPlayer onStart = {this.handleYouTubeButtonClick.bind(this)} url="https://www.youtube.com/watch?v=lXQgSJsqLyw" onPause/>
+       }
+       else{
+          var subscriptions = this.getUserSubscriptions();
+          if(subscriptions.length > 0){
+            if(this.state.availability == "SBCR"){
+              if(subscriptions.includes("SBCR")){
+                trailer_link = <ReactPlayer url={this.state.trailer} onPause/>
+              }
+              else{
+                trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount="10" onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+              }
+              
+            }
+            else if(this.state.availability == "PPVO"){
+              if(subscriptions.includes("PPVO")){
+                trailer_link = <ReactPlayer url={this.state.trailer} onPause/>
+              }
+              else{
+              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+              }
+            }
+            else if(this.state.availability == "PAID"){
+              if(subscriptions.includes("PAID")){
+                trailer_link = <ReactPlayer url={this.state.trailer} onPause/>
+              }
+              else{
+              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+              }
+            }    
+          }
+          else{
+            trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+          }
+          
+       }
+       
+     }
+
+
     if(this.state.image != undefined){
-    //   movie_image = <img className="movie-details__movie-img visual-thumb" src = {require('../images/' + this.state.image)} alt= {this.state.title} />
       movie_image = <img className="movie-details__movie-img visual-thumb" src = {this.state.image} alt= {this.state.title} />
-      trailer_link = <a href = {this.state.trailer}><img id="img-link" src={this.state.image} alt={this.state.title} itemprop="image" /></a>
     }
     if(this.state.isLoggedIn){
       review_link = <a data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" href="https://www.fandango.com/blumhouses-truth-or-dare-2018_208538/writeuserreviews">
@@ -200,17 +307,12 @@ getMovieReviews(){
       review_link =<a href="#" className="fan-review__write-review-cta cta" onClick={this.handleSessionChange.bind(this)}>
       Tell Us What You Think</a>
     }
-
     
-      
-    // }
-
-    // debugger
     return (
     <div>
       <div className="bd dark-background" style={{backgroundColor: '#141414'}} lang="en-US">
         <div className="pinning-header">
-          <Header/>
+          <Header callbackFromParent={this.myCallback} />
         </div>
       </div>
       
@@ -226,14 +328,13 @@ getMovieReviews(){
                            <feComposite in2="SourceGraphic" operator="in"></feComposite>
                         </filter>
                      </defs>
-                     {/* <video className="js-backgroundBlur-image" x="0" y="0" width="100%" height="100%" src={this.state.trailer}></video> */}
                      <image className="js-backgroundBlur-image" x="0" y="0" width="100%" height="100%" xlinkHref= {this.state.image} preserveAspectRatio="xMidYMid slice"/>
                   </svg>
                </div>
                <div className="mop__details-inner">
                   <section className="subnav">
                      <div className="row">
-                        <div className="width-100">
+                        <div className="width-100" style={{marginLeft:'24%'}}>
                            <h1 className="subnav__title heading-style-1 heading-size-xl">
                                 {this.state.title}
                            </h1>
@@ -254,7 +355,8 @@ getMovieReviews(){
                                 <li className="mop__synopsis-title">Directors:{this.state.director}</li>
                                 <li className="mop__synopsis-title">Actors:{this.state.actors}</li>
                               <li className="fd-star-rating__container">
-                                 {/* <div className=" js-fd-star-rating fd-star-rating " data-star-rating={this.state.movieReviewRating / this.state.reviews.length}></div> */}
+                                 <div className=" js-fd-star-rating fd-star-rating " data-star-rating={this.state.movieReviewRating / this.state.reviews.length}>
+                                 </div>
                               </li>
                               <li className="movie-details__fan-ratings">{this.state.totalReview}</li>
                               <li className="js-rotten-tomatoes"></li>
@@ -269,7 +371,7 @@ getMovieReviews(){
                                  data-width=""
                                  data-height="350"
                                  style={{height: '350px'}}>
-                                 <ReactPlayer url={this.state.trailer} onPause/>
+                                 {trailer_link}
                               </div>
                            </div>
                         </section>
@@ -311,9 +413,8 @@ getMovieReviews(){
                   <section className="fan-reviews width-100" style = {{width:"1000px"}}>
                       <div className="fan-reviews__header">
                           <h2 className="fan-reviews__title heading-style-1 heading-size-l">Fan Reviews</h2>
-                          <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating={this.state.movieReviewRating}>
+                          <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating="4.5">
                           </div>
-                          {/* <a className="cta fan-reviews__all-reviews" href="/ralph-breaks-the-internet-201129/movie-reviews">See All Fan Reviews</a> */}
                       </div>
                       <div className="fan-reviews__content-wrap">
                           <div className="fan-reviews__decoration-top"></div>
@@ -321,7 +422,7 @@ getMovieReviews(){
                           <div className="fan-reviews__decoration-bottom"></div>
                       </div>
           
-                      <a data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
+                      <a style={{color:'white'}} data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
           
                   </section>
               </div>
@@ -366,10 +467,6 @@ getMovieReviews(){
                 <hr class="write-review-form__line" />
                 <h2 class="heading-style-1 heading-size-l">Write a review</h2>
                 <ul id="writeReviewForm__errors"></ul>
-                {/* <section class="write-review-form__group">
-                    <label for="writeReviewForm__title">Title:</label>
-                     <input type="text" maxlength="200" id="writeReviewForm__title" onChange = {this.handleTitleChange.bind(this)}/>
-                </section> */}
                 <section class="write-review-form__group">
                     <textarea rows="12" cols="200" id="writeReviewForm__body" onChange = {this.handleReviewContentChange.bind(this)} ></textarea>
                 </section>

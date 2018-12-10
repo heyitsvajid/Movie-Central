@@ -141,8 +141,8 @@ class SignUp extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input style={{width: '138%'}} type="text" name="fname" className="nfTextField" id="id_userLoginId" value={this.state.fname} onChange={this.handleUserInput.bind(this)}  dir="" />
-                                                        <label for="id_userLoginId" className="placeLabel">Enter name</label>
+                                                        <input placeholder="Name" style={{width: '145%'}} type="text" name="fname" className="nfTextField" id="id_userLoginId" value={this.state.fname} onChange={this.handleUserInput.bind(this)}  dir="" />
+                                                        {/* <label for="id_userLoginId" className="placeLabel">Enter name</label> */}
                                                     </label>
                                                     <div className="ui-select-wrapper country-select">
                                                         <a href="#" className="ui-select-wrapper-link">
@@ -156,8 +156,8 @@ class SignUp extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfEmailPhoneControls">
                                                     <label className="input_id">
-                                                        <input style={{width: '138%'}} type="text" name="email" className="nfTextField" id="id_userLoginId" value={this.state.email} onChange={this.handleUserInput.bind(this)}  tabindex="0" autoComplete="email" dir="" />
-                                                        <label for="id_userLoginId" className="placeLabel">Enter Email</label>
+                                                        <input placeholder="Email" style={{width: '145%'}} type="text" name="email" className="nfTextField" id="id_userLoginId" value={this.state.email} onChange={this.handleUserInput.bind(this)}  tabindex="0" autoComplete="email" dir="" />
+                                                        {/* <label for="id_userLoginId" className="placeLabel">Enter Email</label> */}
                                                     </label>
                                                     <div className="ui-select-wrapper country-select">
                                                         <a href="#" className="ui-select-wrapper-link">
@@ -172,8 +172,8 @@ class SignUp extends Component {
                                             <div className="nfInputPlacement">
                                                 <div className="nfPasswordControls">
                                                     <label className="input_id">
-                                                        <input type="password" name="password" className="nfTextField" id="id_password" value={this.state.password} onChange={this.handleUserInput}  tabindex="0" autoComplete="password" dir="" />
-                                                        <label for="id_password" className="placeLabel">Password</label>
+                                                        <input placeholder="Password" style={{backgroundColor:'#333'}} type="password" name="password" className="nfTextField" id="id_password" value={this.state.password} onChange={this.handleUserInput}  tabindex="0" autoComplete="password" dir="" />
+                                                        {/* <label for="id_password" className="placeLabel">Password</label> */}
                                                     </label>
                                                     <button id="id_password_toggle" type="button" className="nfPasswordToggle" title="Show Password">SHOW</button>
                                                 </div>
@@ -187,7 +187,7 @@ class SignUp extends Component {
                                                 <div className="helper"></div>
                                         </div></div>
                                         
-                                        <button className="btn login-button btn-submit btn-small" type="submit" autoComplete="off" tabindex="0" onClick={this.handleSignUp.bind(this)}>Sign In</button>
+                                        <button className="btn login-button btn-submit btn-small" type="submit" autoComplete="off" tabindex="0" onClick={this.handleSignUp.bind(this)}>Sign Up</button>
                                         <div className="hybrid-login-form-help">
                                         <a href="/login" className="login-help-link">Have Account? Login to continue.</a></div>
                                         <input type="hidden" name="flow" value="websiteSignUp" />
