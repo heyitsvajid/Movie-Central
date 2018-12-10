@@ -29,15 +29,16 @@ class AdminDashboard extends Component {
     }
 
     componentWillMount() {
-        localStorage.setItem('roleId',3)
         axios.get(envURL + 'isLoggedIn', {withCredentials: true})
             .then((response) => {
+                
                 console.log("After checking the session", response.data);
                     if(response.data.role.name === 'CUSTOMER'){
                         console.log("Already Logged In. Redirecting to home page")
                         this.props.history.push('/');    
                     }
                     else if(response.data.role.name === 'ADMIN') {
+                        localStorage.setItem('roleId',3)
                         console.log("Already Logged In")
                         this.setState({
                            user: response.data,
@@ -47,7 +48,6 @@ class AdminDashboard extends Component {
                     }
             },
             (error) => { 
-                debugger
                 console.log(error)})
     }
 
