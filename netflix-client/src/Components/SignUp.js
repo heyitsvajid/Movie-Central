@@ -6,12 +6,16 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import { envURL, reactURL } from '../config/environment';
 import swal from 'sweetalert2'
+import Facebook from './Facebook'
+import Google from './Google'
+import { ClipLoader } from 'react-spinners';
 
 class SignUp extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             email : '',
             fname: '',
             password: '',
@@ -38,8 +42,30 @@ class SignUp extends Component {
         });
     }
 
+    facebookSignUp(response){
+        this.setState({
+            fname: response.name,
+            email:response.email,
+            password:'facebook-signup'
+        }, () => {
+            console.log(this.state)
+            this.handleSignUp("")
+        });
+    }
+
+    googleSignUp(response){
+        this.setState({
+            fname: response.name,
+            email:response.email,
+            password:'google-signup'
+        }, () => {
+            console.log(this.state)
+            this.handleSignUp("")
+        });
+    }
+
     handleSignUp(e) {
-        e.preventDefault();
+        e? e.preventDefault():'';
         debugger
         //validation of email
         var patt = new RegExp('[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.][a-zA-Z]+');
@@ -52,8 +78,15 @@ class SignUp extends Component {
             url = url+"customer"
         }
 
+        
         if( res && this.state.password.length >= 6 ) {
-                var user = {
+
+            this.setState({
+                loading: true,
+            }, () => {
+            });
+
+            var user = {
                     name : this.state.fname,
                     email: this.state.email,
                     password: this.state.password,
@@ -61,11 +94,21 @@ class SignUp extends Component {
                 console.log("In Signup : ", this.state );
                 axios.post(url, user, { withCredentials: true} )
                     .then((response) => {
+                        this.setState({
+                            loading: true,
+                        }, () => {
+                        });
+            
                         console.log("SignUp response", response.data );
                             swal("Account Created Successfully. Check email and activate account", "", "success");
                             this.props.history.push('/login')
                     },
                     (error) => { 
+                        this.setState({
+                            loading: true,
+                        }, () => {
+                        });
+            
                         swal({
                             type: 'error',
                             title: 'SignUp',
@@ -102,15 +145,10 @@ class SignUp extends Component {
     }
 
     componentDidMount() {
-        document.addEventListener('keydown', function(event) {
-            if(event.keyCode === 13 ) {
-                document.getElementById('ctl00_GlobalBody_SignOnControl_SignInButton').click();
-            }
-        });
-    }
+        document.getElementsByClassName("kep-login-facebook small")[0].innerHTML = "SignUp with FB"
+}
 
     render() {
-
         return (
         <div>
             <div id="appMountPoint">
@@ -188,8 +226,7 @@ class SignUp extends Component {
                                         </div></div>
                                         
                                         <button className="btn login-button btn-submit btn-small" type="submit" autoComplete="off" tabindex="0" onClick={this.handleSignUp.bind(this)}>Sign Up</button>
-                                        <div className="hybrid-login-form-help">
-                                        <a href="/login" className="login-help-link">Have Account? Login to continue.</a></div>
+                                        <div className="hybrid-login-form-help"></div>
                                         <input type="hidden" name="flow" value="websiteSignUp" />
                                         <input type="hidden" name="mode" value="login" />
                                         <input type="hidden" name="action" value="loginAction" />
@@ -201,29 +238,35 @@ class SignUp extends Component {
                                         <input type="hidden" name="countryIsoCode" value="US" />
                                     </form>
                                 </div>
+
+      <div className='sweet-loading ml-4'>
+        <ClipLoader
+          className={this.state.override}
+          sizeUnit={"px"}
+          size={150}
+          color={'#123abc'}
+          loading={this.state.loading}
+        />
+      </div>
+
                                 <div className="hybrid-login-form-other">
-                                    <form method="post" className="login-form" action="">
-                                        <div className="facebookForm regOption">
+                                <form method="post" className="login-form" action="">
+                                        <div className="facebookForm regOption mt-5 ml-4">
                                             <div className="fb-minimal">
-                                                <hr/>
-                                                <button className="btn minimal-login btn-submit btn-small" type="submit" autoComplete="off" tabindex="0">
-                                                    <div className="fb-login"><img className="icon-facebook" src="https://assets.nflxext.com/ffe/siteui/login/images/FB-f-Logo__blue_57.png" /><span className="fbBtnText">Login with Facebook</span></div>
-                                                </button>
+                                                <Facebook signUp={this.facebookSignUp.bind(this)}/>
                                             </div>
+                                             
                                         </div>
-                                        <input type="hidden" name="flow" value="websiteSignUp" />
-                                        <input type="hidden" name="mode" value="login" />
-                                        <input type="hidden" name="action" value="facebookLoginAction" />
-                                        <input type="hidden" name="withFields" value="accessToken,rememberMe,nextPage" />
-                                        <input type="hidden" name="authURL" value="1542680094463.5uqmyDMu64jhbjI1uS+xp0vcLQs=" />
-                                        <input type="hidden" name="nextPage" value="" />
-                                        <input type="hidden" name="showPassword" value="" />
-                                        <input type="hidden" name="countryCode" value="+1" />
-                                        <input type="hidden" name="countryIsoCode" value="US" />
-                                        <input type="hidden" name="accessToken" value="" />
+                                        <div className="facebookForm regOption mt-5 ml-4">
+                                            <div className="fb-minimal">
+                                                <Google text="SignUp With Google" signUp={this.googleSignUp.bind(this)} />
+                                            </div> 
+                                        </div>
+
                                     </form>
-                                    <div className="login-signup-now">New to Netflix? <a className=" " target="_self" href="/">Sign up now</a>.</div>
+                                    <div className="login-signup-now">Have account? <a className=" " target="_self" href="/login">Login Now!</a>.</div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

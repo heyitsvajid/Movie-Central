@@ -1,5 +1,6 @@
 package com.netflix.app.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpSession;
@@ -111,7 +112,9 @@ public class UserController {
 		user.setActivated(uuid.toString());
 		user.setDeleted("N");
 		user.setPassword(PasswordEncoder.hash(user.getPassword()));
+		user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		userService.save(user);
+	
 		User createdUser = userService.findByEmailAndRole(user.getEmail(), user.getRole());
 		String url = "http://localhost:8080/SpringBootRestApi/activate/" + uuid.toString() + "--" + createdUser.getId();
 		try {

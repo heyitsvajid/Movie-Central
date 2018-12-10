@@ -7,6 +7,8 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import { envURL, reactURL } from '../config/environment';
 import swal from 'sweetalert2'
+import Facebook from './Facebook'
+import Google from './Google'
 
 class SignIn extends Component {
 
@@ -55,26 +57,40 @@ class SignIn extends Component {
                     }
             },
             (error) => { 
-                debugger
                 console.log(error)})
     }
 
-    // componentDidMount() {
-    //     document.addEventListener('keydown', function(event) {
-    //         if(event.keyCode === 13 ) {
-    //             document.getElementById('ctl00_GlobalBody_SignOnControl_SignInButton').click();
-    //         }
-    //     });
-    // }
+    componentDidMount() {
+            document.getElementsByClassName("kep-login-facebook small")[0].innerHTML = "Login with FB"
+    }
 
+    facebooklogin(response){
+        this.setState({
+            email:response.email,
+            password:'facebook-signup',
+            isAdmin:false
+        }, () => {
+            console.log(this.state)
+            this.handleLogin("")
+        });    }
+
+    googlelogin(response){
+        this.setState({
+            email:response.email,
+            password:'google-signup',
+            isAdmin:false
+        }, () => {
+            console.log(this.state)
+            this.handleLogin("")
+        });    
+    }
 
     handleLogin(e) {
-        e.preventDefault();
+        e ? e.preventDefault():'';
 
         //validation of email
         var patt = new RegExp('[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.][a-zA-Z]+');
         var res = patt.test(this.state.email);
-        debugger
 
         var url = envURL + 'login/'
         if(this.state.isAdmin == true){
@@ -131,7 +147,6 @@ class SignIn extends Component {
 
     }
     render() {
-        debugger
         return (
         <div>
             <div id="appMountPoint">
@@ -194,7 +209,10 @@ class SignIn extends Component {
                                                 {/* <input type="checkbox" className="" name="rememberMe" id="bxid_rememberMe_true" value="true" tabindex="0" checked="" />
                                                 <label for="bxid_rememberMe_true"><span className="login-remember-me-label-text">Remember me</span></label>
                                                 <div className="helper"></div> */}
-                                            </div><a href="/signup" className="login-help-link">Dont have account? Create New.</a></div>
+
+                                            </div>
+</div>
+
                                         <input type="hidden" name="flow" value="websiteSignUp" />
                                         <input type="hidden" name="mode" value="login" />
                                         <input type="hidden" name="action" value="loginAction" />
@@ -208,26 +226,20 @@ class SignIn extends Component {
                                 </div>
                                 <div className="hybrid-login-form-other">
                                     <form method="post" className="login-form" action="">
-                                        <div className="facebookForm regOption">
+                                        <div className="facebookForm regOption mt-5 ml-4">
                                             <div className="fb-minimal">
-                                                <hr/>
-                                                <button className="btn minimal-login btn-submit btn-small" type="submit" autoComplete="off" tabindex="0">
-                                                    <div className="fb-login"><img className="icon-facebook" src="https://assets.nflxext.com/ffe/siteui/login/images/FB-f-Logo__blue_57.png" /><span className="fbBtnText">Login with Facebook</span></div>
-                                                </button>
+                                                <Facebook login={this.facebooklogin.bind(this)}/>
                                             </div>
+                                             
                                         </div>
-                                        <input type="hidden" name="flow" value="websiteSignUp" />
-                                        <input type="hidden" name="mode" value="login" />
-                                        <input type="hidden" name="action" value="facebookLoginAction" />
-                                        <input type="hidden" name="withFields" value="accessToken,rememberMe,nextPage" />
-                                        <input type="hidden" name="authURL" value="1542680094463.5uqmyDMu64jhbjI1uS+xp0vcLQs=" />
-                                        <input type="hidden" name="nextPage" value="" />
-                                        <input type="hidden" name="showPassword" value="" />
-                                        <input type="hidden" name="countryCode" value="+1" />
-                                        <input type="hidden" name="countryIsoCode" value="US" />
-                                        <input type="hidden" name="accessToken" value="" />
+                                        <div className="facebookForm regOption mt-5 ml-4">
+                                            <div className="fb-minimal">
+                                                <Google login={this.googlelogin.bind(this)}/>
+                                            </div> 
+                                        </div>
+
                                     </form>
-                                    <div className="login-signup-now">New to Netflix? <a className=" " target="_self" href="/">Sign up now</a>.</div>
+                                    <div className="login-signup-now">New to Netflix? <a className=" " target="_self" href="/signup">Sign up now</a>.</div>
                                 </div>
                             </div>
                         </div>
