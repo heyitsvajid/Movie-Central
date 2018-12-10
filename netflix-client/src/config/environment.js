@@ -1,6 +1,6 @@
 
 //Local
-var envURL = 'http://localhost:8080/SpringBootRestApi/'
+var envURL = 'http://localhost:8085/SpringBootRestApi/'
 var reactURL= 'http://localhost:3006/'
 
 
