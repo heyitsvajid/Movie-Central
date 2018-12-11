@@ -15,22 +15,22 @@ class Footer extends Component {
   }
 
   componentWillMount() {
-    let findAllMovieAPI = envURL + 'findAllMovie';
-    axios.get(findAllMovieAPI)
-      .then(res => {
-        if (res.data.successMsg != '') {
-          console.log('Fetching all movies');
-          console.log(res.data.data);
-          this.setState({
-            movieList: res.data.data ? res.data.data : []
-          })
-        } else {
-          console.error('Error Fetching all movie');
-        }
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    // let findAllMovieAPI = envURL + 'findAllMovie';
+    // axios.get(findAllMovieAPI)
+    //   .then(res => {
+    //     if (res.data.successMsg != '') {
+    //       console.log('Fetching all movies');
+    //       console.log(res.data.data);
+    //       this.setState({
+    //         movieList: res.data.data ? res.data.data : []
+    //       })
+    //     } else {
+    //       console.error('Error Fetching all movie');
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.error(err);
+    //   });
   }
 
   showMovieDetailsPage(e){
