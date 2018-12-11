@@ -11,5 +11,5 @@ public interface ViewRepository extends JpaRepository<View, Long> {
     	
 	View findByMovieId(String movieId);
 	View findById(long id);
-	List<View> findByUserOrderByTimestamp(User user);
+	List<View> findByUser(User user);
 }

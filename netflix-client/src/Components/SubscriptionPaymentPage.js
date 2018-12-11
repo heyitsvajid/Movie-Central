@@ -18,7 +18,9 @@ class SubscriptionPaymentPage extends Component {
     userId:'',
     movieId:'',
     subscriptionType:'',
-    endDate:''
+    endDate:'',
+    subs: false,
+    months: 1
     }
   }
 
@@ -26,11 +28,20 @@ class SubscriptionPaymentPage extends Component {
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-//    document.getElementById(e.target.name + "_error").innerHTML = "";
     this.setState({ [name]: value })
 }
 
     componentWillMount(){
+    if(localStorage.getItem("subs") == "true"){
+        this.setState({subs: true});
+        localStorage.removeItem("subs")
+    }
+    else if(localStorage.getItem("subs") == "false"){
+        localStorage.removeItem("subs")
+    }
+    else{
+        window.location.href = reactURL;
+    }
     axios.get(envURL + 'isLoggedIn', {withCredentials: true})
         .then((response) => {
             console.log("After checking the session", response.data);
@@ -50,19 +61,24 @@ class SubscriptionPaymentPage extends Component {
             this.props.history.push('/login');
             console.log(error)})
 }
-  
     
-  handleSubmit(e) {
-    e.preventDefault();
+    handleSubmit(e) {
+        e.preventDefault();
 
-        debugger
         var type = localStorage.getItem("movieType") ? localStorage.getItem("movieType") : ''
         var amount = localStorage.getItem("amount"); 
         var endDate = new Date(); // Now
-
+        debugger
        if(type == 'SBCR'){
-            amount = 10;
-            endDate = endDate.setDate(endDate.getDate() + 30); // Set now + 30 days as the new date
+            amount = this.state.amount;
+            var d = new Date();
+            var m = this.state.months;
+            var years = Math.floor(m / 12);
+            var months = m - (years * 12);
+            if (years) d.setFullYear(d.getFullYear() + years);
+            if (months) d.setMonth(d.getMonth() + months);
+            d.setHours(0,0,0,0);
+            endDate = d.setHours(0,0,0,0); // Set now + 30 days as the new date
         } else if(type == 'PPVO'){
             amount = localStorage.getItem("amount");
             endDate = endDate.setDate(endDate.getDate() + 1); // Set now + 1 days as the new date
@@ -81,7 +97,6 @@ class SubscriptionPaymentPage extends Component {
             subscriptionType: type,
             endDate:endDate,
         }
-        debugger
 
         axios.post(envURL + 'payment',payment,{ headers: { 'Content-Type': 'application/json'}})
             .then((res) => {
@@ -117,8 +132,15 @@ class SubscriptionPaymentPage extends Component {
         }, 2000);    
 }
 
+    handleMonthsChange(e){
+        this.setState({months: e.target.value, amount: e.target.value*10});
+    }
+
   render() {
-   
+    var monthsDiv = null;
+    if(this.state.subs){
+        monthsDiv = <label class="input_id" placeholder="Number of Months"><input placeholder="Subscription Months"  min="1" step="1" onkeypress={ () => {return false}}  style = {{width:'450px'}} value={this.state.months} onChange={this.handleMonthsChange.bind(this)} type="number" name="monthschange" class="nfTextField hasText" id="id_lastName" tabindex="0" dir="ltr"/></label>;
+    }
     return (
     <div>
       <div id="appMountPoint">
@@ -167,6 +189,15 @@ class SubscriptionPaymentPage extends Component {
                                                 </div>
                                             </div>
                                         </li>
+
+                                        <li data-testid="field-lastName" class="nfFormSpace">
+                                            <div class="nfInput validated nfInputOversize">
+                                                <div class="nfInputPlacement">
+                                                    {monthsDiv}
+                                                </div>
+                                            </div>
+                                        </li>
+
                                      <li data-testid="field-lastName" class="nfFormSpace">
                                             <div class="nfInput validated nfInputOversize">
                                                 <div class="nfInputPlacement">
@@ -274,7 +305,6 @@ class SubscriptionPaymentPage extends Component {
             
         </div>
       </div>
-      <Footer/>
       
       
     </div>

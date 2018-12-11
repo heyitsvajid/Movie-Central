@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {envURL} from "../config/environment";
+import {envURL, reactURL} from "../config/environment";
 import { withRouter } from 'react-router-dom';
 import { debug } from 'util';
 import swal from 'sweetalert';
@@ -64,6 +64,12 @@ class Header extends Component {
         this.props.callbackFromParent(e.target.value);
     }
 
+    handleSubscribeClick(e){
+        localStorage.setItem("subs", true);
+        localStorage.setItem("movieType", "SBCR")
+        window.location.href = reactURL + "payment"
+    }
+
   render() {
 
     var changeButtons = null;
@@ -86,6 +92,8 @@ class Header extends Component {
                   <li class="navigation-menu"><a class="menu-trigger" style={{color: 'red'}} role="button" aria-haspopup="true">Browse</a></li>
                   <li class="navigation-tab"><a class="current active" style={{color: 'red'}} href="/">Home</a></li>
                   <li class="navigation-tab"><a style={{color: 'red'}} href="/movieScoreBoard">Movie Score Board</a></li>
+                  <li class="navigation-tab"><a style={{color: 'red'}} onClick={this.handleSubscribeClick.bind(this)} href="#">Subscibe Now</a></li>
+
                   {/* <li class="navigation-tab"><a href="/browse/genre/34399">Movies</a></li>
                   <li class="navigation-tab"><a href="/browse/genre/1592210">Recently Added</a></li>
                   <li class="navigation-tab"><a href="/browse/my-list">My List</a></li>

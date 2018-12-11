@@ -32,7 +32,9 @@ class MovieDetails extends Component {
         movieReviewRating: 0,
         rating : 0,
         review : null,
-        userPayments: []
+        userPayments: [],
+        userViews: [],
+        isLoggedIn: false
         // reviewCount:0
     }
     this.fetchDataFromServer = this.fetchDataFromServer.bind(this);
@@ -45,6 +47,8 @@ class MovieDetails extends Component {
           console.log("After checking the session", response.data);
           this.fetchDataFromServer();
           this.getCurrentUserPayments();
+          this.getUserViews();
+          this.setState({isLoggedIn: true})
       },
       (error) => { 
           this.props.history.push('/login');
@@ -56,6 +60,16 @@ class MovieDetails extends Component {
         .then((res) => {
             console.log(res.data);
             this.setState({userPayments: res.data});
+        },(error) => {
+            console.log('Error fetching user subscriptions');
+        })
+    }
+
+    getUserViews(){
+      axios.get(envURL + 'view/user/' + localStorage.getItem("userid"),{ headers: { 'Content-Type': 'application/json'}})
+        .then((res) => {
+            console.log(res.data);
+            this.setState({userViews: res.data});
         },(error) => {
             console.log('Error fetching user subscriptions');
         })
@@ -204,9 +218,13 @@ class MovieDetails extends Component {
       localStorage.setItem("amount", e.target.dataset.amount);
       localStorage.setItem("movieType", this.state.availability);
       localStorage.setItem("movieid", this.state.movieId);
-      window.location.href = "http://localhost:3000/payment";
-
-
+      if( e.target.dataset.subscribe != undefined && e.target.dataset.subscribe == "true"){
+        localStorage.setItem("subs", true);
+      }
+      else{
+        localStorage.setItem("subs", false);
+      }
+      window.location.href = reactURL + "payment";
     }
 
     handleYouTubeButtonClick(e){
@@ -245,17 +263,28 @@ class MovieDetails extends Component {
       return result;
     }
 
+    watchedMovieAtleastOnce(){
+      var userViews = this.state.userViews;
+      var result = false;
+      var self = this;
+      if(userViews.length > 0){
+        userViews.forEach(view => {
+          if(view.movie.id == self.state.movieId){
+            result = true;
+          }
+        });
+      }
+      else{
+        return false;
+      }
+      return result;
+    }
+
   render() {
      let movie_image, trailer_link, keywords_list, review_link = null;
     let subscriptionBlock = null;
      if(this.state.availability!=null){
        if(this.state.availability == "FREE"){
-        var video_id = this.state.trailer.split('v=')[1];
-        var ampersandPosition = video_id.indexOf('&');
-        if(ampersandPosition != -1) {
-          video_id = video_id.substring(0, ampersandPosition);
-        }
-        var string = "123"
         trailer_link = <ReactPlayer onStart = {this.handleYouTubeButtonClick.bind(this)} url="https://www.youtube.com/watch?v=lXQgSJsqLyw" onPause/>
        }
        else{
@@ -263,45 +292,64 @@ class MovieDetails extends Component {
           if(subscriptions.length > 0){
             if(this.state.availability == "SBCR"){
               if(subscriptions.includes("SBCR")){
-                trailer_link = <ReactPlayer url={this.state.trailer} onPause/>
+                trailer_link = <ReactPlayer url={this.state.trailer} onStart = {this.handleYouTubeButtonClick.bind(this)} onPause/>
               }
               else{
-                trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount="10" onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
-              }
-              
+                trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-subscribe={true} data-amount="10" onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+              } 
             }
             else if(this.state.availability == "PPVO"){
               if(subscriptions.includes("PPVO")){
-                trailer_link = <ReactPlayer url={this.state.trailer} onPause/>
+                trailer_link = <ReactPlayer url={this.state.trailer} onStart = {this.handleYouTubeButtonClick.bind(this)} onPause/>
               }
               else{
-              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+                if(subscriptions.includes("SBCR")){
+                  trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Pay for this movie to continue</div><a href="#" data-subscribe={false} data-amount={this.state.price*0.5} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+                }
+                else{
+                  trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Pay for this movie to continue</div><a href="#" data-subscribe={false} data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+                }
               }
             }
             else if(this.state.availability == "PAID"){
-              if(subscriptions.includes("PAID")){
-                trailer_link = <ReactPlayer url={this.state.trailer} onPause/>
+              if(subscriptions.includes("PAID") || subscriptions.includes("SBCR")){
+                trailer_link = <ReactPlayer url={this.state.trailer} onStart = {this.handleYouTubeButtonClick.bind(this)} onPause/>
               }
               else{
-              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Pay or subscribe to watch this movie</div><a href="#" data-subscribe={false} data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
               }
-            }    
+            }
           }
           else{
-            trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
-          }
-          
+            if(this.state.availability == "SBCR"){
+              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Please Subscibe to watch this Movie</div><a href="#" data-subscribe={true} data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+            }
+            else if(this.state.availability == "PPVO"){
+              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Pay for this movie to continue</div><a href="#" data-subscribe={false} data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+            }
+            else{
+              trailer_link = <div style={{backgroundColor: 'black', height:'100%'}}><div class="subscribe" href = "">Pay or subscribe to watch this movie</div><a href="#" data-subscribe={false} data-amount={this.state.price} onClick={this.handlePaymentClick.bind(this)} class="subs-anchor">Click Here to subscribe</a></div>
+            }
+          }  
        }
-       
      }
-
+     
 
     if(this.state.image != undefined){
       movie_image = <img className="movie-details__movie-img visual-thumb" src = {this.state.image} alt= {this.state.title} />
     }
     if(this.state.isLoggedIn){
-      review_link = <a data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" href="https://www.fandango.com/blumhouses-truth-or-dare-2018_208538/writeuserreviews">
-      Tell Us What You Think</a>
+      
+      var hasViewedTheMovie = this.watchedMovieAtleastOnce();
+
+      
+      if(hasViewedTheMovie){
+        review_link = <a style={{color:'white'}} data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
+      }
+      else{
+        review_link = <a style={{color:'white'}} className="fan-review__write-review-cta cta" >Watch the movie before you place any review!</a>
+      }
+      
     }
     else{
       review_link =<a href="#" className="fan-review__write-review-cta cta" onClick={this.handleSessionChange.bind(this)}>
@@ -422,7 +470,7 @@ class MovieDetails extends Component {
                           <div className="fan-reviews__decoration-bottom"></div>
                       </div>
           
-                      <a style={{color:'white'}} data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" className="fan-review__write-review-cta cta" >Tell Us What You Think</a>
+                      {review_link}
           
                   </section>
               </div>
