@@ -6,6 +6,9 @@ import '../assets/css/home.css'
 import Header from './Header'
 import Footer from './Footer'
 import swal from 'sweetalert2'
+import {Checkbox, CheckboxGroup} from 'react-checkbox-group';
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
 
 
 class Index extends Component {
@@ -14,10 +17,13 @@ class Index extends Component {
         super(props);
         this.state = {
             movieList: [],
+            mainMovieList : [],
             firstMovie: "",
-            search: null
+            search: null,
+            genres: []
         }
         this.findMovies = this.findMovies.bind(this)
+        this.genresChanged = this.genresChanged.bind(this)
     }
 
   componentWillMount(){
@@ -32,6 +38,7 @@ class Index extends Component {
                 .then((res) => {
                             console.log(res.data);
                             this.setState({
+                                mainMovieList: res.data ? res.data : [],
                                 movieList: res.data ? res.data : [],
                                 firstMovie: res.data ? res.data[0] : ""
                             })          
@@ -45,6 +52,7 @@ class Index extends Component {
                             console.log(res.data);
                             debugger
                             this.setState({
+                                mainMovieList: res.data ? res.data : [],
                                 movieList: res.data ? res.data : [],
                                 firstMovie: res.data ? res.data[0] : ""
                             })          
@@ -205,6 +213,87 @@ getMovieList(start, end){
         }
     }
 
+    genresChanged = (newGenre) => {
+        this.setState({
+          genres: newGenre
+        });
+        if(this.state.genres.length > 0){
+            var movieList = []
+            this.state.genres.map((item, index) => {
+                this.state.mainMovieList.map((movie, index) => {
+                    var genreList = movie.genre.split(",")
+                    genreList.map((genreTag, index) => {
+                        if(item === genreTag.trim() && !movieList.includes(movie)){
+                            movieList.push(movie)
+                        }
+                    });
+                });
+            });
+            this.setState({
+                movieList : movieList
+            })
+        }else if(this.state.genres.length === 0){
+            this.setState({
+                movieList : this.state.mainMovieList
+            })
+        }
+    }
+    renderGenres(){
+        var movieList = this.state.movieList
+        var genreArray = []
+        if( movieList.length > 0 ){
+            let genres = movieList.map((item, index) => {
+                var genreList = item.genre.split(",")
+                genreList.map((genreTag, index) => {
+                    if(!genreArray.includes(genreTag.trim())){
+                        genreArray.push(genreTag.trim())
+                    }
+                });
+            });
+        }
+        var genres = genreArray.map((item, index) => {
+            return(
+                <label><Checkbox value={item}/> {item}</label>
+            )
+        })
+        return genres
+    }
+
+    dynamicSort(property) {
+        var sortOrder = 1;
+        if(property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a,b) {
+            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            return result * sortOrder;
+        }
+    }
+    renderYears(){
+        var movieList = this.state.movieList
+        var options = [ { value: 'none', label: 'Select Year' } ]
+        var exist = false
+          const defaultOption = options[0]
+          if(movieList.length > 0){
+            var yearList = movieList.map((item, index) => {
+                options.map((year, index) => {
+                    if(year.value == item.year+''){
+                        exist = true
+                        
+                    }
+                })
+                if(!exist){
+                    options.push( { value: item.year+'', label: item.year+'' } )
+                }
+            });
+        }
+        options.sort(this.dynamicSort("value"));
+        // var yearDropdownList = options.map((item, index) => {
+        //     return(
+            return    <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />
+    }
+
     render() {
         return (
             <div>
@@ -216,6 +305,14 @@ getMovieList(start, end){
                                 <div class="pinning-header">
                                     <Header callbackFromParent={this.myCallback}/>
                                 </div>
+                                <CheckboxGroup checkboxDepth={2} name="genres" value={this.state.genres} onChange={this.genresChanged}>
+                                    {/* <label><Checkbox value="apple"/> Apple</label>
+                                    <label><Checkbox value="orange"/> Orange</label>
+                                    <label><Checkbox value="watermelon"/> Watermelon</label> */}
+                                    {this.renderGenres()}
+                                    {/* {this.renderRatings()} */}
+                                    {this.renderYears()}
+                                </CheckboxGroup>
                                 <div class="mainView" role="main">
                                     <div class="">
                                         <div class="billboard-row" role="region" aria-label="Featured Content">
