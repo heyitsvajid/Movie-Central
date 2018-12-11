@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.netflix.app.model.Movie;
 import com.netflix.app.model.SearchRequest;
 import com.netflix.app.service.MovieService;
+import com.netflix.app.service.ObjectService;
 import com.netflix.app.util.CustomErrorType;
 import com.netflix.app.util.QueryBuilder;
 
@@ -30,6 +31,9 @@ public class MovieController {
 
 	@Autowired
 	MovieService movieService;
+	@Autowired
+	ObjectService objectService;
+
 	
 	// Service which will do all data retrieval/manipulation work for Movie
 	// Movies---------------------------------------------
@@ -38,6 +42,17 @@ public class MovieController {
 	public ResponseEntity<List<Movie>> findAllMovies() {
 		logger.info("Fetching all Movies ");
 		List<Movie> movies = movieService.findAllMovies();
+		if (movies.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<Movie>>(movies, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/recommendations/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<Movie>> findAllMovieRecommendation(@PathVariable("id") long id) {
+		logger.info("Fetching all Movies ");
+		List<Movie> movies = objectService.movieRecommendationsGenre(id);
 		if (movies.isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND

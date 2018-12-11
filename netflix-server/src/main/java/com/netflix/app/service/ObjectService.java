@@ -3,6 +3,7 @@ package com.netflix.app.service;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.stereotype.Service;
 
+import com.netflix.app.model.Movie;
 import com.netflix.app.model.Payment;
 import com.netflix.app.model.Review;
 import com.netflix.app.model.User;
@@ -88,6 +89,20 @@ public class ObjectService {
 				View.class).getResultList();
 		return results;
 	}
+	
+	
+	public List<Movie> movieRecommendationsGenre(long user_id) {
+		String q1 = "select group_concat(genre separator ' ') from movie mov where mov.id in (select movie_id as id from view v join movie m where v.movie_id = m.id and v.user_id ="+user_id+" group by movie_id);";		
+		List<String> genre = em.createNativeQuery(q1).getResultList();
+		if(genre.size()>0){
+			System.out.println("All Genres "+genre.get(0));
+			String q2 = "SELECT * FROM movie WHERE MATCH (genre) AGAINST ('"+genre.get(0)+"' IN NATURAL LANGUAGE MODE) ";
+			List<Movie> movies= em.createNativeQuery(q2,Movie.class).getResultList();
+			return movies;
+		}		
+		return null;
+	}
+
 
 
 }
