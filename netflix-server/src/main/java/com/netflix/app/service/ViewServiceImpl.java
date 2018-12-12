@@ -57,6 +57,6 @@ public class ViewServiceImpl implements ViewService {
 	@Override
 	public List<View> findByUser(User user) {
 		// TODO Auto-generated method stub
-		return viewRepository.findByUserOrderByTimestamp(user);
+		return viewRepository.findByUser(user);
 	}
 }

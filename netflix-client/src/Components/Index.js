@@ -30,7 +30,7 @@ class Index extends Component {
     axios.get(envURL + 'isLoggedIn', {withCredentials: true})
     .then((response) => {
         console.log("After checking the session", response.data);
-            if(response.data.role.name === 'CUSTOMER'){
+            if(response.data.role.name){
                 console.log("Already Logged In. Getting movie list")
             {this.findMovies()}
                 if(localStorage.getItem("search")== undefined || localStorage.getItem("search")== null){
@@ -61,10 +61,7 @@ class Index extends Component {
                 })
             }
             }
-            else if(response.data.role.name === 'ADMIN') {
-                console.log("Already Logged In. Redirecting to admin dashboard")
-                this.props.history.push('/adminDashboard');
-            }else{
+            else{
                 console.log("Error checking session")
             }
     },

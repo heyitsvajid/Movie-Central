@@ -651,7 +651,7 @@ class AdminGraphs extends Component {
 
 
 
- <div>
+ <div className="invisible">
 
 
                 <div class="row">

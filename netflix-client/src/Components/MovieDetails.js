@@ -79,14 +79,14 @@ class MovieDetails extends Component {
 
     var url = envURL + 'isLoggedIn'
     const { movieId } = this.props.match.params
-    // this.setState({
-    //     movieId: this.props.match.params
-    // })
-    // axios.get(envURL + 'isLoggedIn', {withCredentials: true})
-    // .then((response) => {
-    //     console.log("After checking the session", response.data);
-    //         if(response.data.role.name === 'CUSTOMER'){
-    //             console.log("Already Logged In. Getting movie")
+    this.setState({
+        movieId: this.props.match.params
+    })
+    axios.get(envURL + 'isLoggedIn', {withCredentials: true})
+    .then((response) => {
+        console.log("After checking the session", response.data);
+            if(response.data.role.name){
+                console.log("Already Logged In. Getting movie")
                 axios.get(envURL + 'movie/' + movieId,{ headers: { 'Content-Type': 'application/json'}})
                 .then((res) => {
                             console.log(res.data);
@@ -122,17 +122,14 @@ class MovieDetails extends Component {
                 },(error) => {
                     console.log('Error fetching the movie.');
                 })
+    }else{
+                console.log("Error checking session")
+            }
+    },
+    (error) => { 
+        this.props.history.push('/login');
+        console.log(error)})
     }
-  //           else if(response.data.role.name === 'ADMIN') {
-  //               console.log("Already Logged In. Redirecting to admin dashboard")
-  //               this.props.history.push('/adminDashboard');
-  //           }else{
-  //               console.log("Error checking session")
-  //           }
-  //   },
-  //   (error) => { 
-  //       this.props.history.push('/login');
-  //       console.log(error)})
 
   getMovieReviews(){
       var movieReviews = this.state.reviews;
@@ -228,17 +225,21 @@ class MovieDetails extends Component {
     }
 
     handleYouTubeButtonClick(e){
-      var data = {
-        userId: localStorage.getItem("userid"),
-        movieId: this.state.movieId
+      debugger
+      if(localStorage.getItem('role')!='ADMIN'){
+        var data = {
+          userId: localStorage.getItem("userid"),
+          movieId: this.state.movieId
+        }
+        var addEvent = envURL + 'view';
+        axios.post(addEvent, data)
+            .then(res => {
+            })
+            .catch(err => {
+                console.error(err);
+            });
       }
-      var addEvent = envURL + 'view';
-      axios.post(addEvent, data)
-          .then(res => {
-          })
-          .catch(err => {
-              console.error(err);
-          });
+
 
     }
 
@@ -284,7 +285,7 @@ class MovieDetails extends Component {
      let movie_image, trailer_link, keywords_list, review_link = null;
     let subscriptionBlock = null;
      if(this.state.availability!=null){
-       if(this.state.availability == "FREE"){
+       if(this.state.availability == "FREE" || localStorage.getItem('role')=='ADMIN'){
         trailer_link = <ReactPlayer onStart = {this.handleYouTubeButtonClick.bind(this)} url="https://www.youtube.com/watch?v=lXQgSJsqLyw" onPause/>
        }
        else{
