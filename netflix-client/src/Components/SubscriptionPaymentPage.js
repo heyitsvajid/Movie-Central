@@ -125,11 +125,7 @@ class SubscriptionPaymentPage extends Component {
             movieId:'',
             subscriptionType:'',
             endDate:'',
-        });
-        var that = this;
-        setTimeout(function () {
-            that.loadMovies()
-        }, 2000);    
+        });    
 }
 
     handleMonthsChange(e){
