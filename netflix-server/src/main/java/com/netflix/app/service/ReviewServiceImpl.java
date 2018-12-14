@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.netflix.app.model.Movie;
 import com.netflix.app.model.Review;
 import com.netflix.app.repository.ReviewRepository;
 
@@ -30,6 +31,14 @@ public class ReviewServiceImpl implements ReviewService{
 		// TODO Auto-generated method stub
 		return (List<Review>) reviewRepository.findAllReviewByMovieId(id);
 	}
+
+	@Override
+	public List<Review> findAll() {
+		// TODO Auto-generated method stub
+		return (List<Review>) reviewRepository.findAll();
+	}
+
+	
 
 	
 }

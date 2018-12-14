@@ -62,6 +62,18 @@ public class ReviewController {
 		
 	}
 	
+	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
+	public ResponseEntity<List<Review>> findAll() {
+		logger.info("Fetching all reviews");
+		
+		List<Review> reviews = reviewService.findAll();
+		if (reviews.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<Review>>(reviews, HttpStatus.OK);
+	}
+	
 	// -------------------Top 10 rated movies-------------------------------------------
 
 	@RequestMapping(value = "/topTenRatedMovies", method = RequestMethod.GET)

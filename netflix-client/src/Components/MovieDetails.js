@@ -34,7 +34,9 @@ class MovieDetails extends Component {
         review : null,
         userPayments: [],
         userViews: [],
-        isLoggedIn: false
+        isLoggedIn: false,
+        totalReviews : 0,
+        averageRating:0
         // reviewCount:0
     }
     this.fetchDataFromServer = this.fetchDataFromServer.bind(this);
@@ -133,9 +135,16 @@ class MovieDetails extends Component {
 
   getMovieReviews(){
       var movieReviews = this.state.reviews;
+      var totalRating = 0
+      var totalReviews = 0
       if(movieReviews.length>0){
         let reviews = movieReviews.map((item, index) => {
-          this.state.movieReviewRating  = this.state.movieReviewRating + item.rating
+          totalRating = totalRating + item.rating
+          totalReviews = totalReviews + 1
+          // this.setState({
+          //   movieReviewRating: this.state.movieReviewRating + item.rating,
+          //   totalReviews : this.state.totalReviews + 1
+          // })
           if(item.rating!=0 && item.review!=null && item.review!=undefined){
           return (
             <li class="fan-reviews__item">
@@ -356,6 +365,19 @@ class MovieDetails extends Component {
       review_link =<a href="#" className="fan-review__write-review-cta cta" onClick={this.handleSessionChange.bind(this)}>
       Tell Us What You Think</a>
     }
+
+    var movieReviews = this.state.reviews;
+    var totalRating = 0
+    var totalReviews = 0
+    var average = 0
+    if(movieReviews.length>0){
+      let reviews = movieReviews.map((item, index) => {
+        totalRating = totalRating + item.rating
+        totalReviews = totalReviews + 1
+      })
+    }
+    average = totalRating / totalReviews
+
     
     return (
     <div>
@@ -462,8 +484,17 @@ class MovieDetails extends Component {
                   <section className="fan-reviews width-100" style = {{width:"1000px"}}>
                       <div className="fan-reviews__header">
                           <h2 className="fan-reviews__title heading-style-1 heading-size-l">Fan Reviews</h2>
-                          <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating="4.5">
-                          </div>
+                          {/* <li class="fan-reviews__item"> */}
+                            <div className="stars-large__star-rating--no-hover" data-star-rating={Math.ceil(average)} >
+                                <span className="stars-large__star icon icon-star-rating-small"></span>
+                                <span className="stars-large__star icon icon-star-rating-small"></span>
+                                <span className="stars-large__star icon icon-star-rating-small"></span>
+                                <span className="stars-large__star icon icon-star-rating-small"></span>
+                                <span className="stars-large__star icon icon-star-rating-small"></span>
+                            </div>
+                          {/* </li> */}
+                          {/* <div className="js-fd-star-rating fd-star-rating stars-large__star-rating" data-star-rating="4.5">
+                          </div> */}
                       </div>
                       <div className="fan-reviews__content-wrap">
                           <div className="fan-reviews__decoration-top"></div>
