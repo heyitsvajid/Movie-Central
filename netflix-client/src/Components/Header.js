@@ -99,6 +99,7 @@ class Header extends Component {
                   <li class="navigation-menu"><a class="menu-trigger" style={{color: 'red'}} role="button" aria-haspopup="true">Browse</a></li>
                   <li class="navigation-tab"><a class="current active" style={{color: 'red'}} href="/">Home</a></li>
                   <li class="navigation-tab"><a style={{color: 'red'}} href="/movieScoreBoard">Movie Score Board</a></li>
+                  <li class="navigation-tab"><a style={{color: 'red'}} href="/subscriptions">My Subscriptions</a></li>
                   <li class="navigation-tab"><a style={{color: 'red'}} onClick={this.handleSubscribeClick.bind(this)} href="#">Subscibe Now</a></li>
 
                   {/* <li class="navigation-tab"><a href="/browse/genre/34399">Movies</a></li>

@@ -26,7 +26,8 @@ class Index extends Component {
             reviews: [],
             totalReviewPerMovie : {},
             totalRatingPerMovie : {},
-            averageRatingPerMovie : {}
+            averageRatingPerMovie : {},
+            recommendedMovies: []
         }
         this.findMovies = this.findMovies.bind(this)
         this.genresChanged = this.genresChanged.bind(this)
@@ -41,6 +42,15 @@ class Index extends Component {
             if(response.data.role.name === 'CUSTOMER'){
                 console.log("Already Logged In. Getting movie list")
             {this.findMovies()}
+                axios.get(envURL + '/recommendations/' + response.data.id,{ headers: { 'Content-Type': 'application/json'}})
+                .then((res) => {
+                            this.setState({
+                                recommendedMovies: res.data ? res.data : [],
+                            })          
+                },(error) => {
+                    console.log('Error fetching recommended movies movies.');
+                })
+                
                 if(localStorage.getItem("search")== undefined || localStorage.getItem("search")== null){
                 axios.get(envURL + 'movies',{ headers: { 'Content-Type': 'application/json'}})
                 .then((res) => {
@@ -204,6 +214,74 @@ class Index extends Component {
 
         return arr;    
     }
+
+    returnRecommendedMovieList() {
+        var movieList = this.state.recommendedMovies;
+        var movieLength = movieList.length;
+        var totalRows = (parseInt(this.state.recommendedMovies.length/6)) + 1;
+        var rowsArr = []
+        var currVal = 0;
+        for(let i = 0; i < totalRows; i++){
+            if(movieLength >= 6){
+                rowsArr.push(currVal+6);
+                currVal += 6;
+            }
+            else{
+                rowsArr.push(currVal + this.state.recommendedMovies.length - currVal);
+                currVal += this.state.recommendedMovies.length - currVal;
+            }
+            movieLength -= 6;   
+        }
+        let obj = this;
+        let abc = null;
+        var arr = [];
+        if(movieList != undefined && movieList.length > 0){
+            abc = rowsArr.forEach(function(entry, index) {
+                console.log(entry);
+                var startIndex = index == 0 ? 0 : rowsArr[index-1];
+                var endIndex = rowsArr[index] - 1;
+                arr.push(
+                    // <div class="sliderMask showPeek">
+                    //     <div class="sliderContent row-with-x-columns">
+                            obj.getRecommendedMovieList(startIndex, endIndex)
+                            
+                    //     </div>
+                    // </div>
+                )
+            });
+        }
+
+        return arr;    
+    }
+
+    getRecommendedMovieList(start, end){
+        var movieList = this.state.recommendedMovies;
+        let movieNodes = movieList.map((item, index) => {
+            if(start <= index && end >= index){
+                return (
+                    <div class="slider-item slider-item-0">
+                        <div class="title-card-container">
+                            <div id="title-card-2-0" class="title-card">
+                                <div class="ptrack-content" data-ui-tracking-context="%7B%22list_id%22:%2222c6a048-0a5c-4a83-9b10-c49b8bc8d817_115976689X19XX1542578115059%22,%22location%22:%22homeScreen%22,%22rank%22:0,%22request_id%22:%226ab7664b-8540-430b-93e7-e12db6e75d4f-89857730%22,%22row%22:2,%22track_id%22:14170035,%22video_id%22:80201680,%22image_key%22:%22sdp,16%7CAD_cdfc1710-d0ad-11e8-9705-0eaa7fb7c3c4%7Cen%22,%22supp_video_id%22:1,%22lolomo_id%22:%2222c6a048-0a5c-4a83-9b10-c49b8bc8d817_ROOT%22,%22maturityMisMatchEdgy%22:false,%22maturityMisMatchNonEdgy%22:false,%22appView%22:%22boxArt%22,%22usePresentedEvent%22:true%7D" data-tracking-uuid="93b1f144-4d72-4675-862b-4dbfd30f89bb">
+                                    <a href="" aria-label="The Kominsky Method" tabindex="0" aria-hidden="false" class="slider-refocus">
+                                        <div class="boxart-size-16x9 boxart-container"><img onClick={this.handleMovieDetails.bind(this)} id={item.id} class="boxart-image boxart-image-in-padded-container" src={item.image} alt="" />
+                                            <div class="fallback-text-container" aria-hidden="true">
+                                                <div class="fallback-text">{item.title}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div><span></span></div>
+                        </div>
+                    </div>
+                    )
+            }
+        });
+        return (
+            <div>{movieNodes}</div>
+        
+        );
+    }
+
     getMovieList(start, end){
         var movieList = this.state.movieList;
         let movieNodes = movieList.map((item, index) => {
@@ -397,12 +475,10 @@ class Index extends Component {
     }
 
     selectStar(e){
-        debugger
         var movieList = this.state.movieList
         var averageRatingPerMovie = this.state.averageRatingPerMovie
         var starFilteredMovies = []
         if( e.value != "none" ){
-            debugger
             if(movieList.length > 0){
                 movieList.map((item, index) => {
                     if( averageRatingPerMovie.has(item.id) ){
@@ -471,6 +547,23 @@ class Index extends Component {
                                                     </div><span class="jawBoneContent"></span></div>
                                             </div>
                                         </div>
+
+                                        <div class="lolomoRow lolomoRow_title_card" data-list-context="popularTitles">
+                                            <h2 class="rowHeader"><span class="rowTitle" aria-label="popular on netflix"><div class="row-header-title">Recommended For You</div><div class="aro-row-header"><div class="see-all-link">Explore All</div><div class="aro-row-chevron icon-akiraCaretRight"></div></div></span></h2>
+                                            <div class="rowContainer rowContainer_title_card" id="row-1">
+                                                <div class="ptrack-container">
+                                                    <div class="rowContent slider-hover-trigger-layer">
+                                                        <div class="slider">
+                                                            <div class="sliderMask showPeek">
+                                                                <div class="sliderContent row-with-x-columns">
+                                                                    {this.returnRecommendedMovieList()}
+                                                                </div>
+                                                            </div>
+                                                            <span class="handle handleNext active" tabindex="0" role="button" aria-label="See more titles"><b class="indicator-icon icon-rightCaret"></b></span></div>
+                                                    </div><span class="jawBoneContent"></span></div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

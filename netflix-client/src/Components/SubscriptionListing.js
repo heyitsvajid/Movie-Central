@@ -74,18 +74,13 @@ class SubscriptionListing extends Component {
                             <div class="main-header has-billboard" style={{height:'66px'}}>
                                 <a aria-label="Netflix" class="logo icon-logoUpdate active" href="/browse"></a>
                                 <ul class="tabbed-primary-navigation" role="navigation">
-                                    <li class="navigation-menu"><a class="menu-trigger" role="button" aria-haspopup="true">Browse</a></li>
-                                    <li class="navigation-tab"><a class="current active" href="/browse">Home</a></li>
-                                    <li class="navigation-tab"><a href="/browse/genre/83">TV Shows</a></li>
-                                    <li class="navigation-tab"><a href="/browse/genre/34399">Movies</a></li>
-                                    <li class="navigation-tab"><a href="/browse/genre/1592210">Recently Added</a></li>
-                                    <li class="navigation-tab"><a href="/browse/my-list">My List</a></li>
-                                    <li class="navigation-tab"><a href="/browse/genre/107985">Holidays</a></li>
+                                    <li class="navigation-tab"><a class="current active" href="/">Home</a></li>
+                                    
                                 </ul>
                             </div>
                         </div>
                                 </div>
-                                <h3 className="inline heading-style-stub heading-style-1 heading-size-l" style={{marginLeft:"215px"}}>Top 10 movies</h3>
+                                <h3 className="inline heading-style-stub heading-style-1 heading-size-l" style={{marginLeft:"215px"}}>All Subscriptions</h3>
                                 <table class="table" id = "scoreboard-table">
                                   <thead>
                                     <tr>

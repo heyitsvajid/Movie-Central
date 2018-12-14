@@ -24,4 +24,4 @@ Go to path form terminal: /netflix-server
 Bonus Features
   1. Movie Recommendation: We store the viewing history of the user. On home page based on that viewing history we get all movies which match top viewed movies and based on the genre of those search new movies to be shown as recommended movies. We are using MySQL FULLTEXT search feature to compare genres of different movies and get similarity with the help of MATCH() and AGAINST() function. 
   
-  2. Solr Search: 
+  2. Solr Search: Implemented solr by adding a netflix_movies core in the solr db. Used solr for searching of movies as solr gives much better performance in searching as compared to a relational database. Used solr queries to get the movies according to the names and other related fields.
