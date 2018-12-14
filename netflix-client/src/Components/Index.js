@@ -433,6 +433,7 @@ class Index extends Component {
                                 <div class="pinning-header">
                                     <Header callbackFromParent={this.myCallback}/>
                                 </div>
+                                <div className="filter-wrap">
                                 <CheckboxGroup checkboxDepth={2} name="genres" value={this.state.genres} onChange={this.genresChanged}>
                                     {/* <label><Checkbox value="apple"/> Apple</label>
                                     <label><Checkbox value="orange"/> Orange</label>
@@ -441,6 +442,7 @@ class Index extends Component {
                                     {this.renderRatings()}
                                     {this.renderYears()}
                                 </CheckboxGroup>
+                                </div>
                                 <div class="mainView" role="main">
                                     <div class="">
                                         <div class="billboard-row" role="region" aria-label="Featured Content">

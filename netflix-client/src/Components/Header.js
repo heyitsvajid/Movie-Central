@@ -70,6 +70,13 @@ class Header extends Component {
         window.location.href = reactURL + "payment"
     }
 
+    togglePanel = (e) => {
+
+        let panel = document.querySelector('.filter-wrap');
+
+        panel.classList.toggle("active");
+    }
+
   render() {
 
     var changeButtons = null;
@@ -107,6 +114,7 @@ class Header extends Component {
                         <span class="icon-search">
                         </span>
                             <input type="text" placeholder="Title, Genre or People" onChange = {this.handleSearch.bind(this)} data-search-input="true" dir="ltr" data-uia="search-box-input" maxlength="80" value={this.state.searchQuery} style={{ transitionDuration: '200ms', width:'250px', backgroundColor: 'black', border: 'none'}} />
+                        <button onClick={this.togglePanel} className="btn btn-primary">Filter</button>
                         <span class="icon-close empty">
                         </span>
                         </div>

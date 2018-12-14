@@ -4607,6 +4607,31 @@ td,th{
   background:rgba(0,0,0,.75);
   border:solid 1px rgba(255,255,255,.85)
 }
+
+.searchInput {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  background: rgba(0,0,0,.75);
+  border: solid 1px rgb(29, 30, 33);
+  height: 50px;
+  position:relative;
+}
+.searchInput  button { 
+  background: #ff0000;
+  color: #fff;
+  border-radius: 0;
+  border: 0;
+  height: 35px;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0;
+  min-height: 0;
+
+}
 .searchInput input{
   color:#fff;
   display:inline-block;
@@ -22669,3 +22694,10 @@ a{
   bottom:0;
   position:absolute
 }
+
+.filter-wrap { padding:15px; background:#1d1e21; clear:both; height:160px; display:none; }
+.filter-wrap.active { display:block; }
+
+.filter-wrap > div  > .Dropdown-root { width:calc(50% - 10px); float:left; }
+  .filter-wrap > div  > .Dropdown-root:last-child { margin-left:20px!important; }
+  .filter-wrap > div  > label { width:20%; float:left; margin-bottom:15px; color:#fff; }
