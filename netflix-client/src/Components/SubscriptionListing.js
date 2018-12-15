@@ -72,7 +72,7 @@ class SubscriptionListing extends Component {
                                 <div class="pinning-header">
                                 <div class="pinning-header-container" style={{top: '0px', position: 'relative', background: 'transparent'}}>
                             <div class="main-header has-billboard" style={{height:'66px'}}>
-                                <a aria-label="Netflix" class="logo icon-logoUpdate active" href="/browse"></a>
+                                <a aria-label="Netflix" class="logo icon-logoUpdate active" href="/"></a>
                                 <ul class="tabbed-primary-navigation" role="navigation">
                                     <li class="navigation-tab"><a class="current active" href="/">Home</a></li>
                                     
