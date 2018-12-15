@@ -6,7 +6,7 @@ Murtaza Manasawala    murtaza.manasawala@sjsu.edu       012541828
 Jaykumar Patel        jaykumar.a.patel@sjsu.edu         012548432
 Akshat Shah           akshatalpesh.shah@sjsu.edu        012535627
 
-URL: 
+URL: ec2-52-8-189-53.us-west-1.compute.amazonaws.com:3000/login
 
 
 Build instructions:
