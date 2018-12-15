@@ -27,12 +27,15 @@ class Index extends Component {
             totalReviewPerMovie : {},
             totalRatingPerMovie : {},
             averageRatingPerMovie : {},
-            recommendedMovies: []
+            recommendedMovies: [],
+            selectedYear : "none"
         }
         this.findMovies = this.findMovies.bind(this)
         this.genresChanged = this.genresChanged.bind(this)
         this.fetchGenres = this.fetchGenres.bind(this)
         this.fetchRatings = this.fetchRatings.bind(this)
+        this.fetchRatings = this.fetchRatings.bind(this)
+    
     }
 
     componentWillMount(){
@@ -354,11 +357,11 @@ class Index extends Component {
             this.setState({
                 genres: newGenre
             });
-            debugger
+            var movieList = []
+            var mainMovieList = this.state.mainMovieList
             if(newGenre.length > 0){
-                var movieList = []
                 newGenre.map((item, index) => {
-                    this.state.mainMovieList.map((movie, index) => {
+                    mainMovieList.map((movie, index) => {
                         var genreList = movie.genre.split(",")
                         genreList.map((genreTag, index) => {
                             if(item === genreTag.trim() && !movieList.includes(movie)){
@@ -367,9 +370,12 @@ class Index extends Component {
                         });
                     });
                 });
+                debugger
                 this.setState({
                     movieList : movieList
                 })
+                debugger
+                return movieList
             }else{
                 this.setState({
                     movieList : this.state.mainMovieList
@@ -377,7 +383,7 @@ class Index extends Component {
             }
         }else{
             if(this.state.genres.length > 0){
-                var movieList = []
+                debugger
                 this.state.genres.map((item, index) => {
                     this.state.mainMovieList.map((movie, index) => {
                         var genreList = movie.genre.split(",")
@@ -397,6 +403,7 @@ class Index extends Component {
                 })
             }
         }
+        debugger
     }
     renderGenres(){
         var genres = this.state.genreArray.map((item, index) => {
@@ -438,16 +445,23 @@ class Index extends Component {
         options.sort(this.dynamicSort("value"));
         return    <Dropdown options={options} onChange={this._onSelect.bind(this)} value={defaultOption} placeholder="Select an option" />
     }
-    _onSelect(e){    
+    _onSelect(e){  
+        var movieList = []
+        movieList = this.genresChanged(this.state.genres)
+        this.setState({
+            selectedYear : e.value
+        }) 
         debugger
-        var movieList = this.state.movieList
+        if(this.state.movieList.length > 0){
+            movieList = this.state.movieList
+        }
         var yearFilteredMovies = []
         if( e.value != "none" ){
             if(movieList.length > 0){
                 movieList.map((item, index) => {
                     debugger
                     console.log("test");
-                    if(item.year == e.value && this.state.genres){
+                    if(item.year == this.state.selectedYear && this.state.genres){
                         yearFilteredMovies.push(item)
                     }
                 });
@@ -456,7 +470,23 @@ class Index extends Component {
                 })
 
                 /////////// Correct the code because it repeats the normal list when clicked again ///////////
-            }else{this.genresChanged(this.state.genres)}
+            }else{
+                debugger
+                // this.genresChanged(this.state.genres)
+                // movieList = this.state.movieList
+                // if(movieList.length>0){
+                //     movieList.map((item, index) => {
+                //         debugger
+                //         console.log("test");
+                //         if(item.year == e.value && this.state.genres){
+                //             yearFilteredMovies.push(item)
+                //         }
+                //     });
+                    this.setState({
+                        movieList : []
+                    })
+                // }
+            }
         }else{
             this.genresChanged(this.state.genres)
         }
@@ -475,6 +505,7 @@ class Index extends Component {
     }
 
     selectStar(e){
+        this.genresChanged(this.state.genres)
         var movieList = this.state.movieList
         var averageRatingPerMovie = this.state.averageRatingPerMovie
         var starFilteredMovies = []

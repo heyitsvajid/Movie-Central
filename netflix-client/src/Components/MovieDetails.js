@@ -295,7 +295,7 @@ class MovieDetails extends Component {
     let subscriptionBlock = null;
      if(this.state.availability!=null){
        if(this.state.availability == "FREE" || localStorage.getItem('role')=='ADMIN'){
-        trailer_link = <ReactPlayer onStart = {this.handleYouTubeButtonClick.bind(this)} url="https://www.youtube.com/watch?v=lXQgSJsqLyw" onPause/>
+        trailer_link = <ReactPlayer onStart = {this.handleYouTubeButtonClick.bind(this)} url={this.state.trailer} onPause/>
        }
        else{
           var subscriptions = this.getUserSubscriptions();
