@@ -23,33 +23,33 @@ class Index extends Component {
       this.fetchTopTenRatedMovieReviews()
       this.findMovies()
       this.fetchTopTenViewedMovies()
-    // axios.get(envURL + 'isLoggedIn', {withCredentials: true})
-    // .then((response) => {
-    //     console.log("After checking the session", response.data);
-            // if(response.data.role.name === 'CUSTOMER'){
-    //             console.log("Already Logged In. Getting movie list")
-                // axios.get(envURL + 'movies',{ headers: { 'Content-Type': 'application/json'}})
-                // .then((res) => {
-                //             console.log(res.data);
-                //             debugger
-                //             this.setState({
-                //                 movieList: res.data ? res.data : [],
-                //                 firstMovie: res.data ? res.data[0] : ""
-                //             })          
-                // },(error) => {
-                //     console.log('Error fetching all movies.');
-                // })
-            // }
-            // else if(response.data.role.name === 'ADMIN') {
-            //     console.log("Already Logged In. Redirecting to admin dashboard")
-            //     this.props.history.push('/adminDashboard');
-            // }else{
-            //     console.log("Error checking session")
-            // }
-    // },
-    // (error) => { 
-    //     this.props.history.push('/login');
-    //     console.log(error)})
+    axios.get(envURL + 'isLoggedIn', {withCredentials: true})
+    .then((response) => {
+        console.log("After checking the session", response.data);
+            if(response.data.role.name === 'CUSTOMER'){
+                console.log("Already Logged In. Getting movie list")
+                axios.get(envURL + 'movies',{ headers: { 'Content-Type': 'application/json'}})
+                .then((res) => {
+                            console.log(res.data);
+                            debugger
+                            this.setState({
+                                movieList: res.data ? res.data : [],
+                                firstMovie: res.data ? res.data[0] : ""
+                            })          
+                },(error) => {
+                    console.log('Error fetching all movies.');
+                })
+            }
+            else if(response.data.role.name === 'ADMIN') {
+                console.log("Already Logged In. Redirecting to admin dashboard")
+                this.props.history.push('/adminDashboard');
+            }else{
+                console.log("Error checking session")
+            }
+    },
+    (error) => { 
+        this.props.history.push('/login');
+        console.log(error)})
     }
 
     handleLogout() {
