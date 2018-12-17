@@ -1,5 +1,5 @@
 # CMPE-275-Netflix
-To demonstrate the use of stateless RESTful web services by creating prototype of Freelancer web application. (www.freelancer.com).
+To demonstrate the use of stateless RESTful web services by creating prototype of Freelancer web application.
 
 ```
 Team Project for CMPE 275
