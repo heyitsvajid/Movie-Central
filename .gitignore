@@ -26,3 +26,5 @@ overridedb.*
 *.iml
 .idea
 *.jar
+netflix-client/package-lock.json
+netflix-client/package-lock.json

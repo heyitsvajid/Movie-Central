@@ -1,7 +1,7 @@
 
 //Local
 var envURL = 'http://localhost:8080/SpringBootRestApi/'
-var reactURL= 'http://localhost:3006/'
+var reactURL= 'http://localhost:3000/'
 
 
 //EC2 Instance
